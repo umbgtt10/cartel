@@ -3,6 +3,7 @@
 
 use crate::support::commands::Commands;
 use crate::support::states::States;
+use cartel_spec_model::instance_state::InstanceState;
 use cartel_spec_model::rules::change::Change;
 use cartel_spec_model::vocabulary::command_name::CommandName;
 
@@ -23,6 +24,28 @@ fn applied_of_ballot_opened_opens_the_ballot_with_an_empty_tally() {
             &[2],
             &[]
         )])
+    );
+}
+
+#[test]
+fn applied_of_ballots_closed_forgets_the_ballots_below_the_point_and_moves_it() {
+    // Arrange
+    let state = States::holding(vec![
+        States::ballot(States::key(1, 0, 4), &[1], &[1], &[]),
+        States::ballot(States::key(1, 1, 0), &[1], &[1], &[]),
+        States::ballot(States::key(0, 9, 9), &[1], &[1], &[]),
+    ]);
+
+    // Act
+    let after = Change::BallotsClosed.applied(&Commands::close(1, 1), &state);
+
+    // Assert
+    assert_eq!(
+        after,
+        InstanceState {
+            close_point: Some(States::point(1, 1)),
+            ..States::holding(vec![States::ballot(States::key(1, 1, 0), &[1], &[1], &[])])
+        }
     );
 }
 

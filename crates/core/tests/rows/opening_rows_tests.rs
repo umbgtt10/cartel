@@ -3,8 +3,9 @@
 
 use crate::support::fixtures::Fixtures;
 use cartel::open_ballot::OpenBallot;
-use cartel::opening_rows::OpeningRows;
 use cartel::rejection::Rejection;
+use cartel::rows::closing_rows::ClosingRows;
+use cartel::rows::opening_rows::OpeningRows;
 use std::collections::BTreeMap;
 
 // Ballot (1, 0, 0) open; the opening asked for is of that ballot.
@@ -14,7 +15,35 @@ fn refusal(electorate: &[u64], thresholds: &[u64]) -> Option<Rejection> {
         Fixtures::ballot(1, 0, 0),
         OpenBallot::new(Fixtures::set(&[1]), Fixtures::set(&[1])),
     );
-    OpeningRows::new(&ballots).refusal(Fixtures::ballot(1, 0, 0), electorate, thresholds)
+    OpeningRows::new(&ballots, ClosingRows::new(None)).refusal(
+        Fixtures::ballot(1, 0, 0),
+        electorate,
+        thresholds,
+    )
+}
+
+#[test]
+fn refusal_of_a_ballot_below_the_close_point_is_closed_once_its_form_is_checked() {
+    // Arrange
+    let ballots = BTreeMap::new();
+    let rows = OpeningRows::new(&ballots, ClosingRows::new(Some(Fixtures::point(3, 0))));
+
+    // Act
+    let refused = [
+        rows.refusal(Fixtures::ballot(2, 5, 0), &[1], &[1]),
+        rows.refusal(Fixtures::ballot(2, 5, 0), &[], &[1]),
+        rows.refusal(Fixtures::ballot(3, 0, 0), &[1], &[1]),
+    ];
+
+    // Assert
+    assert_eq!(
+        refused,
+        [
+            Some(Rejection::BallotClosed),
+            Some(Rejection::EmptyElectorate),
+            None
+        ]
+    );
 }
 
 #[test]
@@ -23,8 +52,11 @@ fn refusal_of_a_ballot_not_open_and_well_formed_is_none() {
     let ballots = BTreeMap::new();
 
     // Act
-    let refused =
-        OpeningRows::new(&ballots).refusal(Fixtures::ballot(2, 0, 0), &[3, 1, 2], &[3, 2]);
+    let refused = OpeningRows::new(&ballots, ClosingRows::new(None)).refusal(
+        Fixtures::ballot(2, 0, 0),
+        &[3, 1, 2],
+        &[3, 2],
+    );
 
     // Assert
     assert_eq!(refused, None);

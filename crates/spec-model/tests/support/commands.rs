@@ -19,9 +19,17 @@ impl Commands {
         }
     }
 
+    pub fn close(question: u64, round: u64) -> Command {
+        Command {
+            before: Some(States::point(question, round)),
+            ..Self::of(CommandName::CloseBallots)
+        }
+    }
+
     pub fn of(name: CommandName) -> Command {
         Command {
             name,
+            before: None,
             ballot: None,
             electorate: None,
             thresholds: None,

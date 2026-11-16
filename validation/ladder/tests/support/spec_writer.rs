@@ -5,6 +5,7 @@ use cartel::ballot::Ballot;
 use cartel::ballot_record::BallotRecord;
 use cartel::checkpoint::Checkpoint;
 use cartel::choice::Choice;
+use cartel::close_point::ClosePoint;
 use cartel::command::Command;
 use cartel::origin::Origin;
 use cartel::output::Output;
@@ -19,15 +20,21 @@ use std::fmt::Write;
 pub struct SpecWriter;
 
 impl SpecWriter {
+    // The checkpoint, its close point written only once a close has moved it,
+    // as the specification's growth rule asks (§1).
     pub fn checkpoint(checkpoint: &Checkpoint) -> Value {
-        json!({
+        let mut written = json!({
             "instance": {
                 "node": Self::number(checkpoint.instance.node),
                 "incarnation": Self::number(checkpoint.instance.incarnation),
             },
-            "ballots": checkpoint.ballots.iter().map(Self::record).collect::<Vec<Value>>(),
-            "next_receipt": Self::number(checkpoint.next_receipt),
-        })
+        });
+        if let Some(point) = checkpoint.close_point {
+            written["close_point"] = Self::point(point);
+        }
+        written["ballots"] = Value::Array(checkpoint.ballots.iter().map(Self::record).collect());
+        written["next_receipt"] = Self::number(checkpoint.next_receipt);
+        written
     }
 
     pub fn command(command: &Command) -> Value {
@@ -50,6 +57,9 @@ impl SpecWriter {
                 "member": Self::number(*member),
                 "choice": Self::choice(choice),
             }}),
+            Command::CloseBallots { before } => {
+                json!({"CloseBallots": {"before": Self::point(*before)}})
+            }
             Command::ShowBallot { ballot } => {
                 json!({"ShowBallot": {"ballot": Self::ballot(ballot)}})
             }
@@ -108,6 +118,9 @@ impl SpecWriter {
                 "thresholds": Self::numbers(thresholds),
                 "voters": Self::numbers(voters),
             }}),
+            Output::BallotsClosed { ballots } => json!({"BallotsClosed": {
+                "ballots": ballots.iter().map(Self::ballot).collect::<Vec<Value>>(),
+            }}),
             Output::BallotShown(record) => json!({"BallotShown": {"record": Self::record(record)}}),
             Output::BallotsListed { ballots } => {
                 json!({"BallotsListed": {"ballots": ballots.iter().map(Self::ballot).collect::<Vec<Value>>()}})
@@ -119,6 +132,10 @@ impl SpecWriter {
                 json!({"CommandRejected": Self::rejection(rejection)})
             }
         }
+    }
+
+    fn point(point: ClosePoint) -> Value {
+        json!({"question": Self::number(point.question), "round": Self::number(point.round)})
     }
 
     fn record(record: &BallotRecord) -> Value {
@@ -153,6 +170,10 @@ impl SpecWriter {
             Rejection::AlreadyCounted => json!({"AlreadyCounted": {}}),
             Rejection::Equivocation { counted } => {
                 json!({"Equivocation": {"counted": Self::choice(counted)}})
+            }
+            Rejection::BallotClosed => json!({"BallotClosed": {}}),
+            Rejection::CloseBehind { close_point } => {
+                json!({"CloseBehind": {"close_point": Self::point(*close_point)}})
             }
         }
     }

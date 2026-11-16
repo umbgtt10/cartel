@@ -5,6 +5,28 @@ version it conforms to. The first release is 0.2.0: 0.1.0 on crates.io is the na
 
 ## [Unreleased]
 
+## [0.3.0] — 2026-11-16
+
+### Published on crates.io
+
+Slice 2, closing. Conforms to the specification's version 0.2.0; its 18 new vectors are released beside the 42 of
+0.1.0, which it answers alike.
+
+#### Added
+- Closing (slice 2, the specification's 0.2.0): `CloseBallots` closes every ballot before a question and a round and
+  names them; the books remember the close point, which only moves forward. A close at or behind it is refused with
+  `CloseBehind`, naming it; an opening, a vote or a query for a ballot below it is refused with `BallotClosed`. The
+  checkpoint holds the close point once a close has moved it, and nothing for it before, so every released vector
+  answers alike.
+- The ladder: 18 vectors, a matrix tier for closing, and the property tier's new invariants -- a close leaves every
+  ballot at or above its point as it was, and no open ballot is ever below the close point. The memory tier: books
+  closed as they go hold as much after a hundred ballots as after one.
+
+#### Changed
+- The rows are grouped under `rows/`: `cartel::rows::opening_rows`, `cartel::rows::query_rows` and the new
+  `cartel::rows::closing_rows`. `src/` would otherwise hold more files than the house allows. `Checkpoint` gains
+  `close_point`; `Command`, `Output` and `Rejection` gain the closing variants.
+
 ## [0.2.0] — 2026-11-16
 
 ### Published on crates.io

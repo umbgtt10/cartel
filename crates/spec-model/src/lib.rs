@@ -35,6 +35,7 @@ pub mod lookup;
 pub mod model;
 pub mod numbers;
 pub mod open_ballot;
+pub mod point;
 pub mod rules;
 pub mod spec_reader;
 pub mod table;

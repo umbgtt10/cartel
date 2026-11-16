@@ -1,5 +1,5 @@
 {
- "version": "0.1.0",
+ "version": "0.2.0",
  "rows": [
   {
    "id": "empty-electorate",
@@ -45,6 +45,17 @@
    "situation": "a threshold is given more than once",
    "output": "CommandRejected",
    "rejection": "RepeatedThreshold"
+  },
+  {
+   "id": "ballot-closed",
+   "commands": [
+    "OpenBallot",
+    "CastVote",
+    "ShowBallot"
+   ],
+   "situation": "`ballot` is below the close point: its question and round come before the point's",
+   "output": "CommandRejected",
+   "rejection": "BallotClosed"
   },
   {
    "id": "ballot-already-open",
@@ -115,6 +126,23 @@
    ],
    "situation": "otherwise: `member` becomes a voter of `choice`",
    "output": "VoteCounted"
+  },
+  {
+   "id": "close-behind",
+   "commands": [
+    "CloseBallots"
+   ],
+   "situation": "there is a close point, and `before` is at it or before it",
+   "output": "CommandRejected",
+   "rejection": "CloseBehind"
+  },
+  {
+   "id": "ballots-closed",
+   "commands": [
+    "CloseBallots"
+   ],
+   "situation": "otherwise: the close point becomes `before`, and every open ballot below it is closed",
+   "output": "BallotsClosed"
   },
   {
    "id": "ballot-shown",

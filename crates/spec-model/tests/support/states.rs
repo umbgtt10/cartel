@@ -5,6 +5,7 @@ use cartel_spec_model::ballot_key::BallotKey;
 use cartel_spec_model::choice::Choice;
 use cartel_spec_model::instance_state::InstanceState;
 use cartel_spec_model::open_ballot::OpenBallot;
+use cartel_spec_model::point::Point;
 use cartel_spec_model::vote::Vote;
 
 // Node 2, incarnation 3, receipt 5 next: an instance as a test sets it up.
@@ -48,9 +49,14 @@ impl States {
         InstanceState {
             node: 2,
             incarnation: 3,
+            close_point: None,
             ballots: Vec::new(),
             next_receipt: 5,
         }
+    }
+
+    pub fn point(question: u64, round: u64) -> Point {
+        Point { question, round }
     }
 
     pub fn key(question: u64, round: u64, phase: u64) -> BallotKey {

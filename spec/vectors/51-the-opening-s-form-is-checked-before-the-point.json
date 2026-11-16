@@ -1,0 +1,70 @@
+{
+  "description": "What an opening carries is checked before whether its ballot is below the point.",
+  "rows": [
+    "ballots-closed",
+    "empty-electorate"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "CloseBallots": {
+          "before": {
+            "question": "3",
+            "round": "0"
+          }
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "BallotsClosed": {
+            "ballots": []
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "2",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [],
+          "thresholds": [
+            "1"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "CommandRejected": {
+            "EmptyElectorate": {}
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "close_point": {
+      "question": "3",
+      "round": "0"
+    },
+    "ballots": [],
+    "next_receipt": "4"
+  }
+}

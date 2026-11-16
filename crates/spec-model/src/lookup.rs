@@ -8,6 +8,7 @@ use crate::choice::Choice;
 use crate::command::Command;
 use crate::instance_state::InstanceState;
 use crate::open_ballot::OpenBallot;
+use crate::point::Point;
 
 // The books looked up: a ballot by its key, the choice a member is a voter
 // of, a choice's voters.
@@ -30,6 +31,13 @@ impl Lookup {
 
     // The open ballot a command names, where an earlier row of the table has
     // already found it open.
+    // A ballot is below a point when its question and round come before the
+    // point's, whatever its phase (§4).
+    #[must_use]
+    pub fn is_below(key: BallotKey, point: Point) -> bool {
+        (key.question, key.round) < (point.question, point.round)
+    }
+
     #[must_use]
     pub fn named<'a>(state: &'a InstanceState, command: &Command) -> &'a OpenBallot {
         Self::ballot(state, command.ballot).expect("the open ballot the command names")

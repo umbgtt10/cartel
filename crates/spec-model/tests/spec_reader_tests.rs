@@ -10,6 +10,16 @@ use cartel_spec_model::vocabulary::command_name::CommandName;
 use serde_json::json;
 
 #[test]
+fn command_of_a_close_reads_its_point() {
+    // Arrange & Act
+    let command =
+        SpecReader::command(&json!({"CloseBallots": {"before": {"question": "7", "round": "1"}}}));
+
+    // Assert
+    assert_eq!(command, Commands::close(7, 1));
+}
+
+#[test]
 fn command_of_a_query_carries_nothing_else() {
     // Arrange & Act
     let command = SpecReader::command(&json!({"ListBallots": {}}));

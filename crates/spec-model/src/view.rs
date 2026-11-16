@@ -13,6 +13,7 @@ use crate::ballot_key::BallotKey;
 use crate::choice::Choice;
 use crate::instance_state::InstanceState;
 use crate::open_ballot::OpenBallot;
+use crate::point::Point;
 
 // What an instance shows of its books, in the specification's encoding: every
 // u64 a string of decimal digits, a choice its hexadecimal digits (§1), and
@@ -37,19 +38,23 @@ impl View {
         Value::Array(keys.into_iter().map(Self::ballot).collect())
     }
 
-    // The checkpoint (§9).
+    // The checkpoint (§9): the close point only once a close has moved it (§1).
     #[must_use]
     pub fn checkpoint(state: &InstanceState) -> Value {
         let mut ballots: Vec<&OpenBallot> = state.ballots.iter().collect();
         ballots.sort_unstable_by_key(|ballot| ballot.key);
-        json!({
+        let mut checkpoint = json!({
             "instance": {
                 "node": Self::number(state.node),
                 "incarnation": Self::number(state.incarnation),
             },
-            "ballots": ballots.into_iter().map(Self::record).collect::<Vec<Value>>(),
-            "next_receipt": Self::number(state.next_receipt),
-        })
+        });
+        if let Some(point) = state.close_point {
+            checkpoint["close_point"] = Self::point(point);
+        }
+        checkpoint["ballots"] = Value::Array(ballots.into_iter().map(Self::record).collect());
+        checkpoint["next_receipt"] = Self::number(state.next_receipt);
+        checkpoint
     }
 
     #[must_use]
@@ -71,6 +76,14 @@ impl View {
         let mut sorted = values.to_vec();
         sorted.sort_unstable();
         Value::Array(sorted.into_iter().map(Self::number).collect())
+    }
+
+    #[must_use]
+    pub fn point(point: Point) -> Value {
+        json!({
+            "question": Self::number(point.question),
+            "round": Self::number(point.round),
+        })
     }
 
     // A ballot's record (§4): its electorate and thresholds in ascending

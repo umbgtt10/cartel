@@ -39,6 +39,7 @@ fn encoded_of_a_rejection_that_carries_nothing_is_its_name_alone() {
         RejectionName::BallotNotOpen,
         RejectionName::NotAMember,
         RejectionName::AlreadyCounted,
+        RejectionName::BallotClosed,
     ]
     .map(|rejection| encoded(rejection, &Commands::open(States::key(1, 0, 0), &[1], &[1])));
 
@@ -52,7 +53,31 @@ fn encoded_of_a_rejection_that_carries_nothing_is_its_name_alone() {
             json!({"BallotNotOpen": {}}),
             json!({"NotAMember": {}}),
             json!({"AlreadyCounted": {}}),
+            json!({"BallotClosed": {}}),
         ]
+    );
+}
+
+#[test]
+fn encoded_of_close_behind_names_the_close_point() {
+    // Arrange
+    let state = InstanceState {
+        close_point: Some(States::point(5, 2)),
+        ..state()
+    };
+    let command = Commands::close(5, 1);
+
+    // Act
+    let written = RejectionName::CloseBehind.encoded(&Call {
+        command: &command,
+        before: &state,
+        after: &state,
+    });
+
+    // Assert
+    assert_eq!(
+        written,
+        json!({"CloseBehind": {"close_point": {"question": "5", "round": "2"}}})
     );
 }
 

@@ -6,6 +6,7 @@ use crate::memory_profile::MemoryProfile;
 use cartel::ballot::Ballot;
 use cartel::cartel::Cartel;
 use cartel::choice::Choice;
+use cartel::close_point::ClosePoint;
 use cartel::command::Command;
 use cartel::fresh::Fresh;
 use cartel::instance_id::InstanceId;
@@ -19,20 +20,28 @@ const OTHER: [u8; 32] = [0xbb; 32];
 // given, a majority their threshold, and every member's vote for a 32-byte
 // choice counted -- and, when busy, every vote followed by a repeat, an
 // equivocation, a non-member's vote, an opening of the open ballot and a
-// list of the ballots, each refused or a query. The counter runs from before
-// the instance is created.
+// list of the ballots, each refused or a query -- and, when closing, every
+// ballot closed once its votes are counted. The counter runs from before the
+// instance is created.
 pub struct BallotSequence<'a> {
     counter: &'a dyn AllocationCounter,
     members: u64,
     busy: bool,
+    closing: bool,
 }
 
 impl<'a> BallotSequence<'a> {
-    pub fn new(counter: &'a dyn AllocationCounter, members: u64, busy: bool) -> Self {
+    pub fn new(
+        counter: &'a dyn AllocationCounter,
+        members: u64,
+        busy: bool,
+        closing: bool,
+    ) -> Self {
         Self {
             counter,
             members,
             busy,
+            closing,
         }
     }
 
@@ -62,6 +71,14 @@ impl<'a> BallotSequence<'a> {
                         let _ = cartel.process(noise);
                     }
                 }
+            }
+            if self.closing {
+                let _ = cartel.process(Command::CloseBallots {
+                    before: ClosePoint {
+                        question: question + 1,
+                        round: 0,
+                    },
+                });
             }
         }
         let held_after_all = self.counter.live();

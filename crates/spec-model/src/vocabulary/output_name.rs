@@ -6,6 +6,7 @@ use serde_json::json;
 use serde_json::Map;
 use serde_json::Value;
 
+use crate::ballot_key::BallotKey;
 use crate::call::Call;
 use crate::lookup::Lookup;
 use crate::view::View;
@@ -19,6 +20,7 @@ pub enum OutputName {
     BallotOpened,
     VoteCounted,
     QuorumReached,
+    BallotsClosed,
     BallotShown,
     BallotsListed,
     BooksShown,
@@ -32,6 +34,7 @@ impl OutputName {
             (OutputName::BallotOpened, "BallotOpened"),
             (OutputName::VoteCounted, "VoteCounted"),
             (OutputName::QuorumReached, "QuorumReached"),
+            (OutputName::BallotsClosed, "BallotsClosed"),
             (OutputName::BallotShown, "BallotShown"),
             (OutputName::BallotsListed, "BallotsListed"),
             (OutputName::BooksShown, "BooksShown"),
@@ -39,9 +42,10 @@ impl OutputName {
         ],
     };
 
-    // What the output carries (§5-§9), read from the state the command met, or
-    // from the one it left where the output says what the call made: a vote's
-    // count and quorum, the checkpoint after it.
+    // What the output carries (§5-§10), read from the state the command met,
+    // or from the one it left where the output says what the call made: a
+    // vote's count and quorum, the checkpoint after it. A close names the
+    // ballots it closed: those below its point in the state it met.
     #[must_use]
     pub fn encoded(self, rejection: Option<RejectionName>, call: &Call) -> Value {
         let payload = match self {
@@ -65,6 +69,18 @@ impl OutputName {
                     "thresholds": View::numbers(&reached),
                     "voters": View::numbers(&voters),
                 })
+            }
+            OutputName::BallotsClosed => {
+                let point = call.command.before.expect("a point");
+                let mut closed: Vec<BallotKey> = call
+                    .before
+                    .ballots
+                    .iter()
+                    .map(|ballot| ballot.key)
+                    .filter(|key| Lookup::is_below(*key, point))
+                    .collect();
+                closed.sort_unstable();
+                json!({"ballots": closed.into_iter().map(View::ballot).collect::<Vec<Value>>()})
             }
             OutputName::BallotShown => {
                 json!({"record": View::record(Lookup::named(call.before, call.command))})

@@ -41,6 +41,7 @@ impl Cartel {
                 member,
                 choice,
             } => self.books.cast(*ballot, *member, choice.clone()),
+            Command::CloseBallots { before } => self.books.close(*before),
             Command::ShowBallot { ballot } => self.books.query_rows().ballot(*ballot),
             Command::ListBallots => self.books.query_rows().ballots(),
             Command::ShowBooks => Output::BooksShown(self.books.checkpoint()),

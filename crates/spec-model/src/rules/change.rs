@@ -5,6 +5,7 @@ use alloc::vec::Vec;
 
 use crate::command::Command;
 use crate::instance_state::InstanceState;
+use crate::lookup::Lookup;
 use crate::open_ballot::OpenBallot;
 use crate::vote::Vote;
 
@@ -15,6 +16,7 @@ pub enum Change {
     Nothing,
     BallotOpened,
     VoteCast,
+    BallotsClosed,
 }
 
 impl Change {
@@ -39,6 +41,13 @@ impl Change {
                         choice: command.choice.clone().expect("a choice"),
                     });
                 }),
+            Change::BallotsClosed => {
+                let point = command.before.expect("a point");
+                after
+                    .ballots
+                    .retain(|ballot| !Lookup::is_below(ballot.key, point));
+                after.close_point = Some(point);
+            }
         }
         after
     }

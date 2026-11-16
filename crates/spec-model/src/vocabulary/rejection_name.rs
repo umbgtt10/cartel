@@ -24,6 +24,8 @@ pub enum RejectionName {
     NotAMember,
     AlreadyCounted,
     Equivocation,
+    BallotClosed,
+    CloseBehind,
 }
 
 impl RejectionName {
@@ -40,12 +42,14 @@ impl RejectionName {
             (RejectionName::NotAMember, "NotAMember"),
             (RejectionName::AlreadyCounted, "AlreadyCounted"),
             (RejectionName::Equivocation, "Equivocation"),
+            (RejectionName::BallotClosed, "BallotClosed"),
+            (RejectionName::CloseBehind, "CloseBehind"),
         ],
     };
 
-    // What a refusal carries (§5, §6): the lowest member or threshold at
-    // fault, or the choice a member is already a voter of -- a refusal changes
-    // nothing, so the state is the one the command met.
+    // What a refusal carries (§5, §6, §10): the lowest member or threshold at
+    // fault, the choice a member is already a voter of, or the close point --
+    // a refusal changes nothing, so the state is the one the command met.
     #[must_use]
     pub fn encoded(self, call: &Call) -> Value {
         let name = Speller::name(&Self::SPELLING, self);
@@ -72,6 +76,10 @@ impl RejectionName {
                 let counted = Lookup::choice(ballot, command.member.expect("a member"))
                     .expect("a choice counted");
                 Variant::of(name, json!({"counted": View::choice(counted)}))
+            }
+            RejectionName::CloseBehind => {
+                let point = call.before.close_point.expect("a close point");
+                Variant::of(name, json!({"close_point": View::point(point)}))
             }
             _ => Variant::unit(name),
         }

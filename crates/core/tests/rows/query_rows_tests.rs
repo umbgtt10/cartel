@@ -14,6 +14,19 @@ fn books() -> Books {
 }
 
 #[test]
+fn ballot_of_a_ballot_below_the_close_point_is_refused_as_closed() {
+    // Arrange
+    let mut books = books();
+    let _ = books.close(Fixtures::point(2, 0));
+
+    // Act
+    let output = books.query_rows().ballot(Fixtures::ballot(1, 0, 1));
+
+    // Assert
+    assert_eq!(output, Output::CommandRejected(Rejection::BallotClosed));
+}
+
+#[test]
 fn ballot_of_a_ballot_not_open_is_refused() {
     // Arrange
     let books = books();

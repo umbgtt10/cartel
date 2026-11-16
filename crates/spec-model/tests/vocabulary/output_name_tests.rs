@@ -71,6 +71,37 @@ fn encoded_of_ballot_shown_is_the_ballot_s_record() {
 }
 
 #[test]
+fn encoded_of_ballots_closed_is_the_ballots_below_the_point_in_canonical_order() {
+    // Arrange
+    let command = Commands::close(2, 0);
+    let state = States::holding(vec![
+        States::ballot(States::key(1, 0, 1), &[1], &[1], &[]),
+        States::ballot(States::key(2, 0, 0), &[1], &[1], &[]),
+        States::ballot(States::key(1, 0, 0), &[1], &[1], &[]),
+    ]);
+    let after = Change::BallotsClosed.applied(&command, &state);
+
+    // Act
+    let output = OutputName::BallotsClosed.encoded(
+        None,
+        &Call {
+            command: &command,
+            before: &state,
+            after: &after,
+        },
+    );
+
+    // Assert
+    assert_eq!(
+        output,
+        json!({"BallotsClosed": {"ballots": [
+            {"question": "1", "round": "0", "phase": "0"},
+            {"question": "1", "round": "0", "phase": "1"},
+        ]}})
+    );
+}
+
+#[test]
 fn encoded_of_ballots_listed_is_the_open_ballots() {
     // Arrange
     let command = Commands::of(CommandName::ListBallots);

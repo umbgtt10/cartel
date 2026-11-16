@@ -14,6 +14,7 @@ use sha2::Sha256;
 use std::fmt::Write;
 use std::fs::read_dir;
 use std::fs::read_to_string;
+use std::path::Path;
 use std::path::PathBuf;
 
 // The words DESIGN.md §4 leaves out: each is one protocol's, a role, a phase's
@@ -139,6 +140,23 @@ fn names(value: &Value, found: &mut Vec<String>) {
     }
 }
 
+// Every Rust source file under a folder, its subfolders included.
+fn sources(folder: &Path) -> Vec<PathBuf> {
+    read_dir(folder)
+        .expect("a source folder")
+        .map(|entry| entry.expect("an entry").path())
+        .flat_map(|path| {
+            if path.is_dir() {
+                sources(&path)
+            } else if path.extension().is_some_and(|extension| extension == "rs") {
+                vec![path]
+            } else {
+                Vec::new()
+            }
+        })
+        .collect()
+}
+
 fn words(name: &str) -> Vec<String> {
     let mut split = Vec::new();
     let mut current = String::new();
@@ -200,9 +218,9 @@ fn declared_of_the_crate_holds_no_word_the_vocabulary_leaves_out() {
     let source = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../crates/core/src");
 
     // Act
-    let found: Vec<String> = read_dir(&source)
-        .expect("the crate's source")
-        .map(|entry| read_to_string(entry.expect("a source file").path()).expect("its text"))
+    let found: Vec<String> = sources(&source)
+        .into_iter()
+        .map(|path| read_to_string(path).expect("a source file's text"))
         .flat_map(|text| declared(&text))
         .collect();
 

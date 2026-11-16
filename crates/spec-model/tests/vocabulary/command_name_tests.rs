@@ -19,6 +19,7 @@ fn spelling_of_every_command_is_its_name() {
         vec![
             "OpenBallot",
             "CastVote",
+            "CloseBallots",
             "ShowBallot",
             "ListBallots",
             "ShowBooks"

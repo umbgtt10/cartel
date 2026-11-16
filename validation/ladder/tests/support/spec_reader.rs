@@ -3,6 +3,7 @@
 
 use cartel::ballot::Ballot;
 use cartel::choice::Choice;
+use cartel::close_point::ClosePoint;
 use cartel::command::Command;
 use cartel::fresh::Fresh;
 use cartel::instance_id::InstanceId;
@@ -29,6 +30,12 @@ impl SpecReader {
                 ballot: Self::ballot(&payload["ballot"]),
                 member: Self::number(&payload["member"]),
                 choice: Self::choice(&payload["choice"]),
+            },
+            "CloseBallots" => Command::CloseBallots {
+                before: ClosePoint {
+                    question: Self::number(&payload["before"]["question"]),
+                    round: Self::number(&payload["before"]["round"]),
+                },
             },
             "ShowBallot" => Command::ShowBallot {
                 ballot: Self::ballot(&payload["ballot"]),

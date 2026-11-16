@@ -1,13 +1,13 @@
 # cartel — the specification
 
-**Version 0.1.0.** The four parts of this specification are versioned together: this prose, the data model in
+**Version 0.2.0.** The four parts of this specification are versioned together: this prose, the data model in
 [`schema.json`](schema.json), the decision table in [`matrix.json`](matrix.json) and the conformance vectors in
 [`vectors/`](vectors/). It is normative; the `cartel` crate is one implementation of it, and where the two disagree
 the specification is right ([`P0-ADR-SpecificationIsNormativeCrateIsReference`](../docs/ADRs/P0-ADR-SpecificationIsNormativeCrateIsReference.md)).
 
-**What 0.1.0 covers:** ballots. An instance, created fresh, and the observer it reports every call to;
-`OpenBallot` and `CastVote`; the queries `ShowBallot`, `ListBallots` and `ShowBooks`, the checkpoint; each with
-every row it has. What later versions add is §10.
+**What 0.2.0 covers:** ballots and closing. An instance, created fresh, and the observer it reports every call to;
+`OpenBallot`, `CastVote` and `CloseBallots`; the queries `ShowBallot`, `ListBallots` and `ShowBooks`, the
+checkpoint; each with every row it has. 0.2.0 is 0.1.0 with closing (§10). What later versions add is §11.
 
 ## 1. Conventions
 
@@ -73,14 +73,20 @@ repeat the ballot, the member or the choice the command carried.
 being decided, the round one attempt at deciding it, the phase a stage of a round, each named by the protocol that
 drives the instance ([`P1-ADR-ABallotIsAQuestionARoundAndAPhase`](../docs/ADRs/P1-ADR-ABallotIsAQuestionARoundAndAPhase.md)).
 
-**The books are the open ballots**, each with its record:
+**The books are the open ballots and the close point.** Each open ballot has its record:
 - **the ballot;**
 - **its electorate:** the members who may vote in it, distinct, in ascending order;
 - **its thresholds:** distinct numbers, each from 1 to the electorate's size, in ascending order;
 - **its tally:** for each choice voted in it, its voters, in ascending order. A choice no one voted for is not in
   the tally.
 
-A ballot is open from the `OpenBallot` that opens it. In 0.1.0 nothing closes one.
+A ballot is open from the `OpenBallot` that opens it until a `CloseBallots` closes it (§10).
+
+**The close point** is none on a fresh instance, and a question and a round once a close has moved it. Points are
+ordered by question, then round. A ballot is **below** the close point when its question and round come before the
+point's, whatever its phase; a ballot whose question and round are the point's is not below it. A ballot below the
+close point is **closed**: it is not open, and cannot be opened again, and the rows that meet it say it is closed,
+not that it is unknown ([`P1-ADR-ClosingIsExplicitAndRemembered`](../docs/ADRs/P1-ADR-ClosingIsExplicitAndRemembered.md)).
 
 **A member is a voter of at most one choice in a ballot.** A choice's **count** is how many voters it has. A
 threshold is **reached** for a choice by the vote that makes the choice's count equal to it: once, and only by
@@ -88,7 +94,8 @@ that vote. A vote raises its choice's count by exactly one and a ballot's thresh
 reaches at most one threshold.
 
 **Ballots do not interfere.** A command that names a ballot changes no other ballot's record, and what it answers
-depends on no other ballot's record. A member may vote one choice in one ballot and another in the next.
+depends on no other ballot's record. A member may vote one choice in one ballot and another in the next. A close
+names a point, not a ballot: it closes every ballot below the point and leaves the rest as they were.
 
 **Forgetting is safe.** Given any subset of the votes counted in a ballot, the rules reach no threshold for a choice
 that the whole set did not reach for it. A crash can make an instance miss a quorum, and never report one the votes
@@ -112,6 +119,7 @@ for as long as it is open ([`P1-ADR-TheElectorateTravelsWithTheBallot`](../docs/
 | `no-thresholds` | `thresholds` is empty | `CommandRejected(NoThresholds)` |
 | `threshold-out-of-range` | a threshold is 0, or above the number of members in `electorate` | `CommandRejected(ThresholdOutOfRange { threshold })`, the lowest such threshold |
 | `repeated-threshold` | a threshold is given more than once | `CommandRejected(RepeatedThreshold { threshold })`, the lowest such threshold |
+| `ballot-closed` | `ballot` is below the close point | `CommandRejected(BallotClosed)` |
 | `ballot-already-open` | `ballot` is open | `CommandRejected(BallotAlreadyOpen)` |
 | `ballot-opened` | otherwise | `BallotOpened` |
 
@@ -128,6 +136,7 @@ verified it: Cartel checks no signature and keeps no evidence
 
 | row | situation | output |
 |---|---|---|
+| `ballot-closed` | `ballot` is below the close point | `CommandRejected(BallotClosed)` |
 | `ballot-not-open` | `ballot` is not open | `CommandRejected(BallotNotOpen)` |
 | `not-a-member` | `member` is not in the ballot's electorate | `CommandRejected(NotAMember)` |
 | `already-counted` | `member` is a voter of `choice` in the ballot | `CommandRejected(AlreadyCounted)` |
@@ -152,6 +161,7 @@ offered is the command's, beside the output in the log.
 
 | row | situation | output |
 |---|---|---|
+| `ballot-closed` | `ballot` is below the close point | `CommandRejected(BallotClosed)` |
 | `ballot-not-open` | `ballot` is not open | `CommandRejected(BallotNotOpen)` |
 | `ballot-shown` | otherwise | `BallotShown { record }`, the ballot's record |
 
@@ -171,17 +181,33 @@ offered is the command's, beside the output in the log.
 |---|---|---|
 | `books-shown` | always | `BooksShown { checkpoint }` |
 
-**The checkpoint** is the instance id, every open ballot's record in canonical order, and the next receipt's
-number. It describes the state after its own call: its next receipt number is one more than the number of the
+**The checkpoint** is the instance id, the close point when there is one, every open ballot's record in canonical
+order, and the next receipt's number. While there is no close point, the checkpoint has no member for it (§1). It describes the state after its own call: its next receipt number is one more than the number of the
 receipt that carries it.
 
-## 10. Not yet
+## 10. `CloseBallots`
+
+**Carries:** `before`, a point: a question and a round. When to let go is the protocol's: when a round or a
+question is done, it closes what lies before it
+([`P1-ADR-ClosingIsExplicitAndRemembered`](../docs/ADRs/P1-ADR-ClosingIsExplicitAndRemembered.md)).
+
+| row | situation | output |
+|---|---|---|
+| `close-behind` | there is a close point, and `before` is at it or before it | `CommandRejected(CloseBehind { close_point })`, the close point |
+| `ballots-closed` | otherwise | `BallotsClosed { ballots }`, the ballots it closed, in canonical order |
+
+**Closed:** the close point becomes `before`, and every open ballot below it is closed and forgotten, its record
+gone. Ballots at or above the point are left as they were. A close that closes no ballot still moves the point.
+
+**The point only moves forward.** A close at or behind it is refused and changes nothing; the refusal says where
+the point stands, so a protocol that closes backwards -- a bug, or a replay after a restart -- shows in the log.
+
+## 11. Not yet
 
 The order of building is [`IMPLEMENTATION-PLAN.md`](../docs/IMPLEMENTATION-PLAN.md). Each later version only adds:
 
 | version | adds |
 |---|---|
-| 0.2.0 | closing: `CloseBallots`, the close point, refusals below it |
 | 0.3.0 | the watermark: `MeasureWatermark` |
 | 0.4.0 | restoring an instance from a checkpoint, under a new incarnation |
 | 0.5.0 | the optional bounds: open ballots, electorate, choice length |
@@ -193,7 +219,7 @@ The order of building is [`IMPLEMENTATION-PLAN.md`](../docs/IMPLEMENTATION-PLAN.
 - an answer that a threshold can no longer be reached;
 - weights, joint consensus and federated quorums, as new forms of the quorum.
 
-## 11. Conformance
+## 12. Conformance
 
 **A vector is an initial state, steps, and a final state.** The initial state is an origin: in 0.1.0, fresh. Each
 step is a command and the receipt it must be answered with. The final state is the checkpoint a `ShowBooks` issued

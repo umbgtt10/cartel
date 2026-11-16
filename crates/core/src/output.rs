@@ -20,6 +20,9 @@ pub enum Output {
         thresholds: Vec<u64>,
         voters: Vec<u64>,
     },
+    BallotsClosed {
+        ballots: Vec<Ballot>,
+    },
     BallotShown(BallotRecord),
     BallotsListed {
         ballots: Vec<Ballot>,

@@ -1,0 +1,70 @@
+{
+  "description": "A close at the close point is refused: the point only moves forward.",
+  "rows": [
+    "ballots-closed",
+    "close-behind"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "CloseBallots": {
+          "before": {
+            "question": "5",
+            "round": "2"
+          }
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "BallotsClosed": {
+            "ballots": []
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "CloseBallots": {
+          "before": {
+            "question": "5",
+            "round": "2"
+          }
+        }
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "CommandRejected": {
+            "CloseBehind": {
+              "close_point": {
+                "question": "5",
+                "round": "2"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "close_point": {
+      "question": "5",
+      "round": "2"
+    },
+    "ballots": [],
+    "next_receipt": "4"
+  }
+}

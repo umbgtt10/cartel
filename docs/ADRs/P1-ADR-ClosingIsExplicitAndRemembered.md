@@ -19,7 +19,8 @@ before it is closed and forgotten.
 Cartel remembers the highest point it has closed to. A later open of, or vote in, a ballot before it is refused as
 closed, not as not open.
 
-The point only moves forward: closing to a point at or behind it closes nothing, and is answered as such.
+The point only moves forward: a close to a point at or behind it is refused, changing nothing, and the refusal
+names the close point, so a protocol closing backwards -- a bug, or a replay after a restart -- shows in the log.
 
 ## Forcing constraints / Evidence
 

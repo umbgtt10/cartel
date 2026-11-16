@@ -1,0 +1,71 @@
+{
+  "description": "A close below which no ballot is open closes none, and moves the point all the same.",
+  "rows": [
+    "ballots-closed",
+    "books-shown"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "CloseBallots": {
+          "before": {
+            "question": "5",
+            "round": "0"
+          }
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "BallotsClosed": {
+            "ballots": []
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "ShowBooks": {}
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "BooksShown": {
+            "checkpoint": {
+              "instance": {
+                "node": "1",
+                "incarnation": "1"
+              },
+              "close_point": {
+                "question": "5",
+                "round": "0"
+              },
+              "ballots": [],
+              "next_receipt": "3"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "close_point": {
+      "question": "5",
+      "round": "0"
+    },
+    "ballots": [],
+    "next_receipt": "4"
+  }
+}

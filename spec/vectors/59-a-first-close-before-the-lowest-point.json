@@ -1,0 +1,70 @@
+{
+  "description": "On a fresh instance any close moves the point, the lowest one included; nothing lies before it.",
+  "rows": [
+    "ballots-closed",
+    "close-behind"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "CloseBallots": {
+          "before": {
+            "question": "0",
+            "round": "0"
+          }
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "BallotsClosed": {
+            "ballots": []
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "CloseBallots": {
+          "before": {
+            "question": "0",
+            "round": "0"
+          }
+        }
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "CommandRejected": {
+            "CloseBehind": {
+              "close_point": {
+                "question": "0",
+                "round": "0"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "close_point": {
+      "question": "0",
+      "round": "0"
+    },
+    "ballots": [],
+    "next_receipt": "4"
+  }
+}

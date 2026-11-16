@@ -4,19 +4,21 @@
 use crate::ballot::Ballot;
 use crate::open_ballot::OpenBallot;
 use crate::rejection::Rejection;
+use crate::rows::closing_rows::ClosingRows;
 use alloc::collections::BTreeMap;
 use alloc::collections::BTreeSet;
 
 // The rows a ballot meets before it is opened, in the matrix's order: what the
-// command carries -- its electorate, then its thresholds -- and then whether
-// the ballot is open already.
+// command carries -- its electorate, then its thresholds -- then whether the
+// ballot is below the close point, and whether it is open already.
 pub struct OpeningRows<'a> {
     ballots: &'a BTreeMap<Ballot, OpenBallot>,
+    closing: ClosingRows,
 }
 
 impl<'a> OpeningRows<'a> {
-    pub fn new(ballots: &'a BTreeMap<Ballot, OpenBallot>) -> Self {
-        Self { ballots }
+    pub fn new(ballots: &'a BTreeMap<Ballot, OpenBallot>, closing: ClosingRows) -> Self {
+        Self { ballots, closing }
     }
 
     // The first row that refuses the opening, or none: then it is opened.
@@ -46,6 +48,9 @@ impl<'a> OpeningRows<'a> {
         }
         if let Some(threshold) = Self::first_repeat(thresholds) {
             return Some(Rejection::RepeatedThreshold { threshold });
+        }
+        if self.closing.covers(ballot) {
+            return Some(Rejection::BallotClosed);
         }
         self.ballots
             .contains_key(&ballot)

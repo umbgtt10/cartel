@@ -162,11 +162,13 @@ Every refusal is one output carrying a specific rejection:
 
 | command | rejections |
 |---|---|
-| opening a ballot | already open, below the close point, empty electorate, repeated member, threshold out of range, repeated threshold, books full, electorate too large |
-| casting a vote | not open, below the close point, not a member, already counted, an equivocation carrying the choice counted (the choice offered is the command's), choice too long |
+| opening a ballot | empty electorate, repeated member, threshold out of range, repeated threshold, below the close point, already open, books full, electorate too large |
+| casting a vote | below the close point, not open, not a member, already counted, an equivocation carrying the choice counted (the choice offered is the command's), choice too long |
+| showing a ballot | below the close point, not open |
+| closing | at or behind the close point, carrying it |
 | measuring a watermark | repeated member, threshold out of range |
 
-A close at or behind the close point is answered, closing nothing.
+A ballot below the close point is refused as closed, not as not open: late is not unknown.
 
 ## 6. Where Cartel sits
 
