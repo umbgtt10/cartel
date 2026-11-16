@@ -369,6 +369,96 @@
    "id": "74-positions-span-every-u64",
    "version": "0.3.0",
    "sha256": "abcc06bb5205d3936014aea2d6c95868f7732b5db3a60f03e3c1a3a39b6ac96e"
+  },
+  {
+   "id": "75-an-electorate-at-the-bound-opens",
+   "version": "0.4.0",
+   "sha256": "2aa910dbbe314deef657353b2a757f204404c708f89231cc1f8be386770a4920"
+  },
+  {
+   "id": "76-an-electorate-above-the-bound-is-refused",
+   "version": "0.4.0",
+   "sha256": "a184a5110494fe507598d8c33d796d911024126ae347f2907fe762bfe2da679e"
+  },
+  {
+   "id": "77-an-electorate-bound-of-zero-opens-nothing",
+   "version": "0.4.0",
+   "sha256": "cd4dc56fb650971fb6c7d74b3a080feba8a47b0d530c2677cbf30c7b4bac94c8"
+  },
+  {
+   "id": "78-the-electorate-s-size-is-checked-after-its-form",
+   "version": "0.4.0",
+   "sha256": "fcd5441ee9f3315a2dfcaee03c0beff4b3df9d4206ce13fe1ce212afa36fc019"
+  },
+  {
+   "id": "79-the-electorate-s-size-is-checked-before-the-books",
+   "version": "0.4.0",
+   "sha256": "2596558bbdf635f2fe2aa11aa5169fb565b34e9bac103e9b98b049a784fc559d"
+  },
+  {
+   "id": "80-books-full-at-the-bound",
+   "version": "0.4.0",
+   "sha256": "f1ec88646fe1c8901c83d419501eeb3692d672f5271e440ed15880f5f0f319f2"
+  },
+  {
+   "id": "81-a-close-frees-room",
+   "version": "0.4.0",
+   "sha256": "e46f037d719c51e3113f6c7568fc01c2d4e522d428b5c367fc9a15a493aa675b"
+  },
+  {
+   "id": "82-an-open-ballots-bound-of-zero-opens-nothing",
+   "version": "0.4.0",
+   "sha256": "2b7059f8068e116b881cf686383cc93a7ff4e177b47605da37345f0bd1e4d71e"
+  },
+  {
+   "id": "83-books-full-is-checked-after-the-ballot",
+   "version": "0.4.0",
+   "sha256": "5456ff3802972d966686be865909415d5f080d956d6a60b92a8a8519b7773796"
+  },
+  {
+   "id": "84-books-full-is-checked-last",
+   "version": "0.4.0",
+   "sha256": "d128e51a5f7ccd21a81688ba4eeac490494cccc765db2ea6f7b530d0f3dee934"
+  },
+  {
+   "id": "85-a-choice-at-the-bound-is-counted",
+   "version": "0.4.0",
+   "sha256": "99aed98adba136077e1ec849a72176d53c45f832eb837d72a6a631cda2b9d0d8"
+  },
+  {
+   "id": "86-a-choice-above-the-bound-is-refused",
+   "version": "0.4.0",
+   "sha256": "2ebf1b7335be97d6e33e830b9c2f37c9d9a5c6b995ba199f8373946a73f01481"
+  },
+  {
+   "id": "87-a-choice-bound-of-zero-counts-only-the-empty-choice",
+   "version": "0.4.0",
+   "sha256": "edb4bafdb6859dde02bf50a4ec831a8b020fc9190c3058eb30afaaf698510e46"
+  },
+  {
+   "id": "88-a-choice-too-long-is-checked-first",
+   "version": "0.4.0",
+   "sha256": "a10b29feb0586473519a7dde06c8644b998bc62d419b56f0420469425f4f19ee"
+  },
+  {
+   "id": "89-every-bound-in-the-checkpoint",
+   "version": "0.4.0",
+   "sha256": "f57e7e8db72a2d47d75de18b513e1fa86f9147a6d0c27d3ad4072664f45d7a59"
+  },
+  {
+   "id": "90-a-bound-left-out-is-no-bound",
+   "version": "0.4.0",
+   "sha256": "de2a46ff5577610667aef42b0992e81a59ddec26432343da27e5a22e543245a7"
+  },
+  {
+   "id": "91-measuring-is-not-bounded",
+   "version": "0.4.0",
+   "sha256": "a4be8ce1b5eb3037b7c6368fe9229bcc24eb6d1f3f12eed037253295916ef6f5"
+  },
+  {
+   "id": "92-bounds-span-every-u64",
+   "version": "0.4.0",
+   "sha256": "a56e3802011643e5dfb1e7326fc2a8c1abff14c12abe0466a7df348b92e73777"
   }
  ]
 }

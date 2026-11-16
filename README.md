@@ -2,14 +2,15 @@
 
 A `no_std`, protocol-independent **consensus bookkeeper**.
 
-**Slices 1 to 3 of five are built** (0.4.0, 2026-11-16): ballots, closing and the watermark -- an instance, created
-fresh, with an observer told of every call; `OpenBallot`, `CastVote` and `CloseBallots`; `MeasureWatermark`; the
-queries `ShowBallot`, `ListBallots` and `ShowBooks`, the checkpoint -- conformant to version 0.3.0 of the
-specification in [`spec/`](spec/SPEC.md). Version 0.4.0 is on [crates.io](https://crates.io/crates/cartel).
+**Slices 1 to 4 of five are built** (0.5.0, 2026-11-16): ballots, closing, the watermark and the bounds -- an
+instance, created fresh within the bounds it is given, with an observer told of every call; `OpenBallot`, `CastVote`
+and `CloseBallots`; `MeasureWatermark`; the queries `ShowBallot`, `ListBallots` and `ShowBooks`, the checkpoint --
+conformant to version 0.4.0 of the specification in [`spec/`](spec/SPEC.md). Version 0.5.0 is on
+[crates.io](https://crates.io/crates/cartel).
 
 The design is twenty-three ADRs in [`docs/ADRs/`](docs/ADRs/README.md), the vocabulary and the commands in
 [`docs/DESIGN.md`](docs/DESIGN.md), the order of building in [`docs/IMPLEMENTATION-PLAN.md`](docs/IMPLEMENTATION-PLAN.md):
-bounds and claims come next; restoring from a checkpoint waits until a protocol asks.
+claims come next; restoring from a checkpoint waits until a protocol asks.
 
 ## What it does
 
@@ -21,6 +22,10 @@ bounds and claims come next; restoring from a checkpoint waits until a protocol 
 A ballot is a question, a round and a phase. Its electorate and its thresholds are handed in when it opens, so a
 membership change never touches a ballot already open. A choice is opaque bytes. A member voting two different
 choices in one ballot is refused, the choice already counted named beside the one offered.
+
+**Bounded when it must be.** An instance may be given the most ballots open at once, the most members an electorate
+may name and the most bytes a choice may have. A command that would exceed one is refused, so the books never hold
+more than the bounds allow, whatever faulty members send.
 
 **What it leaves to the protocol that drives it:**
 - verifying signatures;

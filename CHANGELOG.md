@@ -5,6 +5,13 @@ version it conforms to. The first release is 0.2.0: 0.1.0 on crates.io is the na
 
 ## [Unreleased]
 
+## [0.5.0] — 2026-11-16
+
+### Published on crates.io
+
+Slice 4, the bounds. Conforms to the specification's version 0.4.0; its 18 new vectors are released beside the 74
+before them, which it answers alike.
+
 #### Added
 - The bounds (slice 4, the specification's 0.4.0): `Fresh` carries `Bounds` -- the most ballots open at once, the
   most members an electorate may name, the most bytes a choice may have -- each optional, and `Bounds::default()`
