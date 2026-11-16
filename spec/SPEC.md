@@ -1,13 +1,14 @@
 # cartel — the specification
 
-**Version 0.2.0.** The four parts of this specification are versioned together: this prose, the data model in
+**Version 0.3.0.** The four parts of this specification are versioned together: this prose, the data model in
 [`schema.json`](schema.json), the decision table in [`matrix.json`](matrix.json) and the conformance vectors in
 [`vectors/`](vectors/). It is normative; the `cartel` crate is one implementation of it, and where the two disagree
 the specification is right ([`P0-ADR-SpecificationIsNormativeCrateIsReference`](../docs/ADRs/P0-ADR-SpecificationIsNormativeCrateIsReference.md)).
 
-**What 0.2.0 covers:** ballots and closing. An instance, created fresh, and the observer it reports every call to;
-`OpenBallot`, `CastVote` and `CloseBallots`; the queries `ShowBallot`, `ListBallots` and `ShowBooks`, the
-checkpoint; each with every row it has. 0.2.0 is 0.1.0 with closing (§10). What later versions add is §11.
+**What 0.3.0 covers:** ballots, closing and the watermark. An instance, created fresh, and the observer it reports
+every call to; `OpenBallot`, `CastVote` and `CloseBallots`; `MeasureWatermark`; the queries `ShowBallot`,
+`ListBallots` and `ShowBooks`, the checkpoint; each with every row it has. 0.3.0 is 0.2.0 with the watermark (§11).
+What later versions add is §12.
 
 ## 1. Conventions
 
@@ -202,13 +203,32 @@ gone. Ballots at or above the point are left as they were. A close that closes n
 **The point only moves forward.** A close at or behind it is refused and changes nothing; the refusal says where
 the point stands, so a protocol that closes backwards -- a bug, or a replay after a restart -- shows in the log.
 
-## 11. Not yet
+## 11. `MeasureWatermark`
+
+**Carries:** `positions`, each a member and the position it has reached; `threshold`. The positions are the
+protocol's own, given each time: how far each member's log is matched, or which round of its messages each member
+has acknowledged. Cartel keeps none of them, and the order they are given in does not matter
+([`P1-ADR-TheWatermarkIsMeasuredNotKept`](../docs/ADRs/P1-ADR-TheWatermarkIsMeasuredNotKept.md)).
+
+| row | situation | output |
+|---|---|---|
+| `repeated-member` | `positions` name a member more than once | `CommandRejected(RepeatedMember { member })`, the lowest such member |
+| `threshold-out-of-range` | `threshold` is 0, or above the number of members in `positions` | `CommandRejected(ThresholdOutOfRange { threshold })` |
+| `watermark-measured` | otherwise | `WatermarkMeasured { position }`, the watermark |
+
+**The watermark** is the highest position at least `threshold` of the members have reached: a position a member has
+reached when its own is that position or beyond. Every member reaches 0, so the watermark of any threshold in range
+is a position some member gave.
+
+**Changes nothing** but the receipt number. It names no ballot and touches none; what the watermark means -- what
+may be committed, which reads a round confirms -- is the protocol's.
+
+## 12. Not yet
 
 The order of building is [`IMPLEMENTATION-PLAN.md`](../docs/IMPLEMENTATION-PLAN.md). Each later version only adds:
 
 | version | adds |
 |---|---|
-| 0.3.0 | the watermark: `MeasureWatermark` |
 | 0.4.0 | restoring an instance from a checkpoint, under a new incarnation |
 | 0.5.0 | the optional bounds: open ballots, electorate, choice length |
 | 0.6.0 | claims: `ExamineClaim` |
@@ -219,7 +239,7 @@ The order of building is [`IMPLEMENTATION-PLAN.md`](../docs/IMPLEMENTATION-PLAN.
 - an answer that a threshold can no longer be reached;
 - weights, joint consensus and federated quorums, as new forms of the quorum.
 
-## 12. Conformance
+## 13. Conformance
 
 **A vector is an initial state, steps, and a final state.** The initial state is an origin: in 0.1.0, fresh. Each
 step is a command and the receipt it must be answered with. The final state is the checkpoint a `ShowBooks` issued

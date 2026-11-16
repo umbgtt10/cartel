@@ -1,0 +1,63 @@
+{
+  "description": "Of the members named more than once, the refusal names the lowest.",
+  "rows": [
+    "repeated-member"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "MeasureWatermark": {
+          "positions": [
+            {
+              "member": "5",
+              "position": "1"
+            },
+            {
+              "member": "3",
+              "position": "1"
+            },
+            {
+              "member": "5",
+              "position": "2"
+            },
+            {
+              "member": "3",
+              "position": "2"
+            },
+            {
+              "member": "9",
+              "position": "0"
+            }
+          ],
+          "threshold": "1"
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "CommandRejected": {
+            "RepeatedMember": {
+              "member": "3"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [],
+    "next_receipt": "3"
+  }
+}

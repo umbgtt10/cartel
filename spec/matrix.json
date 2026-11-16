@@ -1,5 +1,5 @@
 {
- "version": "0.2.0",
+ "version": "0.3.0",
  "rows": [
   {
    "id": "empty-electorate",
@@ -13,9 +13,10 @@
   {
    "id": "repeated-member",
    "commands": [
-    "OpenBallot"
+    "OpenBallot",
+    "MeasureWatermark"
    ],
-   "situation": "`electorate` names a member more than once",
+   "situation": "the members the command gives -- `electorate`, or those of `positions` -- name one more than once",
    "output": "CommandRejected",
    "rejection": "RepeatedMember"
   },
@@ -31,9 +32,10 @@
   {
    "id": "threshold-out-of-range",
    "commands": [
-    "OpenBallot"
+    "OpenBallot",
+    "MeasureWatermark"
    ],
-   "situation": "a threshold is 0, or above the number of members in `electorate`",
+   "situation": "a threshold the command gives is 0, or above the number of members it gives",
    "output": "CommandRejected",
    "rejection": "ThresholdOutOfRange"
   },
@@ -143,6 +145,14 @@
    ],
    "situation": "otherwise: the close point becomes `before`, and every open ballot below it is closed",
    "output": "BallotsClosed"
+  },
+  {
+   "id": "watermark-measured",
+   "commands": [
+    "MeasureWatermark"
+   ],
+   "situation": "otherwise: the highest position at least `threshold` of the members have reached",
+   "output": "WatermarkMeasured"
   },
   {
    "id": "ballot-shown",

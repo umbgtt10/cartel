@@ -1,0 +1,82 @@
+{
+  "description": "The positions are given in any order, and answered alike.",
+  "rows": [
+    "watermark-measured"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "MeasureWatermark": {
+          "positions": [
+            {
+              "member": "3",
+              "position": "7"
+            },
+            {
+              "member": "1",
+              "position": "5"
+            },
+            {
+              "member": "2",
+              "position": "3"
+            }
+          ],
+          "threshold": "2"
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "WatermarkMeasured": {
+            "position": "5"
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "MeasureWatermark": {
+          "positions": [
+            {
+              "member": "2",
+              "position": "3"
+            },
+            {
+              "member": "3",
+              "position": "7"
+            },
+            {
+              "member": "1",
+              "position": "5"
+            }
+          ],
+          "threshold": "2"
+        }
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "WatermarkMeasured": {
+            "position": "5"
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [],
+    "next_receipt": "4"
+  }
+}

@@ -84,7 +84,7 @@ fn process_of_every_vector_answers_its_receipts_and_its_final_state() {
         .collect();
 
     // Assert
-    assert_eq!(vectors.len(), 60);
+    assert_eq!(vectors.len(), 74);
     assert!(departures.is_empty(), "{departures:#?}");
 }
 

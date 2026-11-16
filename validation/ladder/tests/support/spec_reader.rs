@@ -7,6 +7,7 @@ use cartel::close_point::ClosePoint;
 use cartel::command::Command;
 use cartel::fresh::Fresh;
 use cartel::instance_id::InstanceId;
+use cartel::member_position::MemberPosition;
 use cartel::origin::Origin;
 use serde_json::Value;
 
@@ -36,6 +37,18 @@ impl SpecReader {
                     question: Self::number(&payload["before"]["question"]),
                     round: Self::number(&payload["before"]["round"]),
                 },
+            },
+            "MeasureWatermark" => Command::MeasureWatermark {
+                positions: payload["positions"]
+                    .as_array()
+                    .expect("positions")
+                    .iter()
+                    .map(|given| MemberPosition {
+                        member: Self::number(&given["member"]),
+                        position: Self::number(&given["position"]),
+                    })
+                    .collect(),
+                threshold: Self::number(&payload["threshold"]),
             },
             "ShowBallot" => Command::ShowBallot {
                 ballot: Self::ballot(&payload["ballot"]),

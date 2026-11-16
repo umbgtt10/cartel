@@ -1,0 +1,55 @@
+{
+  "description": "Positions that name a member twice are refused, naming it.",
+  "rows": [
+    "repeated-member"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "MeasureWatermark": {
+          "positions": [
+            {
+              "member": "1",
+              "position": "5"
+            },
+            {
+              "member": "2",
+              "position": "3"
+            },
+            {
+              "member": "1",
+              "position": "9"
+            }
+          ],
+          "threshold": "2"
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "CommandRejected": {
+            "RepeatedMember": {
+              "member": "1"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [],
+    "next_receipt": "3"
+  }
+}

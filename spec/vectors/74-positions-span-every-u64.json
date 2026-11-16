@@ -1,0 +1,82 @@
+{
+  "description": "Members and positions span every u64, 0 and the top included.",
+  "rows": [
+    "watermark-measured"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "MeasureWatermark": {
+          "positions": [
+            {
+              "member": "0",
+              "position": "18446744073709551615"
+            },
+            {
+              "member": "18446744073709551615",
+              "position": "0"
+            },
+            {
+              "member": "7",
+              "position": "18446744073709551615"
+            }
+          ],
+          "threshold": "2"
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "WatermarkMeasured": {
+            "position": "18446744073709551615"
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "MeasureWatermark": {
+          "positions": [
+            {
+              "member": "0",
+              "position": "18446744073709551615"
+            },
+            {
+              "member": "18446744073709551615",
+              "position": "0"
+            },
+            {
+              "member": "7",
+              "position": "18446744073709551615"
+            }
+          ],
+          "threshold": "3"
+        }
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "WatermarkMeasured": {
+            "position": "0"
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [],
+    "next_receipt": "4"
+  }
+}

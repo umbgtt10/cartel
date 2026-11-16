@@ -6,11 +6,19 @@
 
 //! A `no_std`, protocol-independent consensus bookkeeper.
 //!
-//! **Slices 1 and 2, ballots and closing:** an instance, created fresh, with
-//! an observer told of every call; `OpenBallot`, `CastVote` and
-//! `CloseBallots`; the queries `ShowBallot`, `ListBallots` and `ShowBooks`,
-//! the checkpoint -- conformant to version 0.2.0 of the specification in the
-//! repository's `spec/`.
+//! **Slices 1 to 3, ballots, closing and the watermark:** an instance,
+//! created fresh, with an observer told of every call; `OpenBallot`,
+//! `CastVote` and `CloseBallots`; `MeasureWatermark`; the queries
+//! `ShowBallot`, `ListBallots` and `ShowBooks`, the checkpoint -- conformant to
+//! version 0.3.0 of the specification in the repository's `spec/`.
+//!
+//! # The watermark
+//!
+//! Given each member's position -- how far its log is matched, which round
+//! it has acknowledged -- and a threshold, cartel answers the highest position
+//! at least that many members have reached. It keeps no position: the
+//! protocol owns them and hands them in each time, so the books are never
+//! kept twice.
 //!
 //! # Closing
 //!
@@ -59,6 +67,7 @@ pub mod close_point;
 pub mod command;
 pub mod fresh;
 pub mod instance_id;
+pub mod member_position;
 pub mod no_op_observer;
 pub mod observer;
 pub mod open_ballot;

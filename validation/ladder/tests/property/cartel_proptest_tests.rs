@@ -17,6 +17,7 @@ use cartel::choice::Choice;
 use cartel::command::Command;
 use cartel::fresh::Fresh;
 use cartel::instance_id::InstanceId;
+use cartel::member_position::MemberPosition;
 use cartel::no_op_observer::NoOpObserver;
 use cartel::origin::Origin;
 use cartel::output::Output;
@@ -50,7 +51,10 @@ fn named(command: &Command) -> Option<Ballot> {
         Command::OpenBallot { ballot, .. }
         | Command::CastVote { ballot, .. }
         | Command::ShowBallot { ballot } => Some(*ballot),
-        Command::CloseBallots { .. } | Command::ListBallots | Command::ShowBooks => None,
+        Command::CloseBallots { .. }
+        | Command::MeasureWatermark { .. }
+        | Command::ListBallots
+        | Command::ShowBooks => None,
     }
 }
 
@@ -90,6 +94,40 @@ proptest! {
             let distinct: BTreeSet<u64> = voters.iter().copied().collect();
             assert_eq!(voters.len(), distinct.len(), "{record:?}");
         }
+    }
+
+    #[test]
+    fn process_of_a_measure_reaches_no_higher_at_a_higher_threshold_nor_lower_for_a_member_further_on(
+        pairs in vec((0..6_u64, 0..10_u64), 1..6),
+        raised in 0..6_usize,
+    ) {
+        // Arrange
+        let mut members = BTreeSet::new();
+        let positions: Vec<MemberPosition> = pairs
+            .into_iter()
+            .filter(|(member, _)| members.insert(*member))
+            .map(|(member, position)| MemberPosition { member, position })
+            .collect();
+        let mut further = positions.clone();
+        let at = raised % further.len();
+        further[at].position += 3;
+        let mut cartel = fresh();
+        let mut measure = |positions: &[MemberPosition], threshold: u64| match cartel
+            .process(Command::MeasureWatermark { positions: positions.to_vec(), threshold })
+            .output
+        {
+            Output::WatermarkMeasured { position } => position,
+            other => panic!("a watermark, not {other:?}"),
+        };
+
+        // Act
+        let size = positions.len() as u64;
+        let by_threshold: Vec<u64> = (1..=size).map(|threshold| measure(&positions, threshold)).collect();
+        let raised_by_threshold: Vec<u64> = (1..=size).map(|threshold| measure(&further, threshold)).collect();
+
+        // Assert
+        assert!(by_threshold.windows(2).all(|pair| pair[0] >= pair[1]), "{by_threshold:?}");
+        assert!(by_threshold.iter().zip(&raised_by_threshold).all(|(before, after)| after >= before));
     }
 
     #[test]

@@ -7,6 +7,7 @@ use crate::observer::Observer;
 use crate::origin::Origin;
 use crate::output::Output;
 use crate::receipt::Receipt;
+use crate::rows::watermark_rows::WatermarkRows;
 use alloc::boxed::Box;
 
 // The one entry point: every command answered by a receipt, the first row of
@@ -42,6 +43,10 @@ impl Cartel {
                 choice,
             } => self.books.cast(*ballot, *member, choice.clone()),
             Command::CloseBallots { before } => self.books.close(*before),
+            Command::MeasureWatermark {
+                positions,
+                threshold,
+            } => WatermarkRows::new(positions, *threshold).answer(),
             Command::ShowBallot { ballot } => self.books.query_rows().ballot(*ballot),
             Command::ListBallots => self.books.query_rows().ballots(),
             Command::ShowBooks => Output::BooksShown(self.books.checkpoint()),
