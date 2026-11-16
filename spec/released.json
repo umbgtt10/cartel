@@ -209,6 +209,96 @@
    "id": "42-the-checkpoint-mid-run",
    "version": "0.1.0",
    "sha256": "3748aa5cdf968285e5b65db41b858e130c673850870524f695fee4a0d46433da"
+  },
+  {
+   "id": "43-close-ballots-before-a-point",
+   "version": "0.2.0",
+   "sha256": "6e2c2b76119d3018948cc9c9831cbdea1f6095298d4f92b9d30a14783eeab938"
+  },
+  {
+   "id": "44-every-phase-of-a-round-closes-together",
+   "version": "0.2.0",
+   "sha256": "fa70aa7f320846d11ad7eaccdb0cce268a09b1c50939735316ed23271d4e0c2f"
+  },
+  {
+   "id": "45-a-ballot-at-the-point-stays-open",
+   "version": "0.2.0",
+   "sha256": "57ec23c33b29d3a9c6613d10b0d6df73ab2611b52da920ae95180cbee2088c1d"
+  },
+  {
+   "id": "46-a-close-that-closes-nothing-still-moves-the-point",
+   "version": "0.2.0",
+   "sha256": "e87cb1e107c09b0cbefa48b0bd0374973079135f207fe03808d9cdbbad2dfb89"
+  },
+  {
+   "id": "47-a-close-behind-the-point-is-refused",
+   "version": "0.2.0",
+   "sha256": "5cfe6e5fcf9ce0d28f3ddc2065f56111f88a20ea30ddf94fa50f60085d86edf4"
+  },
+  {
+   "id": "48-a-close-at-the-point-is-refused",
+   "version": "0.2.0",
+   "sha256": "cb9a2e2b5a8384ccc0af62b1552fa0a260bd85456b2951b42858d90c4517f37f"
+  },
+  {
+   "id": "49-the-point-moves-forward-again",
+   "version": "0.2.0",
+   "sha256": "c8e7b82925a5abeea62d717d57a6f9c62368a2ca9e633fd422ae3cdb56e75a71"
+  },
+  {
+   "id": "50-opening-a-ballot-below-the-point-is-refused",
+   "version": "0.2.0",
+   "sha256": "e02ce6f1d1c3f4e7ade659a749c33f2fdd91a8d123594236499f8ca5d21b9211"
+  },
+  {
+   "id": "51-the-opening-s-form-is-checked-before-the-point",
+   "version": "0.2.0",
+   "sha256": "cd1ac03a8e4bb7fdf7539b699b5be6a5ea8d0c6177fe9924df2c023d28f96ff0"
+  },
+  {
+   "id": "52-a-vote-below-the-point-is-late-not-unknown",
+   "version": "0.2.0",
+   "sha256": "8ea90c4e54aaf3725ffc575c5f84146c6832b72c3afe8e928086b10e72b897af"
+  },
+  {
+   "id": "53-showing-a-ballot-below-the-point-is-refused-as-closed",
+   "version": "0.2.0",
+   "sha256": "aab82d72ff6d81329aa50baf55bfc8052caff4d5e07f8734becf6d8860a9859c"
+  },
+  {
+   "id": "54-a-close-leaves-the-ballots-above-it-as-they-were",
+   "version": "0.2.0",
+   "sha256": "7b7d5055a35ca359c1edee2c13406a6c242a6dfcab85b32d00cec997c78568ca"
+  },
+  {
+   "id": "55-a-closed-ballot-is-gone-from-the-list",
+   "version": "0.2.0",
+   "sha256": "8566928a9c446d33246fbe8c8896f712ea7afda05fd069a2b916acb2a8119a30"
+  },
+  {
+   "id": "56-the-checkpoint-holds-the-close-point",
+   "version": "0.2.0",
+   "sha256": "1c60d7edce89f7750e7513d4b8e609fd1fae972bd6f0645a05f496e5212cc7dc"
+  },
+  {
+   "id": "57-receipts-count-closes-and-their-refusals",
+   "version": "0.2.0",
+   "sha256": "b852b082d563e81a723dfd841ed713f18686af8055cc565609a4c46fcbcc0b3a"
+  },
+  {
+   "id": "58-closing-at-the-top-of-u64",
+   "version": "0.2.0",
+   "sha256": "b77ba7b9175c641c6f3f5110d478734b417b55678364eac2618fbd72465e7bb8"
+  },
+  {
+   "id": "59-a-first-close-before-the-lowest-point",
+   "version": "0.2.0",
+   "sha256": "0eed48f076e6b7cd3d783fc7ca4bb691c1a5233f61068f7f46c3c807aa41a6c3"
+  },
+  {
+   "id": "60-a-round-closed-and-the-next-opened",
+   "version": "0.2.0",
+   "sha256": "d46b33d72fe964073b1127bbd3f628c6bdcaccf12004a095014447ccc9970553"
   }
  ]
 }

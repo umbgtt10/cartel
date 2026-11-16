@@ -2,14 +2,14 @@
 
 A `no_std`, protocol-independent **consensus bookkeeper**.
 
-**Slice 1 of six is built** (0.2.0, 2026-11-16): ballots -- an instance, created fresh, with an observer told of
-every call; `OpenBallot` and `CastVote`; the queries `ShowBallot`, `ListBallots` and `ShowBooks`, the checkpoint --
-conformant to version 0.1.0 of the specification in [`spec/`](spec/SPEC.md). Version 0.2.0 is on
-[crates.io](https://crates.io/crates/cartel).
+**Slices 1 and 2 of six are built** (0.3.0, 2026-11-16): ballots and closing -- an instance, created fresh, with an
+observer told of every call; `OpenBallot`, `CastVote` and `CloseBallots`; the queries `ShowBallot`, `ListBallots`
+and `ShowBooks`, the checkpoint -- conformant to version 0.2.0 of the specification in [`spec/`](spec/SPEC.md).
+Version 0.3.0 is on [crates.io](https://crates.io/crates/cartel).
 
 The design is twenty-three ADRs in [`docs/ADRs/`](docs/ADRs/README.md), the vocabulary and the commands in
 [`docs/DESIGN.md`](docs/DESIGN.md), the order of building in [`docs/IMPLEMENTATION-PLAN.md`](docs/IMPLEMENTATION-PLAN.md):
-closing, the watermark, restore, bounds and claims come next.
+the watermark, restore, bounds and claims come next.
 
 ## What it does
 

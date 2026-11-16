@@ -5,6 +5,13 @@ version it conforms to. The first release is 0.2.0: 0.1.0 on crates.io is the na
 
 ## [Unreleased]
 
+## [0.3.0] — 2026-11-16
+
+### Published on crates.io
+
+Slice 2, closing. Conforms to the specification's version 0.2.0; its 18 new vectors are released beside the 42 of
+0.1.0, which it answers alike.
+
 #### Added
 - Closing (slice 2, the specification's 0.2.0): `CloseBallots` closes every ballot before a question and a round and
   names them; the books remember the close point, which only moves forward. A close at or behind it is refused with
