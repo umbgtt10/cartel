@@ -7,6 +7,7 @@ use crate::vocabulary::spelling::Spelling;
 pub enum CommandName {
     OpenBallot,
     CastVote,
+    CloseBallots,
     ShowBallot,
     ListBallots,
     ShowBooks,
@@ -18,6 +19,7 @@ impl CommandName {
         words: &[
             (CommandName::OpenBallot, "OpenBallot"),
             (CommandName::CastVote, "CastVote"),
+            (CommandName::CloseBallots, "CloseBallots"),
             (CommandName::ShowBallot, "ShowBallot"),
             (CommandName::ListBallots, "ListBallots"),
             (CommandName::ShowBooks, "ShowBooks"),

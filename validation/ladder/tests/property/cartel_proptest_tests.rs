@@ -20,6 +20,7 @@ use cartel::instance_id::InstanceId;
 use cartel::no_op_observer::NoOpObserver;
 use cartel::origin::Origin;
 use cartel::output::Output;
+use cartel::rows::closing_rows::ClosingRows;
 use proptest::collection::vec;
 use proptest::prelude::any;
 use proptest::proptest;
@@ -49,7 +50,7 @@ fn named(command: &Command) -> Option<Ballot> {
         Command::OpenBallot { ballot, .. }
         | Command::CastVote { ballot, .. }
         | Command::ShowBallot { ballot } => Some(*ballot),
-        Command::ListBallots | Command::ShowBooks => None,
+        Command::CloseBallots { .. } | Command::ListBallots | Command::ShowBooks => None,
     }
 }
 
@@ -114,13 +115,38 @@ proptest! {
         // Act & Assert
         for command in commands {
             let before = books(&mut cartel);
-            let named = named(&command);
             let _ = cartel.process(command.clone());
             let after = books(&mut cartel);
-            let others = |checkpoint: &Checkpoint| -> Vec<_> {
-                checkpoint.ballots.iter().filter(|record| Some(record.ballot) != named).cloned().collect()
+            let kept: Vec<_> = match (&command, after.close_point) {
+                (Command::CloseBallots { .. }, Some(point)) => {
+                    before.ballots.iter().filter(|record| !ClosingRows::new(Some(point)).covers(record.ballot)).cloned().collect()
+                }
+                _ => before.ballots.iter().filter(|record| Some(record.ballot) != named(&command)).cloned().collect(),
             };
-            assert_eq!(others(&before), others(&after), "{command:?}");
+            let left: Vec<_> = after
+                .ballots
+                .iter()
+                .filter(|record| matches!(command, Command::CloseBallots { .. }) || Some(record.ballot) != named(&command))
+                .cloned()
+                .collect();
+            assert_eq!(kept, left, "{command:?}");
+        }
+    }
+
+    #[test]
+    fn process_of_any_sequence_leaves_no_open_ballot_below_the_close_point(commands in RandomCommands::sequence()) {
+        // Arrange
+        let mut cartel = fresh();
+
+        // Act
+        for command in commands {
+            let _ = cartel.process(command);
+        }
+
+        // Assert
+        let checkpoint = books(&mut cartel);
+        if let Some(point) = checkpoint.close_point {
+            assert!(checkpoint.ballots.iter().all(|record| !ClosingRows::new(Some(point)).covers(record.ballot)), "{checkpoint:?}");
         }
     }
 
@@ -135,7 +161,7 @@ proptest! {
             .iter()
             .filter(|command| {
                 let output = cartel.process((*command).clone()).output;
-                matches!(command, Command::OpenBallot { .. })
+                matches!(command, Command::OpenBallot { .. } | Command::CloseBallots { .. })
                     || matches!(output, Output::VoteCounted { .. } | Output::QuorumReached { .. })
             })
             .cloned()
@@ -143,7 +169,9 @@ proptest! {
         let subset: Vec<Command> = counted
             .iter()
             .zip(kept.iter().cycle())
-            .filter(|(command, keep)| matches!(command, Command::OpenBallot { .. }) || **keep)
+            .filter(|(command, keep)| {
+                matches!(command, Command::OpenBallot { .. } | Command::CloseBallots { .. }) || **keep
+            })
             .map(|(command, _)| command.clone())
             .collect();
 

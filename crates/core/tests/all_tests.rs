@@ -5,6 +5,5 @@ mod books_tests;
 mod cartel_tests;
 mod no_op_observer_tests;
 mod open_ballot_tests;
-mod opening_rows_tests;
-mod query_rows_tests;
+mod rows;
 mod support;

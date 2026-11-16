@@ -1,0 +1,125 @@
+{
+  "description": "Once a close has moved it, the checkpoint holds the close point beside the open ballots.",
+  "rows": [
+    "ballot-opened",
+    "ballots-closed",
+    "books-shown"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1"
+          ],
+          "thresholds": [
+            "1"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "BallotOpened": {}
+        }
+      }
+    },
+    {
+      "command": {
+        "CloseBallots": {
+          "before": {
+            "question": "1",
+            "round": "0"
+          }
+        }
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "BallotsClosed": {
+            "ballots": []
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "ShowBooks": {}
+      },
+      "receipt": {
+        "number": "3",
+        "output": {
+          "BooksShown": {
+            "checkpoint": {
+              "instance": {
+                "node": "1",
+                "incarnation": "1"
+              },
+              "close_point": {
+                "question": "1",
+                "round": "0"
+              },
+              "ballots": [
+                {
+                  "ballot": {
+                    "question": "1",
+                    "round": "0",
+                    "phase": "0"
+                  },
+                  "electorate": [
+                    "1"
+                  ],
+                  "thresholds": [
+                    "1"
+                  ],
+                  "tally": []
+                }
+              ],
+              "next_receipt": "4"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "close_point": {
+      "question": "1",
+      "round": "0"
+    },
+    "ballots": [
+      {
+        "ballot": {
+          "question": "1",
+          "round": "0",
+          "phase": "0"
+        },
+        "electorate": [
+          "1"
+        ],
+        "thresholds": [
+          "1"
+        ],
+        "tally": []
+      }
+    ],
+    "next_receipt": "5"
+  }
+}

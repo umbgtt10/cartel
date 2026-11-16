@@ -59,6 +59,26 @@ fn new_of_a_fresh_origin_holds_no_ballot() {
 }
 
 #[test]
+fn process_of_a_close_closes_the_ballots_below_its_point() {
+    // Arrange
+    let mut cartel = fresh();
+    let _ = cartel.process(open((1, 0, 0), &[1], &[1]));
+
+    // Act
+    let receipt = cartel.process(Command::CloseBallots {
+        before: Fixtures::point(1, 1),
+    });
+
+    // Assert
+    assert_eq!(
+        receipt.output,
+        Output::BallotsClosed {
+            ballots: vec![Fixtures::ballot(1, 0, 0)],
+        }
+    );
+}
+
+#[test]
 fn process_of_a_refused_command_answers_its_rejection_and_changes_nothing() {
     // Arrange
     let mut cartel = fresh();

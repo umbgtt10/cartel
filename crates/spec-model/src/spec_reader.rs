@@ -8,6 +8,7 @@ use serde_json::Value;
 use crate::ballot_key::BallotKey;
 use crate::command::Command;
 use crate::instance_state::InstanceState;
+use crate::point::Point;
 use crate::table::decision_table::DecisionTable;
 use crate::table::row::Row;
 use crate::value_reader::ValueReader;
@@ -30,6 +31,7 @@ impl SpecReader {
             .expect("a command: an object of one member");
         Command {
             name: Speller::of(&CommandName::SPELLING, name),
+            before: payload.get("before").map(Self::point),
             ballot: payload.get("ballot").map(Self::ballot),
             electorate: payload.get("electorate").map(ValueReader::numbers),
             thresholds: payload.get("thresholds").map(ValueReader::numbers),
@@ -45,6 +47,7 @@ impl SpecReader {
         InstanceState {
             node: ValueReader::number(&instance["node"]),
             incarnation: ValueReader::number(&instance["incarnation"]),
+            close_point: None,
             ballots: Vec::new(),
             next_receipt: 1,
         }
@@ -60,6 +63,13 @@ impl SpecReader {
             question: ValueReader::number(&value["question"]),
             round: ValueReader::number(&value["round"]),
             phase: ValueReader::number(&value["phase"]),
+        }
+    }
+
+    fn point(value: &Value) -> Point {
+        Point {
+            question: ValueReader::number(&value["question"]),
+            round: ValueReader::number(&value["round"]),
         }
     }
 

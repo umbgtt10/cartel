@@ -1,0 +1,265 @@
+{
+  "description": "A close forgets the ballots below the point and leaves every other ballot's record, and its counting, as they were.",
+  "rows": [
+    "ballot-opened",
+    "vote-counted",
+    "quorum-reached",
+    "ballots-closed",
+    "ballot-shown"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1",
+            "2",
+            "3"
+          ],
+          "thresholds": [
+            "2"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "BallotOpened": {}
+        }
+      }
+    },
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "2",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1",
+            "2",
+            "3"
+          ],
+          "thresholds": [
+            "2"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "BallotOpened": {}
+        }
+      }
+    },
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "member": "1",
+          "choice": "aa"
+        }
+      },
+      "receipt": {
+        "number": "3",
+        "output": {
+          "VoteCounted": {
+            "count": "1"
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "2",
+            "round": "0",
+            "phase": "0"
+          },
+          "member": "1",
+          "choice": "bb"
+        }
+      },
+      "receipt": {
+        "number": "4",
+        "output": {
+          "VoteCounted": {
+            "count": "1"
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "2",
+            "round": "0",
+            "phase": "0"
+          },
+          "member": "2",
+          "choice": "bb"
+        }
+      },
+      "receipt": {
+        "number": "5",
+        "output": {
+          "QuorumReached": {
+            "count": "2",
+            "thresholds": [
+              "2"
+            ],
+            "voters": [
+              "1",
+              "2"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "CloseBallots": {
+          "before": {
+            "question": "2",
+            "round": "0"
+          }
+        }
+      },
+      "receipt": {
+        "number": "6",
+        "output": {
+          "BallotsClosed": {
+            "ballots": [
+              {
+                "question": "1",
+                "round": "0",
+                "phase": "0"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "ShowBallot": {
+          "ballot": {
+            "question": "2",
+            "round": "0",
+            "phase": "0"
+          }
+        }
+      },
+      "receipt": {
+        "number": "7",
+        "output": {
+          "BallotShown": {
+            "record": {
+              "ballot": {
+                "question": "2",
+                "round": "0",
+                "phase": "0"
+              },
+              "electorate": [
+                "1",
+                "2",
+                "3"
+              ],
+              "thresholds": [
+                "2"
+              ],
+              "tally": [
+                {
+                  "choice": "bb",
+                  "voters": [
+                    "1",
+                    "2"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "2",
+            "round": "0",
+            "phase": "0"
+          },
+          "member": "3",
+          "choice": "bb"
+        }
+      },
+      "receipt": {
+        "number": "8",
+        "output": {
+          "VoteCounted": {
+            "count": "3"
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "close_point": {
+      "question": "2",
+      "round": "0"
+    },
+    "ballots": [
+      {
+        "ballot": {
+          "question": "2",
+          "round": "0",
+          "phase": "0"
+        },
+        "electorate": [
+          "1",
+          "2",
+          "3"
+        ],
+        "thresholds": [
+          "2"
+        ],
+        "tally": [
+          {
+            "choice": "bb",
+            "voters": [
+              "1",
+              "2",
+              "3"
+            ]
+          }
+        ]
+      }
+    ],
+    "next_receipt": "10"
+  }
+}

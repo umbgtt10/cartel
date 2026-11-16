@@ -3,6 +3,7 @@
 
 use cartel::ballot::Ballot;
 use cartel::choice::Choice;
+use cartel::close_point::ClosePoint;
 use cartel::command::Command;
 use proptest::collection::vec;
 use proptest::prelude::Just;
@@ -11,7 +12,9 @@ use proptest::prop_oneof;
 
 // Commands over a small world, so random sequences meet every row: three
 // ballots, members 0 to 4, four choices -- the empty one, two of one byte,
-// one of two -- electorates and thresholds of every shape, well formed or not.
+// one of two -- electorates and thresholds of every shape, well formed or not,
+// and closes before points around the ballots, ahead of the close point or
+// not.
 pub struct RandomCommands;
 
 impl RandomCommands {
@@ -52,6 +55,9 @@ impl RandomCommands {
             ),
             8 => (Self::ballot(), 0..5_u64, Self::choice())
                 .prop_map(|(ballot, member, choice)| Command::CastVote { ballot, member, choice }),
+            1 => (0..4_u64, 0..3_u64).prop_map(|(question, round)| Command::CloseBallots {
+                before: ClosePoint { question, round },
+            }),
             1 => Self::ballot().prop_map(|ballot| Command::ShowBallot { ballot }),
             1 => Just(Command::ListBallots),
             1 => Just(Command::ShowBooks),

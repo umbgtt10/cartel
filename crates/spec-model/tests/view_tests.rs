@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 use crate::support::states::States;
+use cartel_spec_model::instance_state::InstanceState;
 use cartel_spec_model::view::View;
 use serde_json::json;
 
@@ -71,6 +72,29 @@ fn checkpoint_of_a_state_is_its_instance_ballots_and_next_receipt() {
 }
 
 #[test]
+fn checkpoint_of_closed_books_holds_the_close_point() {
+    // Arrange
+    let state = InstanceState {
+        close_point: Some(States::point(3, 1)),
+        ..States::instance()
+    };
+
+    // Act
+    let checkpoint = View::checkpoint(&state);
+
+    // Assert
+    assert_eq!(
+        checkpoint,
+        json!({
+            "instance": {"node": "2", "incarnation": "3"},
+            "close_point": {"question": "3", "round": "1"},
+            "ballots": [],
+            "next_receipt": "5",
+        })
+    );
+}
+
+#[test]
 fn choice_of_bytes_is_their_lowercase_hexadecimal_digits() {
     // Arrange & Act
     let written =
@@ -87,6 +111,15 @@ fn number_of_a_u64_is_its_decimal_digits() {
 
     // Assert
     assert_eq!(written, json!("18446744073709551615"));
+}
+
+#[test]
+fn point_of_a_question_and_a_round_is_its_two_numbers() {
+    // Arrange & Act
+    let written = View::point(States::point(4, 0));
+
+    // Assert
+    assert_eq!(written, json!({"question": "4", "round": "0"}));
 }
 
 #[test]

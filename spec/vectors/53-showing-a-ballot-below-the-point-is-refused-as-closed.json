@@ -1,0 +1,116 @@
+{
+  "description": "Showing a ballot below the point is refused as closed; one above it never opened, as not open.",
+  "rows": [
+    "ballot-opened",
+    "ballots-closed",
+    "ballot-closed",
+    "ballot-not-open"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1"
+          ],
+          "thresholds": [
+            "1"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "BallotOpened": {}
+        }
+      }
+    },
+    {
+      "command": {
+        "CloseBallots": {
+          "before": {
+            "question": "2",
+            "round": "0"
+          }
+        }
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "BallotsClosed": {
+            "ballots": [
+              {
+                "question": "1",
+                "round": "0",
+                "phase": "0"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "ShowBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          }
+        }
+      },
+      "receipt": {
+        "number": "3",
+        "output": {
+          "CommandRejected": {
+            "BallotClosed": {}
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "ShowBallot": {
+          "ballot": {
+            "question": "2",
+            "round": "0",
+            "phase": "0"
+          }
+        }
+      },
+      "receipt": {
+        "number": "4",
+        "output": {
+          "CommandRejected": {
+            "BallotNotOpen": {}
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "close_point": {
+      "question": "2",
+      "round": "0"
+    },
+    "ballots": [],
+    "next_receipt": "6"
+  }
+}

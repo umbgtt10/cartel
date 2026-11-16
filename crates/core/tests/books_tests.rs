@@ -8,6 +8,29 @@ use cartel::output::Output;
 use cartel::rejection::Rejection;
 
 #[test]
+fn cast_of_a_vote_below_the_close_point_is_refused_as_closed() {
+    // Arrange
+    let mut books = Books::new(Fixtures::instance());
+    let _ = books.open(Fixtures::ballot(1, 0, 0), &[1], &[1]);
+    let _ = books.close(Fixtures::point(1, 1));
+
+    // Act
+    let outputs = [
+        books.cast(Fixtures::ballot(1, 0, 0), 1, Fixtures::choice(&[0xaa])),
+        books.cast(Fixtures::ballot(1, 1, 0), 1, Fixtures::choice(&[0xaa])),
+    ];
+
+    // Assert
+    assert_eq!(
+        outputs,
+        [
+            Output::CommandRejected(Rejection::BallotClosed),
+            Output::CommandRejected(Rejection::BallotNotOpen),
+        ]
+    );
+}
+
+#[test]
 fn cast_of_a_vote_counts_it_in_that_ballot_alone() {
     // Arrange
     let mut books = Books::new(Fixtures::instance());
@@ -63,10 +86,63 @@ fn checkpoint_of_fresh_books_holds_no_ballot_and_numbers_from_one() {
         checkpoint,
         Checkpoint {
             instance: Fixtures::instance(),
+            close_point: None,
             ballots: Vec::new(),
             next_receipt: 1,
         }
     );
+}
+
+#[test]
+fn close_at_or_behind_the_close_point_is_refused_naming_it() {
+    // Arrange
+    let mut books = Books::new(Fixtures::instance());
+    let _ = books.close(Fixtures::point(5, 2));
+
+    // Act
+    let outputs = [
+        books.close(Fixtures::point(5, 2)),
+        books.close(Fixtures::point(4, 9)),
+    ];
+
+    // Assert
+    let refused = Output::CommandRejected(Rejection::CloseBehind {
+        close_point: Fixtures::point(5, 2),
+    });
+    assert_eq!(outputs, [refused.clone(), refused]);
+    assert_eq!(books.checkpoint().close_point, Some(Fixtures::point(5, 2)));
+}
+
+#[test]
+fn close_of_a_point_closes_every_ballot_below_it_and_moves_the_point() {
+    // Arrange
+    let mut books = Books::new(Fixtures::instance());
+    for ballot in [
+        Fixtures::ballot(2, 1, 0),
+        Fixtures::ballot(2, 0, 9),
+        Fixtures::ballot(1, 7, 0),
+    ] {
+        let _ = books.open(ballot, &[1], &[1]);
+    }
+
+    // Act
+    let output = books.close(Fixtures::point(2, 1));
+
+    // Assert
+    assert_eq!(
+        output,
+        Output::BallotsClosed {
+            ballots: vec![Fixtures::ballot(1, 7, 0), Fixtures::ballot(2, 0, 9)],
+        }
+    );
+    let checkpoint = books.checkpoint();
+    assert_eq!(checkpoint.close_point, Some(Fixtures::point(2, 1)));
+    let open: Vec<_> = checkpoint
+        .ballots
+        .into_iter()
+        .map(|record| record.ballot)
+        .collect();
+    assert_eq!(open, vec![Fixtures::ballot(2, 1, 0)]);
 }
 
 #[test]

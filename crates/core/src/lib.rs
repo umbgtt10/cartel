@@ -6,10 +6,19 @@
 
 //! A `no_std`, protocol-independent consensus bookkeeper.
 //!
-//! **Slice 1, ballots:** an instance, created fresh, with an observer told of
-//! every call; `OpenBallot` and `CastVote`; the queries `ShowBallot`,
-//! `ListBallots` and `ShowBooks`, the checkpoint -- conformant to version
-//! 0.1.0 of the specification in the repository's `spec/`.
+//! **Slices 1 and 2, ballots and closing:** an instance, created fresh, with
+//! an observer told of every call; `OpenBallot`, `CastVote` and
+//! `CloseBallots`; the queries `ShowBallot`, `ListBallots` and `ShowBooks`,
+//! the checkpoint -- conformant to version 0.2.0 of the specification in the
+//! repository's `spec/`.
+//!
+//! # Closing
+//!
+//! The protocol closes what it is done with: every ballot before a question
+//! and a round, at once. The books remember the point they closed to, which
+//! only moves forward, so a late vote for a closed round is refused as
+//! closed, not as unknown -- and a protocol that closes as it goes keeps its
+//! books as small as the ballots it still counts.
 //!
 //! # What it does
 //!
@@ -46,16 +55,16 @@ pub mod books;
 pub mod cartel;
 pub mod checkpoint;
 pub mod choice;
+pub mod close_point;
 pub mod command;
 pub mod fresh;
 pub mod instance_id;
 pub mod no_op_observer;
 pub mod observer;
 pub mod open_ballot;
-pub mod opening_rows;
 pub mod origin;
 pub mod output;
-pub mod query_rows;
 pub mod receipt;
 pub mod rejection;
+pub mod rows;
 pub mod votes;

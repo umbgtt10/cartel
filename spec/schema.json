@@ -1,7 +1,7 @@
 {
  "$schema": "https://json-schema.org/draft/2020-12/schema",
- "$id": "urn:cartel:spec:0.1.0:schema",
- "title": "cartel 0.1.0 -- the data model",
+ "$id": "urn:cartel:spec:0.2.0:schema",
+ "title": "cartel 0.2.0 -- the data model",
  "description": "Every command, receipt, output, rejection and the checkpoint, and the forms of a conformance vector, of the decision table and of the released vectors. Normative with SPEC.md.",
  "$ref": "#/$defs/vector",
  "$defs": {
@@ -54,6 +54,23 @@
      "$ref": "#/$defs/u64"
     },
     "phase": {
+     "$ref": "#/$defs/u64"
+    }
+   }
+  },
+  "point": {
+   "description": "A question and a round: where a close lets go before, and the close point.",
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "question",
+    "round"
+   ],
+   "properties": {
+    "question": {
+     "$ref": "#/$defs/u64"
+    },
+    "round": {
      "$ref": "#/$defs/u64"
     }
    }
@@ -120,7 +137,7 @@
    }
   },
   "checkpoint": {
-   "description": "The books, as ShowBooks answers them: the instance id, every open ballot's record, the next receipt's number.",
+   "description": "The books, as ShowBooks answers them: the instance id, the close point when there is one, every open ballot's record, the next receipt's number.",
    "type": "object",
    "additionalProperties": false,
    "required": [
@@ -131,6 +148,9 @@
    "properties": {
     "instance": {
      "$ref": "#/$defs/instance_id"
+    },
+    "close_point": {
+     "$ref": "#/$defs/point"
     },
     "ballots": {
      "type": "array",
@@ -233,6 +253,27 @@
         },
         "choice": {
          "$ref": "#/$defs/choice"
+        }
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "CloseBallots"
+     ],
+     "properties": {
+      "CloseBallots": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "before"
+       ],
+       "properties": {
+        "before": {
+         "$ref": "#/$defs/point"
         }
        }
       }
@@ -442,6 +483,39 @@
        }
       }
      }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "BallotClosed"
+     ],
+     "properties": {
+      "BallotClosed": {
+       "$ref": "#/$defs/nothing"
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "CloseBehind"
+     ],
+     "properties": {
+      "CloseBehind": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "close_point"
+       ],
+       "properties": {
+        "close_point": {
+         "$ref": "#/$defs/point"
+        }
+       }
+      }
+     }
     }
    ]
   },
@@ -514,6 +588,31 @@
          },
          "uniqueItems": true,
          "minItems": 1
+        }
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "BallotsClosed"
+     ],
+     "properties": {
+      "BallotsClosed": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "ballots"
+       ],
+       "properties": {
+        "ballots": {
+         "type": "array",
+         "items": {
+          "$ref": "#/$defs/ballot"
+         },
+         "uniqueItems": true
         }
        }
       }

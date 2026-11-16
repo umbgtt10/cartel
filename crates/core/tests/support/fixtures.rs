@@ -3,6 +3,7 @@
 
 use cartel::ballot::Ballot;
 use cartel::choice::Choice;
+use cartel::close_point::ClosePoint;
 use cartel::instance_id::InstanceId;
 use std::collections::BTreeSet;
 
@@ -22,6 +23,10 @@ impl Fixtures {
         Choice {
             bytes: bytes.to_vec(),
         }
+    }
+
+    pub fn point(question: u64, round: u64) -> ClosePoint {
+        ClosePoint { question, round }
     }
 
     pub fn instance() -> InstanceId {

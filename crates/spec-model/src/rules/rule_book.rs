@@ -10,7 +10,7 @@ use crate::rules::command_situation::CommandSituation;
 use crate::rules::rule::Rule;
 use crate::rules::situation::Situation;
 
-const RULES: [(&str, Rule); 16] = [
+const RULES: [(&str, Rule); 19] = [
     (
         "empty-electorate",
         Rule {
@@ -43,6 +43,13 @@ const RULES: [(&str, Rule); 16] = [
         "repeated-threshold",
         Rule {
             situation: Situation::Command(CommandSituation::RepeatedThreshold),
+            change: Change::Nothing,
+        },
+    ),
+    (
+        "ballot-closed",
+        Rule {
+            situation: Situation::Books(BooksSituation::Closed),
             change: Change::Nothing,
         },
     ),
@@ -100,6 +107,20 @@ const RULES: [(&str, Rule); 16] = [
         Rule {
             situation: Situation::Always,
             change: Change::VoteCast,
+        },
+    ),
+    (
+        "close-behind",
+        Rule {
+            situation: Situation::Books(BooksSituation::CloseBehind),
+            change: Change::Nothing,
+        },
+    ),
+    (
+        "ballots-closed",
+        Rule {
+            situation: Situation::Always,
+            change: Change::BallotsClosed,
         },
     ),
     (

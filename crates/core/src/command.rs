@@ -3,6 +3,7 @@
 
 use crate::ballot::Ballot;
 use crate::choice::Choice;
+use crate::close_point::ClosePoint;
 use alloc::vec::Vec;
 
 // What a caller asks of an instance: imperative, as every command is.
@@ -17,6 +18,9 @@ pub enum Command {
         ballot: Ballot,
         member: u64,
         choice: Choice,
+    },
+    CloseBallots {
+        before: ClosePoint,
     },
     ShowBallot {
         ballot: Ballot,
