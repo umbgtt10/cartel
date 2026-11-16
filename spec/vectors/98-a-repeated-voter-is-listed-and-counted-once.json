@@ -1,0 +1,57 @@
+{
+  "description": "A member named twice is listed as repeated and counted once, so two names of one member do not make two.",
+  "rows": [
+    "claim-examined"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "ExamineClaim": {
+          "electorate": [
+            "1",
+            "2",
+            "3"
+          ],
+          "threshold": "3",
+          "voters": [
+            "1",
+            "1",
+            "2"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "ClaimExamined": {
+            "counted": [
+              "1",
+              "2"
+            ],
+            "outsiders": [],
+            "repeated": [
+              "1"
+            ],
+            "reached": false
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [],
+    "next_receipt": "3"
+  }
+}

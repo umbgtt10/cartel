@@ -27,6 +27,11 @@ pub enum Command {
         positions: Vec<MemberPosition>,
         threshold: u64,
     },
+    ExamineClaim {
+        electorate: Vec<u64>,
+        threshold: u64,
+        voters: Vec<u64>,
+    },
     ShowBallot {
         ballot: Ballot,
     },

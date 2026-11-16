@@ -48,6 +48,7 @@ impl SpecReader {
             thresholds: payload.get("thresholds").map(ValueReader::numbers),
             member: payload.get("member").map(ValueReader::number),
             choice: payload.get("choice").map(ValueReader::choice),
+            voters: payload.get("voters").map(ValueReader::numbers),
         }
     }
 

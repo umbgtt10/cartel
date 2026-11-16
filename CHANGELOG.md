@@ -5,6 +5,18 @@ version it conforms to. The first release is 0.2.0: 0.1.0 on crates.io is the na
 
 ## [Unreleased]
 
+#### Added
+- Claims (slice 5, the specification's 0.5.0): `ExamineClaim` takes an electorate, a threshold and the voters
+  presented as a quorum, and answers `ClaimExamined` with facts -- the members counted, the outsiders, the voters
+  named more than once, each once in ascending order, and whether the members counted reach the threshold. A
+  repeated voter counts once and an outsider not at all; whether either rejects the claim is the protocol's. An
+  empty electorate, one naming a member twice, or a threshold out of range is refused by the rows an opening meets.
+  Examining names no ballot, changes nothing and keeps nothing, so no bound applies to it. `Repeats` gains `all`.
+- The ladder: 17 vectors; a matrix tier over every electorate of up to three members, every threshold 0 to 4 and
+  every list of up to three voters from four; properties that a claim changes nothing and that fewer voters reach no
+  threshold the whole list did not; claims in the random sequences. A repeat counted twice, outsiders counted, and
+  repeats left unlisted, each planted in the crate, are caught by conformance, the matrix and two properties.
+
 ## [0.5.0] — 2026-11-16
 
 ### Published on crates.io

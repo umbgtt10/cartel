@@ -7,6 +7,7 @@ use crate::origin::Origin;
 use crate::output::Output;
 use crate::receipt::Receipt;
 use crate::registry::books::Books;
+use crate::rows::claim_rows::ClaimRows;
 use crate::rows::watermark_rows::WatermarkRows;
 use alloc::boxed::Box;
 
@@ -47,6 +48,11 @@ impl Cartel {
                 positions,
                 threshold,
             } => WatermarkRows::new(positions, *threshold).answer(),
+            Command::ExamineClaim {
+                electorate,
+                threshold,
+                voters,
+            } => ClaimRows::new(electorate, *threshold, voters).answer(),
             Command::ShowBallot { ballot } => self.books.query_rows().ballot(*ballot),
             Command::ListBallots => self.books.query_rows().ballots(),
             Command::ShowBooks => Output::BooksShown(self.books.checkpoint()),

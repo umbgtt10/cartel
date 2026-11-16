@@ -1,0 +1,51 @@
+{
+  "description": "An electorate naming a member twice is refused, naming the lowest such member; the voters' repeats are facts, not refusals.",
+  "rows": [
+    "repeated-member"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "ExamineClaim": {
+          "electorate": [
+            "5",
+            "3",
+            "5",
+            "3"
+          ],
+          "threshold": "1",
+          "voters": [
+            "3",
+            "3"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "CommandRejected": {
+            "RepeatedMember": {
+              "member": "3"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [],
+    "next_receipt": "3"
+  }
+}

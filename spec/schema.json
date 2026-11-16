@@ -1,7 +1,7 @@
 {
  "$schema": "https://json-schema.org/draft/2020-12/schema",
- "$id": "urn:cartel:spec:0.4.0:schema",
- "title": "cartel 0.4.0 -- the data model",
+ "$id": "urn:cartel:spec:0.5.0:schema",
+ "title": "cartel 0.5.0 -- the data model",
  "description": "Every command, receipt, output, rejection and the checkpoint, and the forms of a conformance vector, of the decision table and of the released vectors. Normative with SPEC.md.",
  "$ref": "#/$defs/vector",
  "$defs": {
@@ -343,6 +343,41 @@
         },
         "threshold": {
          "$ref": "#/$defs/u64"
+        }
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "ExamineClaim"
+     ],
+     "properties": {
+      "ExamineClaim": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "electorate",
+        "threshold",
+        "voters"
+       ],
+       "properties": {
+        "electorate": {
+         "type": "array",
+         "items": {
+          "$ref": "#/$defs/u64"
+         }
+        },
+        "threshold": {
+         "$ref": "#/$defs/u64"
+        },
+        "voters": {
+         "type": "array",
+         "items": {
+          "$ref": "#/$defs/u64"
+         }
         }
        }
       }
@@ -766,6 +801,51 @@
        "properties": {
         "position": {
          "$ref": "#/$defs/u64"
+        }
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "ClaimExamined"
+     ],
+     "properties": {
+      "ClaimExamined": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "counted",
+        "outsiders",
+        "repeated",
+        "reached"
+       ],
+       "properties": {
+        "counted": {
+         "type": "array",
+         "items": {
+          "$ref": "#/$defs/u64"
+         },
+         "uniqueItems": true
+        },
+        "outsiders": {
+         "type": "array",
+         "items": {
+          "$ref": "#/$defs/u64"
+         },
+         "uniqueItems": true
+        },
+        "repeated": {
+         "type": "array",
+         "items": {
+          "$ref": "#/$defs/u64"
+         },
+         "uniqueItems": true
+        },
+        "reached": {
+         "type": "boolean"
         }
        }
       }

@@ -27,6 +27,15 @@ impl Commands {
         }
     }
 
+    pub fn examine(electorate: &[u64], threshold: u64, voters: &[u64]) -> Command {
+        Command {
+            electorate: Some(electorate.to_vec()),
+            threshold: Some(threshold),
+            voters: Some(voters.to_vec()),
+            ..Self::of(CommandName::ExamineClaim)
+        }
+    }
+
     pub fn measure(pairs: &[(u64, u64)], threshold: u64) -> Command {
         Command {
             positions: Some(
@@ -54,6 +63,7 @@ impl Commands {
             thresholds: None,
             member: None,
             choice: None,
+            voters: None,
         }
     }
 

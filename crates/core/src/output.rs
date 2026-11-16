@@ -26,6 +26,12 @@ pub enum Output {
     WatermarkMeasured {
         position: u64,
     },
+    ClaimExamined {
+        counted: Vec<u64>,
+        outsiders: Vec<u64>,
+        repeated: Vec<u64>,
+        reached: bool,
+    },
     BallotShown(BallotRecord),
     BallotsListed {
         ballots: Vec<Ballot>,

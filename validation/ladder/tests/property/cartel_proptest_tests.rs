@@ -5,9 +5,10 @@
 // crate against the specification's model receipt by receipt, without bounds
 // and under any, and the invariants after every call -- receipts one more on
 // every call, no ballot touched by a command naming another, no member a
-// voter of two choices in a ballot, the books within every bound given -- and
-// forgetting safe: of the votes counted, any subset reaches no quorum the
-// whole set did not.
+// voter of two choices in a ballot, the books within every bound given, a
+// claim changing nothing -- and forgetting safe: of the votes counted, any
+// subset reaches no quorum the whole set did not, and of a claim's voters,
+// any subset reaches no threshold the whole list did not.
 
 use crate::support::both_sides::BothSides;
 use crate::support::random_commands::RandomCommands;
@@ -60,6 +61,7 @@ fn named(command: &Command) -> Option<Ballot> {
         | Command::ShowBallot { ballot } => Some(*ballot),
         Command::CloseBallots { .. }
         | Command::MeasureWatermark { .. }
+        | Command::ExamineClaim { .. }
         | Command::ListBallots
         | Command::ShowBooks => None,
     }
@@ -275,6 +277,56 @@ proptest! {
 
         // Assert
         assert!(overflows.is_empty(), "{overflows:#?}");
+    }
+
+    #[test]
+    fn process_of_a_claim_after_any_sequence_changes_nothing_but_the_receipt_number(
+        commands in RandomCommands::sequence(),
+        electorate in vec(0..5_u64, 0..5),
+        threshold in 0..6_u64,
+        voters in vec(0..6_u64, 0..6),
+    ) {
+        // Arrange
+        let mut cartel = fresh();
+        for command in commands {
+            let _ = cartel.process(command);
+        }
+        let before = books(&mut cartel);
+
+        // Act
+        let _ = cartel.process(Command::ExamineClaim { electorate, threshold, voters });
+
+        // Assert
+        let after = books(&mut cartel);
+        assert_eq!(after, Checkpoint { next_receipt: before.next_receipt + 2, ..before });
+    }
+
+    #[test]
+    fn process_of_a_claim_of_fewer_voters_reaches_no_threshold_the_whole_list_did_not(
+        electorate in vec(0..6_u64, 1..6),
+        threshold in 1..6_u64,
+        voters in vec(0..8_u64, 0..8),
+        kept in vec(any::<bool>(), 8),
+    ) {
+        // Arrange
+        let distinct: Vec<u64> = electorate.iter().copied().collect::<BTreeSet<u64>>().into_iter().collect();
+        let threshold = threshold.min(distinct.len() as u64);
+        let fewer: Vec<u64> = voters.iter().zip(&kept).filter(|(_, keep)| **keep).map(|(voter, _)| *voter).collect();
+        let mut cartel = fresh();
+        let mut reached = |voters: &[u64]| match cartel
+            .process(Command::ExamineClaim { electorate: distinct.clone(), threshold, voters: voters.to_vec() })
+            .output
+        {
+            Output::ClaimExamined { reached, .. } => reached,
+            other => panic!("a claim examined, not {other:?}"),
+        };
+
+        // Act
+        let whole = reached(&voters);
+        let subset = reached(&fewer);
+
+        // Assert
+        assert!(whole || !subset, "{fewer:?} of {voters:?} reached where the whole did not");
     }
 }
 

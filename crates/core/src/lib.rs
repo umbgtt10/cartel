@@ -6,12 +6,21 @@
 
 //! A `no_std`, protocol-independent consensus bookkeeper.
 //!
-//! **Slices 1 to 4, ballots, closing, the watermark and the bounds:** an
-//! instance, created fresh within the bounds it is given, with an observer
-//! told of every call; `OpenBallot`, `CastVote` and `CloseBallots`;
-//! `MeasureWatermark`; the queries `ShowBallot`, `ListBallots` and
-//! `ShowBooks`, the checkpoint -- conformant to version 0.4.0 of the
-//! specification in the repository's `spec/`.
+//! **Slices 1 to 5, ballots, closing, the watermark, the bounds and
+//! claims:** an instance, created fresh within the bounds it is given, with
+//! an observer told of every call; `OpenBallot`, `CastVote` and
+//! `CloseBallots`; `MeasureWatermark` and `ExamineClaim`; the queries
+//! `ShowBallot`, `ListBallots` and `ShowBooks`, the checkpoint -- conformant
+//! to version 0.5.0 of the specification in the repository's `spec/`.
+//!
+//! # Claims
+//!
+//! A quorum the protocol did not count -- a certificate's signers, once it
+//! has verified their signatures -- is examined against an electorate and a
+//! threshold, and answered with facts: the members counted, the outsiders,
+//! the voters named twice, and whether the members counted reach the
+//! threshold. What an outsider or a repeat costs is the protocol's rule, and
+//! examining changes nothing in the books.
 //!
 //! # The bounds
 //!

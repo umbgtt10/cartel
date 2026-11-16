@@ -6,6 +6,15 @@ use crate::support::states::States;
 use cartel_spec_model::figures::Figures;
 
 #[test]
+fn members_of_a_claim_are_its_electorate_not_its_voters() {
+    // Arrange & Act
+    let members = Figures::members(&Commands::examine(&[2, 1], 1, &[9, 9]));
+
+    // Assert
+    assert_eq!(members, vec![2, 1]);
+}
+
+#[test]
 fn members_of_a_measure_are_the_members_of_its_positions() {
     // Arrange & Act
     let members = Figures::members(&Commands::measure(&[(3, 9), (1, 0)], 2));
@@ -21,6 +30,15 @@ fn members_of_an_opening_are_its_electorate() {
 
     // Assert
     assert_eq!(members, vec![2, 1]);
+}
+
+#[test]
+fn thresholds_of_a_claim_are_its_one_threshold() {
+    // Arrange & Act
+    let thresholds = Figures::thresholds(&Commands::examine(&[1, 2], 2, &[1]));
+
+    // Assert
+    assert_eq!(thresholds, vec![2]);
 }
 
 #[test]

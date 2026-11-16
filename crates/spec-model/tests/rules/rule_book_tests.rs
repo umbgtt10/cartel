@@ -37,6 +37,7 @@ fn row_ids_of_the_rule_book_are_its_rows_in_check_order() {
             "close-behind",
             "ballots-closed",
             "watermark-measured",
+            "claim-examined",
             "ballot-shown",
             "ballots-listed",
             "books-shown",

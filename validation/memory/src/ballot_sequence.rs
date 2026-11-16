@@ -20,8 +20,9 @@ const OTHER: [u8; 32] = [0xbb; 32];
 // Ballots one after another on one instance: each opened over the members
 // given, a majority their threshold, and every member's vote for a 32-byte
 // choice counted -- and, when busy, every vote followed by a repeat, an
-// equivocation, a non-member's vote, an opening of the open ballot and a
-// list of the ballots, each refused or a query -- and, when closing, every
+// equivocation, a non-member's vote, an opening of the open ballot, a list of
+// the ballots and a claim of every member and one outsider, each refused or
+// a query -- and, when closing, every
 // ballot closed once its votes are counted. The counter runs from before the
 // instance is created.
 pub struct BallotSequence<'a> {
@@ -94,13 +95,18 @@ impl<'a> BallotSequence<'a> {
         }
     }
 
-    fn noise(&self, ballot: Ballot, member: u64) -> [Command; 5] {
+    fn noise(&self, ballot: Ballot, member: u64) -> [Command; 6] {
         [
             Self::vote(ballot, member, &HASH),
             Self::vote(ballot, member, &OTHER),
             Self::vote(ballot, self.members + 1, &HASH),
             self.opening(ballot),
             Command::ListBallots,
+            Command::ExamineClaim {
+                electorate: (1..=self.members).collect(),
+                threshold: self.members / 2 + 1,
+                voters: (1..=self.members + 1).collect(),
+            },
         ]
     }
 

@@ -1,14 +1,14 @@
 # cartel — the specification
 
-**Version 0.4.0.** The four parts of this specification are versioned together: this prose, the data model in
+**Version 0.5.0.** The four parts of this specification are versioned together: this prose, the data model in
 [`schema.json`](schema.json), the decision table in [`matrix.json`](matrix.json) and the conformance vectors in
 [`vectors/`](vectors/). It is normative; the `cartel` crate is one implementation of it, and where the two disagree
 the specification is right ([`P0-ADR-SpecificationIsNormativeCrateIsReference`](../docs/ADRs/P0-ADR-SpecificationIsNormativeCrateIsReference.md)).
 
-**What 0.4.0 covers:** ballots, closing, the watermark and the bounds. An instance, created fresh with the bounds it
-is given, and the observer it reports every call to; `OpenBallot`, `CastVote` and `CloseBallots`;
-`MeasureWatermark`; the queries `ShowBallot`, `ListBallots` and `ShowBooks`, the checkpoint; each with every row it
-has. 0.4.0 is 0.3.0 with the bounds (§2, §5, §6). What later versions add is §12.
+**What 0.5.0 covers:** ballots, closing, the watermark, the bounds and claims. An instance, created fresh with the
+bounds it is given, and the observer it reports every call to; `OpenBallot`, `CastVote` and `CloseBallots`;
+`MeasureWatermark` and `ExamineClaim`; the queries `ShowBallot`, `ListBallots` and `ShowBooks`, the checkpoint; each
+with every row it has. 0.5.0 is 0.4.0 with claims (§12). What later versions may add is §13.
 
 ## 1. Conventions
 
@@ -251,13 +251,41 @@ is a position some member gave.
 **Changes nothing** but the receipt number. It names no ballot and touches none; what the watermark means -- what
 may be committed, which reads a round confirms -- is the protocol's. It keeps nothing, so no bound applies to it.
 
-## 12. Not yet
+## 12. `ExamineClaim`
 
-The order of building is [`IMPLEMENTATION-PLAN.md`](../docs/IMPLEMENTATION-PLAN.md). Each later version only adds:
+**Carries:** `electorate`, a list of members; `threshold`, a number; `voters`, a list of members presented as a
+quorum -- a certificate's signers, once the protocol has verified their signatures. A claim names no ballot: it may
+be of a question this instance never opened, or has closed. The order of either list does not matter, and `voters`
+may name a member more than once, or one outside `electorate`
+([`P1-ADR-AClaimIsExaminedAsFacts`](../docs/ADRs/P1-ADR-AClaimIsExaminedAsFacts.md)).
 
-| version | adds |
-|---|---|
-| 0.5.0 | claims: `ExamineClaim` |
+**Checked in this order:**
+
+| row | situation | output |
+|---|---|---|
+| `empty-electorate` | `electorate` is empty | `CommandRejected(EmptyElectorate)` |
+| `repeated-member` | `electorate` names a member more than once | `CommandRejected(RepeatedMember { member })`, the lowest such member |
+| `threshold-out-of-range` | `threshold` is 0, or above the number of members in `electorate` | `CommandRejected(ThresholdOutOfRange { threshold })` |
+| `claim-examined` | otherwise | `ClaimExamined { counted, outsiders, repeated, reached }` |
+
+**Examined:** the answer is facts, never a verdict.
+- `counted` lists the members of `electorate` that `voters` names, each once, in ascending order.
+- `outsiders` lists the voters not in `electorate`, each once, in ascending order.
+- `repeated` lists the voters `voters` names more than once, members and outsiders alike, each once, in ascending
+  order.
+- `reached` is whether the members counted number at least `threshold`.
+
+A repeated voter counts once, and an outsider not at all. Whether a repeat or an outsider rejects the claim is the
+protocol's: one protocol may pass a claim with an outsider among its voters and refuse one with a repeat, another
+refuse any outsider, and each rule reads these facts.
+
+**Changes nothing** but the receipt number. It names no ballot and touches none. It keeps nothing, so no bound
+applies to it.
+
+## 13. Not yet
+
+The order of building is [`IMPLEMENTATION-PLAN.md`](../docs/IMPLEMENTATION-PLAN.md). Every slice it plans is in
+0.5.0. Each later version only adds.
 
 **Later, when a protocol asks:**
 - restoring an instance from a checkpoint, under a new incarnation;
@@ -266,7 +294,7 @@ The order of building is [`IMPLEMENTATION-PLAN.md`](../docs/IMPLEMENTATION-PLAN.
 - an answer that a threshold can no longer be reached;
 - weights, joint consensus and federated quorums, as new forms of the quorum.
 
-## 13. Conformance
+## 14. Conformance
 
 **A vector is an initial state, steps, and a final state.** The initial state is an origin: fresh, with the bounds it gives. Each
 step is a command and the receipt it must be answered with. The final state is the checkpoint a `ShowBooks` issued

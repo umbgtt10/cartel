@@ -1,0 +1,66 @@
+{
+  "description": "The electorate is checked first: an empty one, then one naming a member twice, each before a threshold out of range.",
+  "rows": [
+    "empty-electorate",
+    "repeated-member"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "ExamineClaim": {
+          "electorate": [],
+          "threshold": "0",
+          "voters": []
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "CommandRejected": {
+            "EmptyElectorate": {}
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "ExamineClaim": {
+          "electorate": [
+            "1",
+            "1"
+          ],
+          "threshold": "5",
+          "voters": [
+            "1"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "CommandRejected": {
+            "RepeatedMember": {
+              "member": "1"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [],
+    "next_receipt": "4"
+  }
+}

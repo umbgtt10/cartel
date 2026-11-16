@@ -167,6 +167,7 @@ Every refusal is one output carrying a specific rejection:
 | showing a ballot | below the close point, not open |
 | closing | at or behind the close point, carrying it |
 | measuring a watermark | repeated member, threshold out of range |
+| examining a claim | empty electorate, repeated member in the electorate, threshold out of range |
 
 A ballot below the close point is refused as closed, not as not open: late is not unknown.
 
