@@ -1,0 +1,29 @@
+# The crate. Its metadata follows beggar's and faction's: same licence, edition,
+# MSRV and categories. The version starts at 0.2.0: 0.1.0 on crates.io is the
+# name's placeholder, so the first release that could ever be published is
+# above it.
+[package]
+name = "cartel"
+version = "0.2.0"
+edition = "2021"
+rust-version = "1.85"
+license = "MIT"
+description = "A no_std, protocol-independent consensus bookkeeper: ballots, members, opaque choices and thresholds -- who voted for what, and when a threshold is reached -- counted and never decided."
+documentation = "https://docs.rs/cartel"
+readme = "../../README.md"
+keywords = ["consensus", "quorum", "voting", "distributed", "no-std"]
+categories = ["no-std", "algorithms", "network-programming"]
+autotests = false
+
+# `repository` and `homepage` go in when the repository goes public: it is
+# private, and both links would resolve to a 404 on the crates.io page.
+
+[dependencies]
+
+[lib]
+name = "cartel"
+path = "src/lib.rs"
+
+[[test]]
+name = "all_tests"
+path = "tests/all_tests.rs"

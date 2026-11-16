@@ -1,0 +1,167 @@
+{
+  "description": "A checkpoint taken between votes holds the tally so far and the next receipt's number.",
+  "rows": [
+    "ballot-opened",
+    "vote-counted",
+    "books-shown",
+    "quorum-reached"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1",
+            "2"
+          ],
+          "thresholds": [
+            "2"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "BallotOpened": {}
+        }
+      }
+    },
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "member": "1",
+          "choice": "aa"
+        }
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "VoteCounted": {
+            "count": "1"
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "ShowBooks": {}
+      },
+      "receipt": {
+        "number": "3",
+        "output": {
+          "BooksShown": {
+            "checkpoint": {
+              "instance": {
+                "node": "1",
+                "incarnation": "1"
+              },
+              "ballots": [
+                {
+                  "ballot": {
+                    "question": "1",
+                    "round": "0",
+                    "phase": "0"
+                  },
+                  "electorate": [
+                    "1",
+                    "2"
+                  ],
+                  "thresholds": [
+                    "2"
+                  ],
+                  "tally": [
+                    {
+                      "choice": "aa",
+                      "voters": [
+                        "1"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "next_receipt": "4"
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "member": "2",
+          "choice": "aa"
+        }
+      },
+      "receipt": {
+        "number": "4",
+        "output": {
+          "QuorumReached": {
+            "count": "2",
+            "thresholds": [
+              "2"
+            ],
+            "voters": [
+              "1",
+              "2"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [
+      {
+        "ballot": {
+          "question": "1",
+          "round": "0",
+          "phase": "0"
+        },
+        "electorate": [
+          "1",
+          "2"
+        ],
+        "thresholds": [
+          "2"
+        ],
+        "tally": [
+          {
+            "choice": "aa",
+            "voters": [
+              "1",
+              "2"
+            ]
+          }
+        ]
+      }
+    ],
+    "next_receipt": "6"
+  }
+}

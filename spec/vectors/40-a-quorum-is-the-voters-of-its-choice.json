@@ -1,0 +1,201 @@
+{
+  "description": "A threshold is reached by one choice's votes alone; votes for another choice never count toward it.",
+  "rows": [
+    "ballot-opened",
+    "vote-counted",
+    "quorum-reached"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"
+          ],
+          "thresholds": [
+            "3"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "BallotOpened": {}
+        }
+      }
+    },
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "member": "1",
+          "choice": "aa"
+        }
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "VoteCounted": {
+            "count": "1"
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "member": "2",
+          "choice": "bb"
+        }
+      },
+      "receipt": {
+        "number": "3",
+        "output": {
+          "VoteCounted": {
+            "count": "1"
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "member": "3",
+          "choice": "aa"
+        }
+      },
+      "receipt": {
+        "number": "4",
+        "output": {
+          "VoteCounted": {
+            "count": "2"
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "member": "4",
+          "choice": "bb"
+        }
+      },
+      "receipt": {
+        "number": "5",
+        "output": {
+          "VoteCounted": {
+            "count": "2"
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "member": "5",
+          "choice": "aa"
+        }
+      },
+      "receipt": {
+        "number": "6",
+        "output": {
+          "QuorumReached": {
+            "count": "3",
+            "thresholds": [
+              "3"
+            ],
+            "voters": [
+              "1",
+              "3",
+              "5"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [
+      {
+        "ballot": {
+          "question": "1",
+          "round": "0",
+          "phase": "0"
+        },
+        "electorate": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+        ],
+        "thresholds": [
+          "3"
+        ],
+        "tally": [
+          {
+            "choice": "aa",
+            "voters": [
+              "1",
+              "3",
+              "5"
+            ]
+          },
+          {
+            "choice": "bb",
+            "voters": [
+              "2",
+              "4"
+            ]
+          }
+        ]
+      }
+    ],
+    "next_receipt": "8"
+  }
+}

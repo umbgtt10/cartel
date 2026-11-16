@@ -1,0 +1,50 @@
+{
+  "description": "A repeated member is checked before the thresholds.",
+  "rows": [
+    "repeated-member"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "2",
+            "2"
+          ],
+          "thresholds": []
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "CommandRejected": {
+            "RepeatedMember": {
+              "member": "2"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [],
+    "next_receipt": "3"
+  }
+}

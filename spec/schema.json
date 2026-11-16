@@ -1,0 +1,760 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "urn:cartel:spec:0.1.0:schema",
+ "title": "cartel 0.1.0 -- the data model",
+ "description": "Every command, receipt, output, rejection and the checkpoint, and the forms of a conformance vector, of the decision table and of the released vectors. Normative with SPEC.md.",
+ "$ref": "#/$defs/vector",
+ "$defs": {
+  "u64": {
+   "description": "A u64 as a string of decimal digits: no sign, no leading zero, no exponent.",
+   "type": "string",
+   "pattern": "^(0|[1-9][0-9]{0,19})$"
+  },
+  "nothing": {
+   "description": "What a value of an enumeration that carries nothing carries.",
+   "type": "object",
+   "maxProperties": 0
+  },
+  "choice": {
+   "description": "A choice: bytes, possibly none, as lowercase hexadecimal digits, two to a byte.",
+   "type": "string",
+   "pattern": "^([0-9a-f]{2})*$"
+  },
+  "instance_id": {
+   "description": "A node and an incarnation: tells one instance's receipts from another's.",
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "node",
+    "incarnation"
+   ],
+   "properties": {
+    "node": {
+     "$ref": "#/$defs/u64"
+    },
+    "incarnation": {
+     "$ref": "#/$defs/u64"
+    }
+   }
+  },
+  "ballot": {
+   "description": "What a vote is counted in: a question, a round and a phase, never interpreted.",
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "question",
+    "round",
+    "phase"
+   ],
+   "properties": {
+    "question": {
+     "$ref": "#/$defs/u64"
+    },
+    "round": {
+     "$ref": "#/$defs/u64"
+    },
+    "phase": {
+     "$ref": "#/$defs/u64"
+    }
+   }
+  },
+  "votes": {
+   "description": "One choice of a tally and its voters, in ascending order.",
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "choice",
+    "voters"
+   ],
+   "properties": {
+    "choice": {
+     "$ref": "#/$defs/choice"
+    },
+    "voters": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/u64"
+     },
+     "uniqueItems": true,
+     "minItems": 1
+    }
+   }
+  },
+  "record": {
+   "description": "An open ballot's record: its electorate and thresholds in ascending order, its tally in the choices' order.",
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "ballot",
+    "electorate",
+    "thresholds",
+    "tally"
+   ],
+   "properties": {
+    "ballot": {
+     "$ref": "#/$defs/ballot"
+    },
+    "electorate": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/u64"
+     },
+     "uniqueItems": true,
+     "minItems": 1
+    },
+    "thresholds": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/u64"
+     },
+     "uniqueItems": true,
+     "minItems": 1
+    },
+    "tally": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/votes"
+     },
+     "uniqueItems": true
+    }
+   }
+  },
+  "checkpoint": {
+   "description": "The books, as ShowBooks answers them: the instance id, every open ballot's record, the next receipt's number.",
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "instance",
+    "ballots",
+    "next_receipt"
+   ],
+   "properties": {
+    "instance": {
+     "$ref": "#/$defs/instance_id"
+    },
+    "ballots": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/record"
+     },
+     "uniqueItems": true
+    },
+    "next_receipt": {
+     "$ref": "#/$defs/u64"
+    }
+   }
+  },
+  "fresh": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "instance"
+   ],
+   "properties": {
+    "instance": {
+     "$ref": "#/$defs/instance_id"
+    }
+   }
+  },
+  "origin": {
+   "oneOf": [
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "Fresh"
+     ],
+     "properties": {
+      "Fresh": {
+       "$ref": "#/$defs/fresh"
+      }
+     }
+    }
+   ]
+  },
+  "command": {
+   "oneOf": [
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "OpenBallot"
+     ],
+     "properties": {
+      "OpenBallot": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "ballot",
+        "electorate",
+        "thresholds"
+       ],
+       "properties": {
+        "ballot": {
+         "$ref": "#/$defs/ballot"
+        },
+        "electorate": {
+         "type": "array",
+         "items": {
+          "$ref": "#/$defs/u64"
+         }
+        },
+        "thresholds": {
+         "type": "array",
+         "items": {
+          "$ref": "#/$defs/u64"
+         }
+        }
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "CastVote"
+     ],
+     "properties": {
+      "CastVote": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "ballot",
+        "member",
+        "choice"
+       ],
+       "properties": {
+        "ballot": {
+         "$ref": "#/$defs/ballot"
+        },
+        "member": {
+         "$ref": "#/$defs/u64"
+        },
+        "choice": {
+         "$ref": "#/$defs/choice"
+        }
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "ShowBallot"
+     ],
+     "properties": {
+      "ShowBallot": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "ballot"
+       ],
+       "properties": {
+        "ballot": {
+         "$ref": "#/$defs/ballot"
+        }
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "ListBallots"
+     ],
+     "properties": {
+      "ListBallots": {
+       "$ref": "#/$defs/nothing"
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "ShowBooks"
+     ],
+     "properties": {
+      "ShowBooks": {
+       "$ref": "#/$defs/nothing"
+      }
+     }
+    }
+   ]
+  },
+  "rejection": {
+   "oneOf": [
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "EmptyElectorate"
+     ],
+     "properties": {
+      "EmptyElectorate": {
+       "$ref": "#/$defs/nothing"
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "RepeatedMember"
+     ],
+     "properties": {
+      "RepeatedMember": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "member"
+       ],
+       "properties": {
+        "member": {
+         "$ref": "#/$defs/u64"
+        }
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "NoThresholds"
+     ],
+     "properties": {
+      "NoThresholds": {
+       "$ref": "#/$defs/nothing"
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "ThresholdOutOfRange"
+     ],
+     "properties": {
+      "ThresholdOutOfRange": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "threshold"
+       ],
+       "properties": {
+        "threshold": {
+         "$ref": "#/$defs/u64"
+        }
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "RepeatedThreshold"
+     ],
+     "properties": {
+      "RepeatedThreshold": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "threshold"
+       ],
+       "properties": {
+        "threshold": {
+         "$ref": "#/$defs/u64"
+        }
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "BallotAlreadyOpen"
+     ],
+     "properties": {
+      "BallotAlreadyOpen": {
+       "$ref": "#/$defs/nothing"
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "BallotNotOpen"
+     ],
+     "properties": {
+      "BallotNotOpen": {
+       "$ref": "#/$defs/nothing"
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "NotAMember"
+     ],
+     "properties": {
+      "NotAMember": {
+       "$ref": "#/$defs/nothing"
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "AlreadyCounted"
+     ],
+     "properties": {
+      "AlreadyCounted": {
+       "$ref": "#/$defs/nothing"
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "Equivocation"
+     ],
+     "properties": {
+      "Equivocation": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "counted"
+       ],
+       "properties": {
+        "counted": {
+         "$ref": "#/$defs/choice"
+        }
+       }
+      }
+     }
+    }
+   ]
+  },
+  "output": {
+   "oneOf": [
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "BallotOpened"
+     ],
+     "properties": {
+      "BallotOpened": {
+       "$ref": "#/$defs/nothing"
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "VoteCounted"
+     ],
+     "properties": {
+      "VoteCounted": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "count"
+       ],
+       "properties": {
+        "count": {
+         "$ref": "#/$defs/u64"
+        }
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "QuorumReached"
+     ],
+     "properties": {
+      "QuorumReached": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "count",
+        "thresholds",
+        "voters"
+       ],
+       "properties": {
+        "count": {
+         "$ref": "#/$defs/u64"
+        },
+        "thresholds": {
+         "type": "array",
+         "items": {
+          "$ref": "#/$defs/u64"
+         },
+         "uniqueItems": true,
+         "minItems": 1
+        },
+        "voters": {
+         "type": "array",
+         "items": {
+          "$ref": "#/$defs/u64"
+         },
+         "uniqueItems": true,
+         "minItems": 1
+        }
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "BallotShown"
+     ],
+     "properties": {
+      "BallotShown": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "record"
+       ],
+       "properties": {
+        "record": {
+         "$ref": "#/$defs/record"
+        }
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "BallotsListed"
+     ],
+     "properties": {
+      "BallotsListed": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "ballots"
+       ],
+       "properties": {
+        "ballots": {
+         "type": "array",
+         "items": {
+          "$ref": "#/$defs/ballot"
+         },
+         "uniqueItems": true
+        }
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "BooksShown"
+     ],
+     "properties": {
+      "BooksShown": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "checkpoint"
+       ],
+       "properties": {
+        "checkpoint": {
+         "$ref": "#/$defs/checkpoint"
+        }
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "CommandRejected"
+     ],
+     "properties": {
+      "CommandRejected": {
+       "$ref": "#/$defs/rejection"
+      }
+     }
+    }
+   ]
+  },
+  "receipt": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "number",
+    "output"
+   ],
+   "properties": {
+    "number": {
+     "$ref": "#/$defs/u64"
+    },
+    "output": {
+     "$ref": "#/$defs/output"
+    }
+   }
+  },
+  "step": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "command",
+    "receipt"
+   ],
+   "properties": {
+    "command": {
+     "$ref": "#/$defs/command"
+    },
+    "receipt": {
+     "$ref": "#/$defs/receipt"
+    }
+   }
+  },
+  "vector": {
+   "description": "A conformance vector: an origin, steps and the checkpoint a closing ShowBooks answers.",
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "description",
+    "rows",
+    "origin",
+    "steps",
+    "final"
+   ],
+   "properties": {
+    "description": {
+     "type": "string"
+    },
+    "rows": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "uniqueItems": true,
+     "minItems": 1
+    },
+    "origin": {
+     "$ref": "#/$defs/origin"
+    },
+    "steps": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/step"
+     },
+     "minItems": 1
+    },
+    "final": {
+     "$ref": "#/$defs/checkpoint"
+    }
+   }
+  },
+  "matrix": {
+   "description": "The decision table: its rows in check order.",
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "version",
+    "rows"
+   ],
+   "properties": {
+    "version": {
+     "type": "string"
+    },
+    "rows": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "id",
+       "commands",
+       "situation",
+       "output"
+      ],
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "commands": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        },
+        "uniqueItems": true,
+        "minItems": 1
+       },
+       "situation": {
+        "type": "string"
+       },
+       "output": {
+        "type": "string"
+       },
+       "rejection": {
+        "type": "string"
+       }
+      }
+     },
+     "uniqueItems": true,
+     "minItems": 1
+    }
+   }
+  },
+  "released": {
+   "description": "Every vector of every released version, by its file's name and the SHA-256 digest of its bytes.",
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "vectors"
+   ],
+   "properties": {
+    "vectors": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "id",
+       "version",
+       "sha256"
+      ],
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "version": {
+        "type": "string"
+       },
+       "sha256": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+       }
+      }
+     },
+     "uniqueItems": true
+    }
+   }
+  }
+ }
+}

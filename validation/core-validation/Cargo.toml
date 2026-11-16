@@ -1,0 +1,25 @@
+# The testing ladder's cluster simulation tier: several nodes' books fed by a
+# seeded harness, with honest, crashed and equivocating members, and the
+# cross-node invariants consensus counting must keep. The harness is its
+# `src/`; its tests, named for what they prove, its `tests/`.
+[package]
+name = "cartel-core-validation"
+version = "0.0.0"
+edition.workspace = true
+license.workspace = true
+publish = false
+autotests = false
+
+[dependencies]
+cartel.workspace = true
+
+[dev-dependencies]
+proptest.workspace = true
+
+[lib]
+name = "cartel_core_validation"
+path = "src/lib.rs"
+
+[[test]]
+name = "all_tests"
+path = "tests/all_tests.rs"

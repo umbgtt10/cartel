@@ -1,0 +1,164 @@
+{
+  "description": "Every further different choice is an equivocation again; the counted one again is already counted.",
+  "rows": [
+    "ballot-opened",
+    "vote-counted",
+    "equivocation",
+    "already-counted"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1",
+            "2",
+            "3"
+          ],
+          "thresholds": [
+            "3"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "BallotOpened": {}
+        }
+      }
+    },
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "member": "2",
+          "choice": "aa"
+        }
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "VoteCounted": {
+            "count": "1"
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "member": "2",
+          "choice": "bb"
+        }
+      },
+      "receipt": {
+        "number": "3",
+        "output": {
+          "CommandRejected": {
+            "Equivocation": {
+              "counted": "aa"
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "member": "2",
+          "choice": "cc"
+        }
+      },
+      "receipt": {
+        "number": "4",
+        "output": {
+          "CommandRejected": {
+            "Equivocation": {
+              "counted": "aa"
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "member": "2",
+          "choice": "aa"
+        }
+      },
+      "receipt": {
+        "number": "5",
+        "output": {
+          "CommandRejected": {
+            "AlreadyCounted": {}
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [
+      {
+        "ballot": {
+          "question": "1",
+          "round": "0",
+          "phase": "0"
+        },
+        "electorate": [
+          "1",
+          "2",
+          "3"
+        ],
+        "thresholds": [
+          "3"
+        ],
+        "tally": [
+          {
+            "choice": "aa",
+            "voters": [
+              "2"
+            ]
+          }
+        ]
+      }
+    ],
+    "next_receipt": "7"
+  }
+}

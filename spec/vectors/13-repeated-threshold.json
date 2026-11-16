@@ -1,0 +1,54 @@
+{
+  "description": "A threshold given twice is refused, naming it.",
+  "rows": [
+    "repeated-threshold"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1",
+            "2",
+            "3"
+          ],
+          "thresholds": [
+            "2",
+            "2"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "CommandRejected": {
+            "RepeatedThreshold": {
+              "threshold": "2"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [],
+    "next_receipt": "3"
+  }
+}

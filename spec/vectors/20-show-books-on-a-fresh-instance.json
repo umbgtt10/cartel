@@ -1,0 +1,44 @@
+{
+  "description": "A fresh instance's checkpoint: its instance id, no ballot, and the next receipt's number after its own call.",
+  "rows": [
+    "books-shown"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "4",
+        "incarnation": "9"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "ShowBooks": {}
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "BooksShown": {
+            "checkpoint": {
+              "instance": {
+                "node": "4",
+                "incarnation": "9"
+              },
+              "ballots": [],
+              "next_receipt": "2"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "4",
+      "incarnation": "9"
+    },
+    "ballots": [],
+    "next_receipt": "3"
+  }
+}

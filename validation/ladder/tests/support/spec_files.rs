@@ -1,0 +1,69 @@
+// Copyright (c) 2026 Umberto Gotti
+// SPDX-License-Identifier: MIT
+
+use serde_json::from_str;
+use serde_json::Value;
+use std::fs::read;
+use std::fs::read_dir;
+use std::path::Path;
+use std::path::PathBuf;
+
+// The specification, at the repository root beside the crate: read by the
+// tests alone, never by the crate.
+pub struct SpecFiles;
+
+impl SpecFiles {
+    pub fn matrix() -> Value {
+        Self::read(&Self::root().join("matrix.json"))
+    }
+
+    pub fn released() -> Value {
+        Self::read(&Self::root().join("released.json"))
+    }
+
+    pub fn schema() -> Value {
+        Self::read(&Self::root().join("schema.json"))
+    }
+
+    // A vector's file as it is stored, byte for byte, or none if there is no
+    // vector of that name.
+    pub fn vector_bytes(name: &str) -> Option<Vec<u8>> {
+        read(Self::root().join("vectors").join(format!("{name}.json"))).ok()
+    }
+
+    // Every vector under its file's name, in the order of the names.
+    pub fn vectors() -> Vec<(String, Value)> {
+        let folder = Self::root().join("vectors");
+        let mut files: Vec<PathBuf> = read_dir(&folder)
+            .unwrap_or_else(|error| panic!("{}: {error}", folder.display()))
+            .map(|entry| entry.expect("a vector's entry").path())
+            .filter(|path| {
+                path.extension()
+                    .is_some_and(|extension| extension == "json")
+            })
+            .collect();
+        files.sort();
+        files
+            .into_iter()
+            .map(|path| {
+                let name = path
+                    .file_stem()
+                    .expect("a vector's name")
+                    .to_string_lossy()
+                    .into_owned();
+                (name, Self::read(&path))
+            })
+            .collect()
+    }
+
+    fn read(path: &Path) -> Value {
+        let bytes = read(path).unwrap_or_else(|error| panic!("{}: {error}", path.display()));
+        let text =
+            String::from_utf8(bytes).unwrap_or_else(|error| panic!("{}: {error}", path.display()));
+        from_str(&text).unwrap_or_else(|error| panic!("{}: {error}", path.display()))
+    }
+
+    fn root() -> PathBuf {
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../spec")
+    }
+}
