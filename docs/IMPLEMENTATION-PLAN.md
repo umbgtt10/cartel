@@ -65,13 +65,23 @@ It is the largest slice by far. The five after it are small.
 
 ## 3. Integration
 
-**Raft, after slice 3.** A `raft-cartel` plug-in behind Raft's `ConsensusBookkeeping` port replaces
-`MajorityConsensusBookkeeping`, with no change of behaviour.
-- Ballots: question = term, round 0, phase 0 for pre-vote and 1 for vote.
-- Closing: a close at each new term.
-- The watermark: from the leader's positions, given per member. Raft's `held` list gains its members.
+**Raft, after slice 3 -- built 2026-11-16** (`etheram-raft`, branch `cartel-integration`). A `raft-cartel`
+plug-in behind Raft's `ConsensusBookkeeping` port, over Cartel 0.4.0 from crates.io, keeps the consensus books in
+every deployment there, with no change of behaviour. What was built differs from what this section first planned,
+for reasons the port's contract and a property test gave:
+- **One Cartel instance per kind of ballot.** Raft opens and supersedes a pre-vote and a vote apart, and its
+  contract asks that opening one leave the other's count as it was. A close in one instance takes every phase below
+  its point, so one instance with a phase per kind could not drop a kind's superseded attempts without the other's
+  live ballot; two instances can.
+- **A ballot's question is its opening's place in the kind's sequence,** not the term. Each opening is a ballot of
+  its own, the one it supersedes closed before it, so a re-opening counts over and the books hold only the ballot
+  open now. With the term as the question, a key lower than the last -- which the port allows, though Raft never
+  sends one -- met a close point above it: the property test against the default found it.
+- **The watermark,** from what each member holds, now named beside it (`HeldIndex`), at a majority's threshold.
+- `MajorityConsensusBookkeeping` stays Raft's default in `node-infra`, and the consumer outside that repository
+  that constructs it is untouched until its own step.
 
-Raft's stages 1–6 must stay green. Raft takes Cartel from a git tag until it is published, as it took beggar.
+Raft's stages 1, 2, 5 and 6 and its soak stay green.
 
 **IBFT, after slice 6.**
 1. Its `VoteTally` port first.

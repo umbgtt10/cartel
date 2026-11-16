@@ -177,7 +177,7 @@ meet Cartel's:
 
 | protocol | integration point | status |
 |---|---|---|
-| Raft | a `raft-cartel` plug-in behind its `ConsensusBookkeeping` port, replacing `MajorityConsensusBookkeeping` with no change of behaviour | first, agreed |
+| Raft | a `raft-cartel` plug-in behind its `ConsensusBookkeeping` port, in place of `MajorityConsensusBookkeeping` in every deployment, with no change of behaviour: one instance per kind of ballot, progress a watermark | built 2026-11-16 |
 | IBFT | its `VoteTally` port first, then the books still in its consensus code (inventory I1–I17) | after Raft |
 
 ## 7. The quorum's shape, left open
