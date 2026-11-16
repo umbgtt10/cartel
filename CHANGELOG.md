@@ -5,6 +5,10 @@ version it conforms to. The first release is 0.2.0: 0.1.0 on crates.io is the na
 
 ## [Unreleased]
 
+## [0.2.0] — 2026-11-16
+
+Slice 1, ballots. Conforms to the specification's version 0.1.0. Not on crates.io.
+
 #### Added
 - The workspace, laid out by role: the crate in `crates/core/`, the specification's model in `crates/spec-model/`,
   the packages that check them in `validation/`, the gates in `xtask/`, ported from beggar's.

@@ -1,3 +1,214 @@
 {
- "vectors": []
+ "vectors": [
+  {
+   "id": "01-open-a-ballot",
+   "version": "0.1.0",
+   "sha256": "c421ec44211e1b5c2c450b9731dceccac20403f5bcdae594efd9b7316d148527"
+  },
+  {
+   "id": "02-electorate-and-thresholds-in-any-order",
+   "version": "0.1.0",
+   "sha256": "8f16307d77be08f0374c3dd17469548a4376d8566201eb3a0b37d91e99ab3af9"
+  },
+  {
+   "id": "03-empty-electorate",
+   "version": "0.1.0",
+   "sha256": "4091ff331713a964b70a7320adb72e363db623fffba335f3a356b5ca70bf18f7"
+  },
+  {
+   "id": "04-empty-electorate-checked-first",
+   "version": "0.1.0",
+   "sha256": "a48f2cd98244c160f42c502f9b141a7dfa7ff2bab053d875b1f93704e7a121d8"
+  },
+  {
+   "id": "05-repeated-member",
+   "version": "0.1.0",
+   "sha256": "af6f6df6a1cf38e0c6f1ff478cb697795d1e432a65647010ab6eda888ffe55a2"
+  },
+  {
+   "id": "06-repeated-member-names-the-lowest",
+   "version": "0.1.0",
+   "sha256": "f31e1308f5993cf4e233c8b2b066a9e3b679fa77a6eb67f9a08a1ca7abe1f07e"
+  },
+  {
+   "id": "07-repeated-member-checked-before-the-thresholds",
+   "version": "0.1.0",
+   "sha256": "722fc34f1bc9416d3c49ee91894a67cfb169f03d97f7a0c4803ae4d5fe2cec1f"
+  },
+  {
+   "id": "08-no-thresholds",
+   "version": "0.1.0",
+   "sha256": "2ca4d7094e863296cf9e92268ad77f0a58dc6c83e59db5f2ae19b9b41038bf21"
+  },
+  {
+   "id": "09-threshold-zero",
+   "version": "0.1.0",
+   "sha256": "df58cd387d26f31a8e63426b74b3f722d3ddf781bc0706c53bc81b34185951a6"
+  },
+  {
+   "id": "10-threshold-above-the-electorate",
+   "version": "0.1.0",
+   "sha256": "35b0d0984946f4fbf7a498f10f5817104f1b2863fc009d6012c8cf6f7a3ec280"
+  },
+  {
+   "id": "11-threshold-out-of-range-names-the-lowest",
+   "version": "0.1.0",
+   "sha256": "b91552bd82b764aeb3c1e788a340df054a6442bd5357e08e18939daf769eb968"
+  },
+  {
+   "id": "12-threshold-at-the-electorate-size",
+   "version": "0.1.0",
+   "sha256": "6468a81d65a992e6f2825966495e6a1f3de5b14b1da29ee18d5ec38062985093"
+  },
+  {
+   "id": "13-repeated-threshold",
+   "version": "0.1.0",
+   "sha256": "e5bf86c0f7d7a7efd25f3b666ed93c263d89c2e518ffbc2ebdd14cb80f4a43ae"
+  },
+  {
+   "id": "14-repeated-threshold-names-the-lowest",
+   "version": "0.1.0",
+   "sha256": "cf3626639fff389bea0ac572d3b9f18bb4aa426c47dad18951b6b774d2b71bfc"
+  },
+  {
+   "id": "15-out-of-range-checked-before-repeated",
+   "version": "0.1.0",
+   "sha256": "9250aa549ae7c576e25f58ac504223bd0733205633cbc7398be7e1a9697ce752"
+  },
+  {
+   "id": "16-the-command-is-checked-before-the-ballot",
+   "version": "0.1.0",
+   "sha256": "ae72e18f70b52e627174a27e777d3f9a47fe0929bfc0267d2f949c15a103c315"
+  },
+  {
+   "id": "17-ballot-already-open",
+   "version": "0.1.0",
+   "sha256": "96feb0853f5b7b70c23bd102435b59bdc2a0045d26876ebcf3ee889571df3618"
+  },
+  {
+   "id": "18-a-ballot-is-all-three-numbers",
+   "version": "0.1.0",
+   "sha256": "a1030dde1c1b7c838778e04884241ef4709e8944f6eed693b987435cefa4d222"
+  },
+  {
+   "id": "19-list-ballots-on-a-fresh-instance",
+   "version": "0.1.0",
+   "sha256": "d024581eb799f41543c2c8933ba8243864cfcdf9c20eebf3721485d7c86a3ed3"
+  },
+  {
+   "id": "20-show-books-on-a-fresh-instance",
+   "version": "0.1.0",
+   "sha256": "5f114547d8bb9b2c67f068d817491db3d766bf31185a405ed4fc98a682b81a00"
+  },
+  {
+   "id": "21-vote-in-a-ballot-not-open",
+   "version": "0.1.0",
+   "sha256": "5df7750f05efb5f9c0868b2ad40ed2682080df482e08b6570f43a8b7c558db17"
+  },
+  {
+   "id": "22-the-ballot-is-checked-before-the-member",
+   "version": "0.1.0",
+   "sha256": "ad315d674a2e2f4140d18e19b84d25884099be8f7cade440e14968f960e6fccd"
+  },
+  {
+   "id": "23-vote-from-a-non-member",
+   "version": "0.1.0",
+   "sha256": "75982f183c65942d54429be3c29754cc2159c11623db7befbedb7ef2be748fe1"
+  },
+  {
+   "id": "24-vote-counted",
+   "version": "0.1.0",
+   "sha256": "6190f59700223851d6cc59b3446e3346fb4918072a5353476b70c1593e921e9b"
+  },
+  {
+   "id": "25-quorum-reached",
+   "version": "0.1.0",
+   "sha256": "2ae675d67bf79db812528fa818f9201510e31392a1fd9fb045adceb54f287fd0"
+  },
+  {
+   "id": "26-threshold-of-one",
+   "version": "0.1.0",
+   "sha256": "1aeaca91bfb160dd42339d38d1671d9ca554d2236455e36727f230c07af19fde"
+  },
+  {
+   "id": "27-thresholds-reached-in-turn",
+   "version": "0.1.0",
+   "sha256": "bb2ff967641e97b4bea9ce76bc534bb20cff16dad83ae4888784d2f65fef4620"
+  },
+  {
+   "id": "28-a-threshold-is-reached-once-per-choice",
+   "version": "0.1.0",
+   "sha256": "e97345b66f7ebee2652b4cebe64e60e758facd34c200e07a2a46c908b15ce40f"
+  },
+  {
+   "id": "29-already-counted",
+   "version": "0.1.0",
+   "sha256": "ed15982f07d047ccc1368d56d5c25b2bc607713ad1dac500e7019ee8b304505e"
+  },
+  {
+   "id": "30-equivocation",
+   "version": "0.1.0",
+   "sha256": "c2b54e175b8222e9be84cb91240bda8eb633cee6225c8ee9a1acac07e7867aee"
+  },
+  {
+   "id": "31-equivocation-every-time",
+   "version": "0.1.0",
+   "sha256": "15d133fec49005ad2ec5917c6574a6ee6b17c8aa6bfe01707aded1daedebc6ae"
+  },
+  {
+   "id": "32-membership-is-checked-before-the-tally",
+   "version": "0.1.0",
+   "sha256": "43144383dd67dfa36e8ccffe85b0154596cbafe328354a35d015db7d4d2e8e89"
+  },
+  {
+   "id": "33-empty-choice",
+   "version": "0.1.0",
+   "sha256": "53b83baafd3ab2127d8c846449fbae7cd583339075e1d6a7b2d418a6d5479fe8"
+  },
+  {
+   "id": "34-choices-of-different-lengths-share-a-ballot",
+   "version": "0.1.0",
+   "sha256": "23bd79a3082744893cdc8410298d138e42a920514f141e670c50fb9bc9b192a5"
+  },
+  {
+   "id": "35-choices-in-byte-order",
+   "version": "0.1.0",
+   "sha256": "cd38714f8f74f11f942d3a6c28ec03cf4eb15e65a4b9bf2e38ea95a347d1e389"
+  },
+  {
+   "id": "36-ballots-do-not-interfere",
+   "version": "0.1.0",
+   "sha256": "ec047e7180c04fa330b8ead654903d86cfced126877b5881f1ae324a06ce71b4"
+  },
+  {
+   "id": "37-receipts-count-every-call",
+   "version": "0.1.0",
+   "sha256": "7f20be0c92fc1f1d9094588cc29e79458673daf7b7b05cf1bfd74f5f51242ef5"
+  },
+  {
+   "id": "38-a-refusal-changes-nothing",
+   "version": "0.1.0",
+   "sha256": "6336bd3d17a3875d585cf4f5bd43036004e0d0028f4bf11da32cf957fdd547eb"
+  },
+  {
+   "id": "39-the-top-of-u64",
+   "version": "0.1.0",
+   "sha256": "07fa1e6ad8a6f4fa11eedba51bb364086826f629bbb29a139b03c16339e47a92"
+  },
+  {
+   "id": "40-a-quorum-is-the-voters-of-its-choice",
+   "version": "0.1.0",
+   "sha256": "3e9e59abed976dc340077b827090a80f035e16191c531f79cf40f3597b136fcd"
+  },
+  {
+   "id": "41-show-a-ballot-not-open",
+   "version": "0.1.0",
+   "sha256": "3b41e70436a9473fc0694de443892d542b04031d95aea4b4d1d1a25a079264a4"
+  },
+  {
+   "id": "42-the-checkpoint-mid-run",
+   "version": "0.1.0",
+   "sha256": "3748aa5cdf968285e5b65db41b858e130c673850870524f695fee4a0d46433da"
+  }
+ ]
 }

@@ -2,9 +2,13 @@
 
 A `no_std`, protocol-independent **consensus bookkeeper**.
 
-**Under construction.** The design is settled: twenty-three ADRs in [`docs/ADRs/`](docs/ADRs/README.md), the
-vocabulary and the commands in [`docs/DESIGN.md`](docs/DESIGN.md), the order of building in
-[`docs/IMPLEMENTATION-PLAN.md`](docs/IMPLEMENTATION-PLAN.md). The first slice, ballots, is being built.
+**Slice 1 of six is built** (0.2.0, 2026-11-16): ballots -- an instance, created fresh, with an observer told of
+every call; `OpenBallot` and `CastVote`; the queries `ShowBallot`, `ListBallots` and `ShowBooks`, the checkpoint --
+conformant to version 0.1.0 of the specification in [`spec/`](spec/SPEC.md). Not on crates.io.
+
+The design is twenty-three ADRs in [`docs/ADRs/`](docs/ADRs/README.md), the vocabulary and the commands in
+[`docs/DESIGN.md`](docs/DESIGN.md), the order of building in [`docs/IMPLEMENTATION-PLAN.md`](docs/IMPLEMENTATION-PLAN.md):
+closing, the watermark, restore, bounds and claims come next.
 
 ## What it does
 
