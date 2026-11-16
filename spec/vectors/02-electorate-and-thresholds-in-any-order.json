@@ -1,0 +1,104 @@
+{
+  "description": "The electorate and the thresholds are given in any order, and kept in ascending order.",
+  "rows": [
+    "ballot-opened",
+    "ballot-shown"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "7",
+            "round": "2",
+            "phase": "1"
+          },
+          "electorate": [
+            "3",
+            "1",
+            "2"
+          ],
+          "thresholds": [
+            "3",
+            "2"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "BallotOpened": {}
+        }
+      }
+    },
+    {
+      "command": {
+        "ShowBallot": {
+          "ballot": {
+            "question": "7",
+            "round": "2",
+            "phase": "1"
+          }
+        }
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "BallotShown": {
+            "record": {
+              "ballot": {
+                "question": "7",
+                "round": "2",
+                "phase": "1"
+              },
+              "electorate": [
+                "1",
+                "2",
+                "3"
+              ],
+              "thresholds": [
+                "2",
+                "3"
+              ],
+              "tally": []
+            }
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [
+      {
+        "ballot": {
+          "question": "7",
+          "round": "2",
+          "phase": "1"
+        },
+        "electorate": [
+          "1",
+          "2",
+          "3"
+        ],
+        "thresholds": [
+          "2",
+          "3"
+        ],
+        "tally": []
+      }
+    ],
+    "next_receipt": "4"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "description": "A fresh instance has no ballot open.",
+  "rows": [
+    "ballots-listed"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "ListBallots": {}
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "BallotsListed": {
+            "ballots": []
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [],
+    "next_receipt": "3"
+  }
+}

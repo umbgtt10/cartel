@@ -19,8 +19,8 @@ What to do about an equivocating member differs by protocol: ignore it, exclude 
 When a member votes a choice different from the one already counted for it in a ballot:
 - the first vote stays counted;
 - the second is not counted;
-- the command is refused with an equivocation, carrying the ballot, the member, the choice counted and the choice
-  offered.
+- the command is refused with an equivocation, carrying the choice counted. The ballot, the member and the choice
+  offered are the command's, beside the refusal in the log.
 
 Cartel takes no further action.
 

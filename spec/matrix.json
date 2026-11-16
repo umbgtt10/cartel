@@ -1,0 +1,144 @@
+{
+ "version": "0.1.0",
+ "rows": [
+  {
+   "id": "empty-electorate",
+   "commands": [
+    "OpenBallot"
+   ],
+   "situation": "`electorate` is empty",
+   "output": "CommandRejected",
+   "rejection": "EmptyElectorate"
+  },
+  {
+   "id": "repeated-member",
+   "commands": [
+    "OpenBallot"
+   ],
+   "situation": "`electorate` names a member more than once",
+   "output": "CommandRejected",
+   "rejection": "RepeatedMember"
+  },
+  {
+   "id": "no-thresholds",
+   "commands": [
+    "OpenBallot"
+   ],
+   "situation": "`thresholds` is empty",
+   "output": "CommandRejected",
+   "rejection": "NoThresholds"
+  },
+  {
+   "id": "threshold-out-of-range",
+   "commands": [
+    "OpenBallot"
+   ],
+   "situation": "a threshold is 0, or above the number of members in `electorate`",
+   "output": "CommandRejected",
+   "rejection": "ThresholdOutOfRange"
+  },
+  {
+   "id": "repeated-threshold",
+   "commands": [
+    "OpenBallot"
+   ],
+   "situation": "a threshold is given more than once",
+   "output": "CommandRejected",
+   "rejection": "RepeatedThreshold"
+  },
+  {
+   "id": "ballot-already-open",
+   "commands": [
+    "OpenBallot"
+   ],
+   "situation": "`ballot` is open",
+   "output": "CommandRejected",
+   "rejection": "BallotAlreadyOpen"
+  },
+  {
+   "id": "ballot-opened",
+   "commands": [
+    "OpenBallot"
+   ],
+   "situation": "otherwise: the ballot is opened with its electorate and thresholds and an empty tally",
+   "output": "BallotOpened"
+  },
+  {
+   "id": "ballot-not-open",
+   "commands": [
+    "CastVote",
+    "ShowBallot"
+   ],
+   "situation": "`ballot` is not open",
+   "output": "CommandRejected",
+   "rejection": "BallotNotOpen"
+  },
+  {
+   "id": "not-a-member",
+   "commands": [
+    "CastVote"
+   ],
+   "situation": "`member` is not in the ballot's electorate",
+   "output": "CommandRejected",
+   "rejection": "NotAMember"
+  },
+  {
+   "id": "already-counted",
+   "commands": [
+    "CastVote"
+   ],
+   "situation": "`member` is a voter of `choice` in the ballot",
+   "output": "CommandRejected",
+   "rejection": "AlreadyCounted"
+  },
+  {
+   "id": "equivocation",
+   "commands": [
+    "CastVote"
+   ],
+   "situation": "`member` is a voter of another choice in the ballot",
+   "output": "CommandRejected",
+   "rejection": "Equivocation"
+  },
+  {
+   "id": "quorum-reached",
+   "commands": [
+    "CastVote"
+   ],
+   "situation": "otherwise, and the vote reaches a threshold: the choice's count with it is one of the ballot's thresholds",
+   "output": "QuorumReached"
+  },
+  {
+   "id": "vote-counted",
+   "commands": [
+    "CastVote"
+   ],
+   "situation": "otherwise: `member` becomes a voter of `choice`",
+   "output": "VoteCounted"
+  },
+  {
+   "id": "ballot-shown",
+   "commands": [
+    "ShowBallot"
+   ],
+   "situation": "otherwise: the ballot's record",
+   "output": "BallotShown"
+  },
+  {
+   "id": "ballots-listed",
+   "commands": [
+    "ListBallots"
+   ],
+   "situation": "always: the open ballots, in canonical order",
+   "output": "BallotsListed"
+  },
+  {
+   "id": "books-shown",
+   "commands": [
+    "ShowBooks"
+   ],
+   "situation": "always: the checkpoint, describing the state after the call",
+   "output": "BooksShown"
+  }
+ ]
+}

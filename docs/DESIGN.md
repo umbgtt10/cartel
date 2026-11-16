@@ -163,7 +163,7 @@ Every refusal is one output carrying a specific rejection:
 | command | rejections |
 |---|---|
 | opening a ballot | already open, below the close point, empty electorate, repeated member, threshold out of range, repeated threshold, books full, electorate too large |
-| casting a vote | not open, below the close point, not a member, already counted, an equivocation carrying the choice counted and the choice offered, choice too long |
+| casting a vote | not open, below the close point, not a member, already counted, an equivocation carrying the choice counted (the choice offered is the command's), choice too long |
 | measuring a watermark | repeated member, threshold out of range |
 
 A close at or behind the close point is answered, closing nothing.

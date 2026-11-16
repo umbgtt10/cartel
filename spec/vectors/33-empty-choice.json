@@ -1,0 +1,147 @@
+{
+  "description": "The empty choice is a choice like any other: a ballot whose every vote is a yes.",
+  "rows": [
+    "ballot-opened",
+    "vote-counted",
+    "quorum-reached",
+    "already-counted"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "5",
+            "round": "0",
+            "phase": "1"
+          },
+          "electorate": [
+            "1",
+            "2",
+            "3"
+          ],
+          "thresholds": [
+            "2"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "BallotOpened": {}
+        }
+      }
+    },
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "5",
+            "round": "0",
+            "phase": "1"
+          },
+          "member": "1",
+          "choice": ""
+        }
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "VoteCounted": {
+            "count": "1"
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "5",
+            "round": "0",
+            "phase": "1"
+          },
+          "member": "3",
+          "choice": ""
+        }
+      },
+      "receipt": {
+        "number": "3",
+        "output": {
+          "QuorumReached": {
+            "count": "2",
+            "thresholds": [
+              "2"
+            ],
+            "voters": [
+              "1",
+              "3"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "5",
+            "round": "0",
+            "phase": "1"
+          },
+          "member": "3",
+          "choice": ""
+        }
+      },
+      "receipt": {
+        "number": "4",
+        "output": {
+          "CommandRejected": {
+            "AlreadyCounted": {}
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [
+      {
+        "ballot": {
+          "question": "5",
+          "round": "0",
+          "phase": "1"
+        },
+        "electorate": [
+          "1",
+          "2",
+          "3"
+        ],
+        "thresholds": [
+          "2"
+        ],
+        "tally": [
+          {
+            "choice": "",
+            "voters": [
+              "1",
+              "3"
+            ]
+          }
+        ]
+      }
+    ],
+    "next_receipt": "6"
+  }
+}

@@ -1,0 +1,165 @@
+{
+  "description": "Ballots and members span every u64, 0 and the top included.",
+  "rows": [
+    "ballot-opened",
+    "vote-counted",
+    "quorum-reached",
+    "ballot-shown"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "18446744073709551615",
+            "round": "18446744073709551615",
+            "phase": "18446744073709551615"
+          },
+          "electorate": [
+            "18446744073709551615",
+            "0"
+          ],
+          "thresholds": [
+            "2"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "BallotOpened": {}
+        }
+      }
+    },
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "18446744073709551615",
+            "round": "18446744073709551615",
+            "phase": "18446744073709551615"
+          },
+          "member": "18446744073709551615",
+          "choice": "aa"
+        }
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "VoteCounted": {
+            "count": "1"
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "18446744073709551615",
+            "round": "18446744073709551615",
+            "phase": "18446744073709551615"
+          },
+          "member": "0",
+          "choice": "aa"
+        }
+      },
+      "receipt": {
+        "number": "3",
+        "output": {
+          "QuorumReached": {
+            "count": "2",
+            "thresholds": [
+              "2"
+            ],
+            "voters": [
+              "0",
+              "18446744073709551615"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "ShowBallot": {
+          "ballot": {
+            "question": "18446744073709551615",
+            "round": "18446744073709551615",
+            "phase": "18446744073709551615"
+          }
+        }
+      },
+      "receipt": {
+        "number": "4",
+        "output": {
+          "BallotShown": {
+            "record": {
+              "ballot": {
+                "question": "18446744073709551615",
+                "round": "18446744073709551615",
+                "phase": "18446744073709551615"
+              },
+              "electorate": [
+                "0",
+                "18446744073709551615"
+              ],
+              "thresholds": [
+                "2"
+              ],
+              "tally": [
+                {
+                  "choice": "aa",
+                  "voters": [
+                    "0",
+                    "18446744073709551615"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [
+      {
+        "ballot": {
+          "question": "18446744073709551615",
+          "round": "18446744073709551615",
+          "phase": "18446744073709551615"
+        },
+        "electorate": [
+          "0",
+          "18446744073709551615"
+        ],
+        "thresholds": [
+          "2"
+        ],
+        "tally": [
+          {
+            "choice": "aa",
+            "voters": [
+              "0",
+              "18446744073709551615"
+            ]
+          }
+        ]
+      }
+    ],
+    "next_receipt": "6"
+  }
+}

@@ -1,29 +1,44 @@
 # cartel
 
-`cartel` is a Rust crate named `cartel`.
+A `no_std`, protocol-independent **consensus bookkeeper**.
 
-At the moment, this project is in its initial stage and currently provides a minimal executable target.
+**Under construction.** The design is settled: twenty-three ADRs in [`docs/ADRs/`](docs/ADRs/README.md), the
+vocabulary and the commands in [`docs/DESIGN.md`](docs/DESIGN.md), the order of building in
+[`docs/IMPLEMENTATION-PLAN.md`](docs/IMPLEMENTATION-PLAN.md). The first slice, ballots, is being built.
 
-## Installation
+## What it does
 
-Build the project locally with Cargo:
+**Cartel counts and never decides.** It keeps the books on votes:
+- who may vote in a ballot;
+- who voted for which choice;
+- when a threshold is reached, and by whom.
 
-cargo build
+A ballot is a question, a round and a phase. Its electorate and its thresholds are handed in when it opens, so a
+membership change never touches a ballot already open. A choice is opaque bytes. A member voting two different
+choices in one ballot is refused, the choice already counted named beside the one offered.
 
-## Usage
+**What it leaves to the protocol that drives it:**
+- verifying signatures;
+- computing thresholds;
+- casting its own vote;
+- timing rounds;
+- storing anything durably;
+- deciding what a reached quorum means.
 
-Run the project locally with:
+Raft or IBFT, crash- or Byzantine-tolerant: the protocol translates at one integration point, and Cartel answers
+every call through one entry point, on a numbered receipt, reported to an observer.
 
-cargo run
+## Siblings
 
-Current output:
+Cartel is one of four bookkeepers a consensus protocol orchestrates, none aware of the others:
 
-Hello, world!
-
-## Publishing
-
-This repository is being prepared for publication on [crates.io](https://crates.io/).
+| bookkeeper | keeps |
+|---|---|
+| [faction](https://crates.io/crates/faction) | membership |
+| [beggar](https://crates.io/crates/beggar) | recovery |
+| notary | credentials |
+| cartel | consensus |
 
 ## License
 
-This project should be released under an open source license before publishing.
+MIT.

@@ -1,12 +1,28 @@
-[package]
-name = "cartel"
-version = "0.1.0"
-edition = "2024"
-description = "A Rust crate named cartel."
-license = "MIT OR Apache-2.0"
-repository = "https://github.com/your-org/cartel"
-readme = "README.md"
-keywords = ["cartel"]
-categories = ["command-line-utilities"]
+# A virtual workspace laid out by role (docs/ADRs/P2-ADR-WorkspaceLaidOutByRole.md):
+# the library under crates/, everything that checks it under validation/, the
+# gates in xtask/. A crate at the root would put xtask/tests/** inside its
+# package directory, and stern would read them as the crate's.
+[workspace]
+members = [
+    "crates/core",
+    "crates/spec-model",
+    "validation/core-validation",
+    "validation/ladder",
+    "validation/memory",
+    "xtask",
+]
+resolver = "2"
 
-[dependencies]
+[workspace.package]
+edition = "2021"
+license = "MIT"
+
+[workspace.dependencies]
+cartel = { path = "crates/core" }
+cartel-core-validation = { path = "validation/core-validation" }
+cartel-spec-model = { path = "crates/spec-model" }
+boon = "0.6"
+proptest = { version = "1", default-features = false, features = ["std"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", default-features = false, features = ["alloc"] }
+sha2 = "0.10"

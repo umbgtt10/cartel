@@ -67,7 +67,8 @@ not repeated in the output.
 **Refusals:**
 - Every refusal is one output carrying a specific rejection, and what the log needs to tell a degenerate caller
   from a malicious member.
-- An equivocation is such a rejection: it carries the choice counted and the choice offered.
+- An equivocation is such a rejection: it carries the choice counted, and the command beside it the choice
+  offered.
 - A refusal changes nothing.
 
 **The matrix is checked in a fixed order:**

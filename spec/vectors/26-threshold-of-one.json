@@ -1,0 +1,101 @@
+{
+  "description": "A threshold of 1 is reached by the first vote for a choice.",
+  "rows": [
+    "ballot-opened",
+    "quorum-reached"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1",
+            "2",
+            "3"
+          ],
+          "thresholds": [
+            "1"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "BallotOpened": {}
+        }
+      }
+    },
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "member": "2",
+          "choice": "bb"
+        }
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "QuorumReached": {
+            "count": "1",
+            "thresholds": [
+              "1"
+            ],
+            "voters": [
+              "2"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [
+      {
+        "ballot": {
+          "question": "1",
+          "round": "0",
+          "phase": "0"
+        },
+        "electorate": [
+          "1",
+          "2",
+          "3"
+        ],
+        "thresholds": [
+          "1"
+        ],
+        "tally": [
+          {
+            "choice": "bb",
+            "voters": [
+              "2"
+            ]
+          }
+        ]
+      }
+    ],
+    "next_receipt": "4"
+  }
+}

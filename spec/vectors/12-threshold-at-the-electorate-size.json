@@ -1,0 +1,148 @@
+{
+  "description": "A threshold equal to the electorate's size is in range, reached by the last member's vote.",
+  "rows": [
+    "ballot-opened",
+    "vote-counted",
+    "quorum-reached"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1",
+            "2",
+            "3"
+          ],
+          "thresholds": [
+            "3"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "BallotOpened": {}
+        }
+      }
+    },
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "member": "1",
+          "choice": "aa"
+        }
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "VoteCounted": {
+            "count": "1"
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "member": "2",
+          "choice": "aa"
+        }
+      },
+      "receipt": {
+        "number": "3",
+        "output": {
+          "VoteCounted": {
+            "count": "2"
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "member": "3",
+          "choice": "aa"
+        }
+      },
+      "receipt": {
+        "number": "4",
+        "output": {
+          "QuorumReached": {
+            "count": "3",
+            "thresholds": [
+              "3"
+            ],
+            "voters": [
+              "1",
+              "2",
+              "3"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [
+      {
+        "ballot": {
+          "question": "1",
+          "round": "0",
+          "phase": "0"
+        },
+        "electorate": [
+          "1",
+          "2",
+          "3"
+        ],
+        "thresholds": [
+          "3"
+        ],
+        "tally": [
+          {
+            "choice": "aa",
+            "voters": [
+              "1",
+              "2",
+              "3"
+            ]
+          }
+        ]
+      }
+    ],
+    "next_receipt": "6"
+  }
+}

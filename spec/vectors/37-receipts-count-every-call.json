@@ -1,0 +1,160 @@
+{
+  "description": "Every call is numbered one more than the last, refusals and queries included; the checkpoint describes the state after its own call.",
+  "rows": [
+    "ballot-not-open",
+    "ballots-listed",
+    "ballot-opened",
+    "ballot-already-open",
+    "books-shown"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "member": "1",
+          "choice": "aa"
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "CommandRejected": {
+            "BallotNotOpen": {}
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "ListBallots": {}
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "BallotsListed": {
+            "ballots": []
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1"
+          ],
+          "thresholds": [
+            "1"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "3",
+        "output": {
+          "BallotOpened": {}
+        }
+      }
+    },
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1"
+          ],
+          "thresholds": [
+            "1"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "4",
+        "output": {
+          "CommandRejected": {
+            "BallotAlreadyOpen": {}
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "ShowBooks": {}
+      },
+      "receipt": {
+        "number": "5",
+        "output": {
+          "BooksShown": {
+            "checkpoint": {
+              "instance": {
+                "node": "1",
+                "incarnation": "1"
+              },
+              "ballots": [
+                {
+                  "ballot": {
+                    "question": "1",
+                    "round": "0",
+                    "phase": "0"
+                  },
+                  "electorate": [
+                    "1"
+                  ],
+                  "thresholds": [
+                    "1"
+                  ],
+                  "tally": []
+                }
+              ],
+              "next_receipt": "6"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [
+      {
+        "ballot": {
+          "question": "1",
+          "round": "0",
+          "phase": "0"
+        },
+        "electorate": [
+          "1"
+        ],
+        "thresholds": [
+          "1"
+        ],
+        "tally": []
+      }
+    ],
+    "next_receipt": "7"
+  }
+}
