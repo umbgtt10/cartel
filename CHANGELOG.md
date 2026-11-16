@@ -5,6 +5,13 @@ version it conforms to. The first release is 0.2.0: 0.1.0 on crates.io is the na
 
 ## [Unreleased]
 
+## [0.4.0] — 2026-11-16
+
+### Published on crates.io
+
+Slice 3, the watermark. Conforms to the specification's version 0.3.0; its 14 new vectors are released beside the 60
+before them, which it answers alike.
+
 #### Added
 - The watermark (slice 3, the specification's 0.3.0): `MeasureWatermark` takes each member's position and a threshold
   and answers `WatermarkMeasured`, the highest position at least that many members have reached. It keeps no
