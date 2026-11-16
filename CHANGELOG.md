@@ -5,6 +5,16 @@ version it conforms to. The first release is 0.2.0: 0.1.0 on crates.io is the na
 
 ## [Unreleased]
 
+## [0.6.1] — 2026-11-16
+
+### Published on crates.io
+
+A patch release: nothing the crate does changes. Conforms to the specification's version 0.5.0.
+
+#### Changed
+- Edition 2024, as the three bookkeepers now are; `rust-version` stays 1.85. rustfmt's 2024 style reflows the
+  source. A crate's edition is its own, so no caller is touched.
+
 ## [0.6.0] — 2026-11-16
 
 ### Published on crates.io

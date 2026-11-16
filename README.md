@@ -13,7 +13,7 @@ consensus exists to survive.
 decides nothing.
 
 **Slices 1 to 5 of five are built** (0.6.0, 2026-11-16): ballots, closing, the watermark, the bounds and claims,
-conformant to version 0.5.0 of the specification in [`spec/`](spec/SPEC.md). Version 0.6.0 is on
+conformant to version 0.5.0 of the specification in [`spec/`](spec/SPEC.md). Version 0.6.1 is on
 [crates.io](https://crates.io/crates/cartel).
 
 ---
@@ -212,7 +212,7 @@ The caller owns the protocol. `cartel` owns the books.
 | Crappy functions (CRAP score) | 0 |
 | Unsafe code | 0 — enforced by `#![forbid(unsafe_code)]` |
 | `no_std` | Verified on `thumbv7em-none-eabihf` |
-| Published | [crates.io](https://crates.io/crates/cartel) 0.6.0 |
+| Published | [crates.io](https://crates.io/crates/cartel) 0.6.1 |
 
 ---
 
