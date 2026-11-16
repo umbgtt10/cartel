@@ -90,9 +90,11 @@ reaches at most one threshold.
 **Ballots do not interfere.** A command that names a ballot changes no other ballot's record, and what it answers
 depends on no other ballot's record. A member may vote one choice in one ballot and another in the next.
 
-**Forgetting is safe.** Given any subset of the votes a ballot was cast, the rules reach no threshold for a choice
-that the full set would not reach for it. A crash can make an instance miss a quorum, and never report one that was
-not there ([`DESIGN.md`](../docs/DESIGN.md) §8).
+**Forgetting is safe.** Given any subset of the votes counted in a ballot, the rules reach no threshold for a choice
+that the whole set did not reach for it. A crash can make an instance miss a quorum, and never report one the votes
+it had counted did not reach. One case is the protocol's to weigh: a member that voted two choices, a faulty one,
+may have its second counted by an instance that forgot its first. Quorum intersection, which the protocol's choice
+of thresholds gives, keeps that from deciding two choices ([`DESIGN.md`](../docs/DESIGN.md) §8).
 
 ## 5. `OpenBallot`
 

@@ -5,6 +5,8 @@ use cartel::ballot::Ballot;
 use cartel::ballot_record::BallotRecord;
 use cartel::checkpoint::Checkpoint;
 use cartel::choice::Choice;
+use cartel::command::Command;
+use cartel::origin::Origin;
 use cartel::output::Output;
 use cartel::receipt::Receipt;
 use cartel::rejection::Rejection;
@@ -26,6 +28,42 @@ impl SpecWriter {
             "ballots": checkpoint.ballots.iter().map(Self::record).collect::<Vec<Value>>(),
             "next_receipt": Self::number(checkpoint.next_receipt),
         })
+    }
+
+    pub fn command(command: &Command) -> Value {
+        match command {
+            Command::OpenBallot {
+                ballot,
+                electorate,
+                thresholds,
+            } => json!({"OpenBallot": {
+                "ballot": Self::ballot(ballot),
+                "electorate": Self::numbers(electorate),
+                "thresholds": Self::numbers(thresholds),
+            }}),
+            Command::CastVote {
+                ballot,
+                member,
+                choice,
+            } => json!({"CastVote": {
+                "ballot": Self::ballot(ballot),
+                "member": Self::number(*member),
+                "choice": Self::choice(choice),
+            }}),
+            Command::ShowBallot { ballot } => {
+                json!({"ShowBallot": {"ballot": Self::ballot(ballot)}})
+            }
+            Command::ListBallots => json!({"ListBallots": {}}),
+            Command::ShowBooks => json!({"ShowBooks": {}}),
+        }
+    }
+
+    pub fn origin(origin: &Origin) -> Value {
+        let Origin::Fresh(fresh) = origin;
+        json!({"Fresh": {"instance": {
+            "node": Self::number(fresh.instance.node),
+            "incarnation": Self::number(fresh.instance.incarnation),
+        }}})
     }
 
     pub fn receipt(receipt: &Receipt) -> Value {

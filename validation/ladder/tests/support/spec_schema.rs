@@ -14,6 +14,7 @@ pub struct SpecSchema {
     vector: SchemaIndex,
     matrix: SchemaIndex,
     released: SchemaIndex,
+    step: SchemaIndex,
 }
 
 impl SpecSchema {
@@ -33,11 +34,15 @@ impl SpecSchema {
         let released = compiler
             .compile(&format!("{id}#/$defs/released"), &mut schemas)
             .expect("the released vectors' definition compiles");
+        let step = compiler
+            .compile(&format!("{id}#/$defs/step"), &mut schemas)
+            .expect("a step's definition compiles");
         Self {
             schemas,
             vector,
             matrix,
             released,
+            step,
         }
     }
 
@@ -47,6 +52,10 @@ impl SpecSchema {
 
     pub fn admits_released(&self, released: &Value) -> bool {
         self.schemas.validate(released, self.released).is_ok()
+    }
+
+    pub fn admits_step(&self, step: &Value) -> bool {
+        self.schemas.validate(step, self.step).is_ok()
     }
 
     pub fn admits_vector(&self, vector: &Value) -> bool {

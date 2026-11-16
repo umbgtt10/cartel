@@ -65,22 +65,26 @@ its votes from its WAL after a restart.
 
 **Storing the checkpoint is the caller's:** a WAL, a file, nothing.
 
-**Forgetting is safe.** A fresh or restored instance holds a subset of the votes the instance it replaces held. The
-specification states the property this rests on: given any subset of the votes, Cartel reports no threshold reached
-that the full set would not have reached. Counting only adds, so a crash can make Cartel miss a quorum and never
-report one that was not there. Safety across a crash rests on the protocol's own durable promises, its own vote
-above all, never on Cartel's books ([`../DESIGN.md`](../DESIGN.md) §8).
+**Forgetting is safe.** A fresh or restored instance holds a subset of the votes the instance it replaces counted.
+The specification states the property this rests on: given any subset of the votes counted, Cartel reports no
+threshold reached that the whole set did not reach.
+- Counting only adds, so a crash can make Cartel miss a quorum and never report one its counted votes did not reach.
+- A faulty member that voted two choices may have its second counted once its first is forgotten. Quorum
+  intersection holds against it, not the books.
+- Safety across a crash rests on the protocol's own durable promises, its own vote above all, never on Cartel's
+  books ([`../DESIGN.md`](../DESIGN.md) §8).
 
 ## Enforcement
 
 - The property tests check that every call's number is one more than the last, refused calls included.
-- A property test removes any of a log's votes and replays it: quorums reached may vanish, never appear.
+- A property test keeps any subset of a run's counted votes and replays it: quorums reached may vanish, never
+  appear.
 - The conformance vectors give every expected receipt.
 - The replay tier ([P2-ADR-TestingLadder](P2-ADR-TestingLadder.md)):
   - rebuilds every receipt from a log;
   - detects a dropped line;
-  - resynchronises from a checkpoint;
-  - restores into a new incarnation.
+  - from 0.4.0, resynchronises from a checkpoint;
+  - from 0.4.0, restores into a new incarnation.
 
 ## Related
 

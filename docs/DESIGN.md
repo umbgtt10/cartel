@@ -197,10 +197,11 @@ and a new term or round begins.
 ### Why forgetting is safe
 
 1. **Counting only adds.** A vote is a fact another node sent. After a restart Cartel holds nothing, or an older
-   checkpoint, which is a subset of the votes it had. A subset of the votes reaches no threshold the full set would
-   not have reached. This is a property of the specification: given any subset of the votes, Cartel reports no
-   threshold reached that the full set would not have reached
+   checkpoint, which is a subset of the votes it had counted. This is a property of the specification: given any
+   subset of the votes counted, Cartel reports no threshold reached that the whole set did not reach
    ([`P1-ADR-TheLogIsTheRecord`](ADRs/P1-ADR-TheLogIsTheRecord.md)).
+   - **One exception:** a member that voted two choices may have its second counted once a restart forgot its
+     first. Only a faulty member votes two choices, and point 3 holds against it.
 2. **The danger is the node's own vote, and it is the protocol's.** What breaks safety across a crash is a node
    forgetting that it voted and voting again, differently. The node's own vote is durable protocol state
    ([`P0-ADR-CartelCountsNeverDecides`](ADRs/P0-ADR-CartelCountsNeverDecides.md)).
@@ -239,7 +240,7 @@ The restart sequence for a protocol:
 3. Open the ballots it now counts.
 
 The testing ladder holds this two ways ([`P2-ADR-TestingLadder`](ADRs/P2-ADR-TestingLadder.md)):
-- **a property test:** with any of its votes removed, a log loses quorums and never gains one;
+- **a property test:** any subset of a run's counted votes loses quorums and never gains one;
 - **the cluster simulation:** nodes crash and restart, fresh or from older checkpoints, and the cross-node invariant
   must hold through every restart.
 

@@ -15,3 +15,8 @@ version it conforms to. The first release is 0.2.0: 0.1.0 on crates.io is the na
 - The crate's first slice, ballots: `Cartel::new` from a fresh origin and an observer, and `process`, one entry point
   answering `OpenBallot`, `CastVote`, `ShowBallot`, `ListBallots` and `ShowBooks` on numbered receipts. Every vector
   answered and every call reported as answered. `NoOpObserver` for a caller with no use for one.
+- The rest of the testing ladder: the exhaustive matrix over small electorates, every threshold and two choices; the
+  property tier, crate against model, receipts numbered, ballots not interfering, no member counted twice, and any
+  subset of the votes counted reaching no quorum the whole set did not; the replay tier, logs rebuilt and a lost line
+  found; the cluster simulation, quorum intersection kept with equivocating members, lost, duplicated and reordered
+  votes and fresh restarts; the memory tier, refusals and queries holding nothing and nothing left after a drop.
