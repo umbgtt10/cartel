@@ -5,6 +5,19 @@ version it conforms to. The first release is 0.2.0: 0.1.0 on crates.io is the na
 
 ## [Unreleased]
 
+## [0.6.0] — 2026-11-16
+
+### Published on crates.io
+
+Slice 5, claims, the last slice the plan holds. Conforms to the specification's version 0.5.0; its 17 new vectors
+are released beside the 92 before them, which it answers alike.
+
+#### Changed
+- `Cartel::new` and `Cartel::process` are `#[must_use]`, as faction's are.
+- The README and the crate's front page follow the outline the three bookkeepers now share; both pages' examples
+  run as doctests. The agent rules are the set the three now share, and the ADR index carries the table of the
+  principles they hold in common.
+
 #### Added
 - Claims (slice 5, the specification's 0.5.0): `ExamineClaim` takes an electorate, a threshold and the voters
   presented as a quorum, and answers `ClaimExamined` with facts -- the members counted, the outsiders, the voters

@@ -12,9 +12,9 @@ consensus exists to survive.
 `cartel` takes the counting out: a **formally specified, fully tested registry** that keeps the books on votes and
 decides nothing.
 
-**Slices 1 to 5 of five are built** (2026-11-16): ballots, closing, the watermark, the bounds and claims,
-conformant to version 0.5.0 of the specification in [`spec/`](spec/SPEC.md). Version 0.5.0 of the crate, slices 1
-to 4, is on [crates.io](https://crates.io/crates/cartel); 0.6.0 adds claims.
+**Slices 1 to 5 of five are built** (0.6.0, 2026-11-16): ballots, closing, the watermark, the bounds and claims,
+conformant to version 0.5.0 of the specification in [`spec/`](spec/SPEC.md). Version 0.6.0 is on
+[crates.io](https://crates.io/crates/cartel).
 
 ---
 
@@ -194,7 +194,7 @@ The caller owns the protocol. `cartel` owns the books.
 |---|---|---|
 | [`spec/`](./spec/SPEC.md) | The normative specification: a decision table of 24 rows and 109 conformance vectors, each receipt written by hand | — |
 | `crates/spec-model/` | The specification's independent model: its decision table read and interpreted, depending on nothing of the crate | 101 |
-| `crates/core/` unit tests | Each type and each row in isolation | 65 |
+| `crates/core/` unit tests | Each type and each row in isolation, and the front page's and the README's examples | 67 |
 | `validation/ladder/` | Conformance to the specification, of the model and then of the crate; every command in every situation over small electorates and bounds, against the model; properties over random command sequences, the crate against the model among them; logs replayed | 35 |
 | `validation/core-validation/` | A seeded cluster simulation: honest, crashed and equivocating members, votes lost, duplicated and reordered, nodes restarting, and quorum intersection checked across them | 17 |
 | `validation/memory/` | A counting allocator: the books holding what their votes need and nothing for refusals and queries, nothing after a drop, and no more than they hold full when flooded beyond their bounds | 12 |
@@ -207,12 +207,12 @@ The caller owns the protocol. `cartel` owns the books.
 |---|---|
 | Core productive LOC | ~690 |
 | Specification | [`spec/`](./spec/SPEC.md) 0.5.0 — its independent model and the crate answer all 109 vectors as written |
-| Total tests | 351 |
+| Total tests | 353 |
 | Code coverage (productive) | 100%, over every tier and over the conformance tier alone |
 | Crappy functions (CRAP score) | 0 |
 | Unsafe code | 0 — enforced by `#![forbid(unsafe_code)]` |
 | `no_std` | Verified on `thumbv7em-none-eabihf` |
-| Published | [crates.io](https://crates.io/crates/cartel) 0.5.0 |
+| Published | [crates.io](https://crates.io/crates/cartel) 0.6.0 |
 
 ---
 
