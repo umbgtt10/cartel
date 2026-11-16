@@ -155,20 +155,23 @@ fn sources(folder: &Path) -> Vec<PathBuf> {
         .collect()
 }
 
+// A name's words, lowercase: split at each underscore and where a capital
+// follows a lowercase letter or a digit, so `next_receipt`, `QuorumReached`
+// and `BLOCK_HEIGHT` each give their two.
 fn words(name: &str) -> Vec<String> {
     let mut split = Vec::new();
     let mut current = String::new();
+    let mut after_lowercase = false;
     for character in name.chars() {
-        if character == '_' || character.is_uppercase() {
-            if !current.is_empty() {
-                split.push(current.clone());
-                current.clear();
-            }
-            if character == '_' {
-                continue;
-            }
+        let boundary = character == '_' || (character.is_uppercase() && after_lowercase);
+        if boundary && !current.is_empty() {
+            split.push(current.clone());
+            current.clear();
         }
-        current.extend(character.to_lowercase());
+        after_lowercase = character.is_lowercase() || character.is_ascii_digit();
+        if character != '_' {
+            current.extend(character.to_lowercase());
+        }
     }
     if !current.is_empty() {
         split.push(current);
