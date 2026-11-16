@@ -37,7 +37,7 @@ call, never a step of the plan.
 | **2. Closing** | `CloseBallots` and the close point. Opening or casting below it is refused as closed; a close at or behind it is answered, closing nothing. The close point is in the checkpoint, optional. | Raft, IBFT |
 | **3. Watermark** | `MeasureWatermark`: positions per member, a threshold, the highest position at least that many members have reached. Refused: a repeated member, a threshold out of range. | Raft's commit, ReadIndex and check-quorum |
 | *Raft integrates* | §3 | |
-| **4. Restore** | An instance from a checkpoint; a restart under a new incarnation; the replay tier resynchronising from a checkpoint; restarts in the cluster simulation. | IBFT's WAL |
+| **4. Restore** | An instance from a checkpoint; a restart under a new incarnation; the replay tier resynchronising from a checkpoint; restarts from older checkpoints in the cluster simulation. | a replay's resynchronisation; a protocol that keeps its books across a restart |
 | **5. Bounds** | The three optional bounds and their refusals: books full, electorate too large, choice too long. The bounds are in the checkpoint, optional. The memory tier is measured at the bounds. | small hosts, Byzantine-tolerant protocols |
 | **6. Claims** | `ExamineClaim`: the members counted, the outsiders, the repeats, whether the threshold is reached. | IBFT's certificate and NewView checks |
 | *IBFT integrates* | §3 | |
@@ -79,8 +79,7 @@ Raft's stages 1–6 must stay green. Raft takes Cartel from a git tag until it i
    - view changes and their two thresholds;
    - closing at a new round and at a commit;
    - equivocation;
-   - certificates examined as claims;
-   - the WAL's checkpoint.
+   - certificates examined as claims.
 
 The bounds come from its protocol limits. Its stages run on hardware as well.
 

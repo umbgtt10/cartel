@@ -12,8 +12,6 @@ assumes nothing about: a line may be lost.
 
 A full-state dump on every call would cost more than the lines it is read against.
 
-IBFT also persists its votes and restores them after a restart.
-
 ## Decision
 
 Every call is answered with a receipt, logged as `(number, command, output)`. The receipt holds the output and a
@@ -58,8 +56,9 @@ first receipt is number 1. The instance id, a node and an incarnation, tells two
 **An instance has one of two origins:** fresh, or a checkpoint.
 
 **Restoring a checkpoint may serve, unlike in beggar.** Beggar forbids a live restore because a restored instance
-would mint names again. Cartel mints no names, so a restored instance can serve, and IBFT needs one: it restores
-its votes from its WAL after a restart.
+would mint names again. Cartel mints no names, so a restored instance can serve: a protocol that keeps its books
+across a restart, rather than lose a round, restores them. Neither Raft nor IBFT does today; IBFT gave its
+volatile snapshot up (D20, D21) and starts from its hard state alone.
 - **A restart** restores into a new incarnation, so its receipts are told apart from those before the crash.
 - **A replay** restores under the same one.
 

@@ -206,13 +206,13 @@ and a new term or round begins.
    forgetting that it voted and voting again, differently. The node's own vote is durable protocol state
    ([`P0-ADR-CartelCountsNeverDecides`](ADRs/P0-ADR-CartelCountsNeverDecides.md)).
    - Raft writes its term and `votedFor` before it answers.
-   - IBFT keeps its round, pending block and prepared certificate in its hard state. Restarted without its volatile
-     snapshot, it begins with empty tallies and infers from that hard state whether it already sent its prepare.
+   - IBFT keeps its round, pending block and prepared certificate in its hard state, and restarts from it alone
+     (D21): it begins with empty tallies and infers from that hard state whether it already sent its prepare.
 3. **Across the cluster nothing changes.** Two quorums for different choices need, in their intersection, an honest
    member who voted both. Whatever any node's Cartel remembers, that cannot happen while honest members keep their
    own votes durable.
 4. **What is lost is evidence.** An equivocation reported before the crash is forgotten, unless the protocol kept
-   the report. IBFT keeps its malicious senders in its snapshot today.
+   the report. IBFT's malicious senders are volatile: a restart forgets them.
 
 ### How a protocol recovers
 
@@ -224,14 +224,14 @@ and a new term or round begins.
 
 For step 3 the protocol chooses one of two ways:
 
-- **Fresh.** Raft always starts fresh; IBFT does when it has no snapshot. A new instance, under a new incarnation,
-  with empty books.
+- **Fresh.** Raft and IBFT both start fresh. A new instance, under a new incarnation, with empty books.
   - A Raft node restarts as a follower; a candidate that crashed loses that term's election. A new leader rebuilds
     its followers' positions from their replies, as Raft always does: they are volatile by design.
   - In IBFT, a round that cannot reach its quorum without the votes lost times out into a view change.
-- **Restored.** This is IBFT's way today. The protocol stores the checkpoint, `ShowBooks`'s answer, in its own WAL,
-  where its volatile snapshot goes now, and restores it into a new incarnation. The argument is the same, since an
-  older checkpoint holds a subset of the votes. What it gains is the round not lost.
+- **Restored.** No protocol in view does this today; IBFT did, until it gave its volatile snapshot up (D20, D21).
+  The protocol stores the checkpoint, `ShowBooks`'s answer, in its own WAL, and restores it into a new incarnation.
+  The argument is the same, since an older checkpoint holds a subset of the votes counted. What it gains is the
+  round not lost.
 
 The restart sequence for a protocol:
 1. Create the instance, fresh or restored.
