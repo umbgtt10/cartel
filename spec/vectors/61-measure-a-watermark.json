@@ -1,0 +1,53 @@
+{
+  "description": "The watermark is the highest position at least the threshold's number of members have reached: two of three have reached 5.",
+  "rows": [
+    "watermark-measured"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "MeasureWatermark": {
+          "positions": [
+            {
+              "member": "1",
+              "position": "5"
+            },
+            {
+              "member": "2",
+              "position": "3"
+            },
+            {
+              "member": "3",
+              "position": "7"
+            }
+          ],
+          "threshold": "2"
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "WatermarkMeasured": {
+            "position": "5"
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [],
+    "next_receipt": "3"
+  }
+}

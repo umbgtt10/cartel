@@ -5,6 +5,21 @@ version it conforms to. The first release is 0.2.0: 0.1.0 on crates.io is the na
 
 ## [Unreleased]
 
+## [0.4.0] — 2026-11-16
+
+### Published on crates.io
+
+Slice 3, the watermark. Conforms to the specification's version 0.3.0; its 14 new vectors are released beside the 60
+before them, which it answers alike.
+
+#### Added
+- The watermark (slice 3, the specification's 0.3.0): `MeasureWatermark` takes each member's position and a threshold
+  and answers `WatermarkMeasured`, the highest position at least that many members have reached. It keeps no
+  position and touches no ballot. A member named twice, or a threshold of 0 or above the members given, is refused
+  by the same rows an opening meets: `RepeatedMember` and `ThresholdOutOfRange`.
+- The ladder: 14 vectors; a matrix tier for the measure; properties that a higher threshold never raises the
+  watermark and a member further on never lowers it. A reversed sort planted in the measure is caught by four tests.
+
 ## [0.3.0] — 2026-11-16
 
 ### Published on crates.io

@@ -1,0 +1,82 @@
+{
+  "description": "Members at the same position each count toward it.",
+  "rows": [
+    "watermark-measured"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "MeasureWatermark": {
+          "positions": [
+            {
+              "member": "1",
+              "position": "4"
+            },
+            {
+              "member": "2",
+              "position": "4"
+            },
+            {
+              "member": "3",
+              "position": "1"
+            }
+          ],
+          "threshold": "2"
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "WatermarkMeasured": {
+            "position": "4"
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "MeasureWatermark": {
+          "positions": [
+            {
+              "member": "1",
+              "position": "4"
+            },
+            {
+              "member": "2",
+              "position": "4"
+            },
+            {
+              "member": "3",
+              "position": "1"
+            }
+          ],
+          "threshold": "3"
+        }
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "WatermarkMeasured": {
+            "position": "1"
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [],
+    "next_receipt": "4"
+  }
+}

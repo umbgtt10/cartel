@@ -1,7 +1,7 @@
 {
  "$schema": "https://json-schema.org/draft/2020-12/schema",
- "$id": "urn:cartel:spec:0.2.0:schema",
- "title": "cartel 0.2.0 -- the data model",
+ "$id": "urn:cartel:spec:0.3.0:schema",
+ "title": "cartel 0.3.0 -- the data model",
  "description": "Every command, receipt, output, rejection and the checkpoint, and the forms of a conformance vector, of the decision table and of the released vectors. Normative with SPEC.md.",
  "$ref": "#/$defs/vector",
  "$defs": {
@@ -71,6 +71,23 @@
      "$ref": "#/$defs/u64"
     },
     "round": {
+     "$ref": "#/$defs/u64"
+    }
+   }
+  },
+  "member_position": {
+   "description": "A member and the position it has reached, as the protocol gives them.",
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "member",
+    "position"
+   ],
+   "properties": {
+    "member": {
+     "$ref": "#/$defs/u64"
+    },
+    "position": {
      "$ref": "#/$defs/u64"
     }
    }
@@ -274,6 +291,34 @@
        "properties": {
         "before": {
          "$ref": "#/$defs/point"
+        }
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "MeasureWatermark"
+     ],
+     "properties": {
+      "MeasureWatermark": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "positions",
+        "threshold"
+       ],
+       "properties": {
+        "positions": {
+         "type": "array",
+         "items": {
+          "$ref": "#/$defs/member_position"
+         }
+        },
+        "threshold": {
+         "$ref": "#/$defs/u64"
         }
        }
       }
@@ -613,6 +658,27 @@
           "$ref": "#/$defs/ballot"
          },
          "uniqueItems": true
+        }
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "WatermarkMeasured"
+     ],
+     "properties": {
+      "WatermarkMeasured": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "position"
+       ],
+       "properties": {
+        "position": {
+         "$ref": "#/$defs/u64"
         }
        }
       }

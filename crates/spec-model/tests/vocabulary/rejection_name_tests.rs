@@ -30,6 +30,30 @@ fn state() -> InstanceState {
 }
 
 #[test]
+fn encoded_of_a_measure_s_refusals_names_its_member_or_threshold() {
+    // Arrange & Act
+    let written = [
+        encoded(
+            RejectionName::RepeatedMember,
+            &Commands::measure(&[(5, 1), (3, 1), (5, 2), (3, 2)], 1),
+        ),
+        encoded(
+            RejectionName::ThresholdOutOfRange,
+            &Commands::measure(&[(1, 5), (2, 3)], 3),
+        ),
+    ];
+
+    // Assert
+    assert_eq!(
+        written,
+        [
+            json!({"RepeatedMember": {"member": "3"}}),
+            json!({"ThresholdOutOfRange": {"threshold": "3"}}),
+        ]
+    );
+}
+
+#[test]
 fn encoded_of_a_rejection_that_carries_nothing_is_its_name_alone() {
     // Arrange & Act
     let written = [

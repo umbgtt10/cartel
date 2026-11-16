@@ -5,6 +5,7 @@ use cartel::ballot::Ballot;
 use cartel::choice::Choice;
 use cartel::close_point::ClosePoint;
 use cartel::instance_id::InstanceId;
+use cartel::member_position::MemberPosition;
 use std::collections::BTreeSet;
 
 // The values the unit tier builds its cases from.
@@ -23,6 +24,16 @@ impl Fixtures {
         Choice {
             bytes: bytes.to_vec(),
         }
+    }
+
+    pub fn positions(pairs: &[(u64, u64)]) -> Vec<MemberPosition> {
+        pairs
+            .iter()
+            .map(|(member, position)| MemberPosition {
+                member: *member,
+                position: *position,
+            })
+            .collect()
     }
 
     pub fn point(question: u64, round: u64) -> ClosePoint {

@@ -4,6 +4,7 @@
 use crate::ballot::Ballot;
 use crate::choice::Choice;
 use crate::close_point::ClosePoint;
+use crate::member_position::MemberPosition;
 use alloc::vec::Vec;
 
 // What a caller asks of an instance: imperative, as every command is.
@@ -21,6 +22,10 @@ pub enum Command {
     },
     CloseBallots {
         before: ClosePoint,
+    },
+    MeasureWatermark {
+        positions: Vec<MemberPosition>,
+        threshold: u64,
     },
     ShowBallot {
         ballot: Ballot,

@@ -20,6 +20,21 @@ fn command_of_a_close_reads_its_point() {
 }
 
 #[test]
+fn command_of_a_measure_reads_its_positions_and_threshold() {
+    // Arrange
+    let value = json!({"MeasureWatermark": {
+        "positions": [{"member": "3", "position": "7"}, {"member": "1", "position": "5"}],
+        "threshold": "2",
+    }});
+
+    // Act
+    let command = SpecReader::command(&value);
+
+    // Assert
+    assert_eq!(command, Commands::measure(&[(3, 7), (1, 5)], 2));
+}
+
+#[test]
 fn command_of_a_query_carries_nothing_else() {
     // Arrange & Act
     let command = SpecReader::command(&json!({"ListBallots": {}}));

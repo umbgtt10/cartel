@@ -1,0 +1,61 @@
+{
+  "description": "Of five members, the highest position three have reached.",
+  "rows": [
+    "watermark-measured"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "MeasureWatermark": {
+          "positions": [
+            {
+              "member": "1",
+              "position": "10"
+            },
+            {
+              "member": "2",
+              "position": "8"
+            },
+            {
+              "member": "3",
+              "position": "8"
+            },
+            {
+              "member": "4",
+              "position": "3"
+            },
+            {
+              "member": "5",
+              "position": "1"
+            }
+          ],
+          "threshold": "3"
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "WatermarkMeasured": {
+            "position": "8"
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [],
+    "next_receipt": "3"
+  }
+}

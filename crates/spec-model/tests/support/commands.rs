@@ -4,6 +4,7 @@
 use crate::support::states::States;
 use cartel_spec_model::ballot_key::BallotKey;
 use cartel_spec_model::command::Command;
+use cartel_spec_model::member_position::MemberPosition;
 use cartel_spec_model::vocabulary::command_name::CommandName;
 
 // Commands as the reader gives them, each carrying what its kind carries.
@@ -26,10 +27,28 @@ impl Commands {
         }
     }
 
+    pub fn measure(pairs: &[(u64, u64)], threshold: u64) -> Command {
+        Command {
+            positions: Some(
+                pairs
+                    .iter()
+                    .map(|(member, position)| MemberPosition {
+                        member: *member,
+                        position: *position,
+                    })
+                    .collect(),
+            ),
+            threshold: Some(threshold),
+            ..Self::of(CommandName::MeasureWatermark)
+        }
+    }
+
     pub fn of(name: CommandName) -> Command {
         Command {
             name,
             before: None,
+            positions: None,
+            threshold: None,
             ballot: None,
             electorate: None,
             thresholds: None,

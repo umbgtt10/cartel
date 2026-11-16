@@ -78,7 +78,7 @@ fn process_of_every_vector_answers_each_step_as_written() {
         .collect();
 
     // Assert
-    assert_eq!(vectors.len(), 60);
+    assert_eq!(vectors.len(), 74);
     assert!(departures.is_empty(), "{departures:#?}");
 }
 

@@ -32,6 +32,7 @@ fn row_ids_of_the_rule_book_are_its_rows_in_check_order() {
             "vote-counted",
             "close-behind",
             "ballots-closed",
+            "watermark-measured",
             "ballot-shown",
             "ballots-listed",
             "books-shown",

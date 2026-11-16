@@ -219,3 +219,23 @@ fn encoded_of_vote_counted_is_the_choice_s_count_with_the_vote() {
     // Assert
     assert_eq!(output, json!({"VoteCounted": {"count": "1"}}));
 }
+
+#[test]
+fn encoded_of_watermark_measured_is_the_highest_position_the_threshold_s_members_reached() {
+    // Arrange
+    let command = Commands::measure(&[(1, 10), (2, 8), (3, 8), (4, 3), (5, 1)], 3);
+    let state = States::instance();
+
+    // Act
+    let output = OutputName::WatermarkMeasured.encoded(
+        None,
+        &Call {
+            command: &command,
+            before: &state,
+            after: &state,
+        },
+    );
+
+    // Assert
+    assert_eq!(output, json!({"WatermarkMeasured": {"position": "8"}}));
+}

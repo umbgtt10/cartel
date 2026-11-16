@@ -23,6 +23,9 @@ pub enum Output {
     BallotsClosed {
         ballots: Vec<Ballot>,
     },
+    WatermarkMeasured {
+        position: u64,
+    },
     BallotShown(BallotRecord),
     BallotsListed {
         ballots: Vec<Ballot>,

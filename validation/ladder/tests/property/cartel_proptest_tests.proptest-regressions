@@ -1,0 +1,8 @@
+# Seeds for failure cases proptest has generated in the past. It is
+# automatically read and these particular cases re-run before any
+# novel cases are generated.
+#
+# It is recommended to check this file in to source control so that
+# everyone who runs the test benefits from these saved cases.
+cc 0225405b0ce0163a378c35c25d98027119e4a2917209b75c9362ab526ac63cd5 # shrinks to pairs = [(0, 0), (1, 1)], raised = 0
+cc 1fac9d3718a290444905fb78f648ca0f32382256604bb24af9410f8d5cc7463f # shrinks to commands = [MeasureWatermark { positions: [MemberPosition { member: 2, position: 0 }, MemberPosition { member: 0, position: 0 }, MemberPosition { member: 3, position: 0 }, MemberPosition { member: 1, position: 1 }], threshold: 4 }]

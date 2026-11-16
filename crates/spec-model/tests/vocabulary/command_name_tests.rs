@@ -20,6 +20,7 @@ fn spelling_of_every_command_is_its_name() {
             "OpenBallot",
             "CastVote",
             "CloseBallots",
+            "MeasureWatermark",
             "ShowBallot",
             "ListBallots",
             "ShowBooks"

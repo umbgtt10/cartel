@@ -299,6 +299,76 @@
    "id": "60-a-round-closed-and-the-next-opened",
    "version": "0.2.0",
    "sha256": "d46b33d72fe964073b1127bbd3f628c6bdcaccf12004a095014447ccc9970553"
+  },
+  {
+   "id": "61-measure-a-watermark",
+   "version": "0.3.0",
+   "sha256": "3f5c86d793250990bdaf72bf58d62c8ef30a51145eb7f25424572206575a92c8"
+  },
+  {
+   "id": "62-positions-in-any-order",
+   "version": "0.3.0",
+   "sha256": "2e4237e0943a7ab181e24ca89c2bd695cf6b825725ddf93006291b59c5f90b00"
+  },
+  {
+   "id": "63-a-threshold-of-one-is-the-highest-position",
+   "version": "0.3.0",
+   "sha256": "a053158832dfbb7772e60b757c3466bd3db4db378639e7a8079ba02f48c4142a"
+  },
+  {
+   "id": "64-a-threshold-of-every-member-is-the-lowest-position",
+   "version": "0.3.0",
+   "sha256": "b1f21a8dd369b51dd883f965308c106d56c7d95ed53ba58c640516ba8c67369d"
+  },
+  {
+   "id": "65-members-at-the-same-position",
+   "version": "0.3.0",
+   "sha256": "6b7f1b0eeec2c78b8ff9e24f599f7c5ec37b0c811a1f94be0a64fd030dcf1714"
+  },
+  {
+   "id": "66-a-quorum-of-five-at-three",
+   "version": "0.3.0",
+   "sha256": "398e317ffd67203218b58023b41048e1db61ef4a7a5cffe203b26bdfafdb96ac"
+  },
+  {
+   "id": "67-a-member-named-twice-is-refused",
+   "version": "0.3.0",
+   "sha256": "c90849847e51836f4c99475989da776be0ec46638d957513cb597dc110cffc49"
+  },
+  {
+   "id": "68-repeated-member-names-the-lowest",
+   "version": "0.3.0",
+   "sha256": "ed08e5292100eaadf405917b704572daa02660fd690d42dbe850b7ec07f1ddac"
+  },
+  {
+   "id": "69-a-threshold-of-zero-is-out-of-range",
+   "version": "0.3.0",
+   "sha256": "788ceab49f99544a475b81e4c3bb2cec2161cf203538606dac4ccd78acca04fa"
+  },
+  {
+   "id": "70-a-threshold-above-the-members-is-out-of-range",
+   "version": "0.3.0",
+   "sha256": "b9edef01ed5dc51476ee98a566f405a443abd1f704cf41bf749c59c32fa30859"
+  },
+  {
+   "id": "71-no-positions",
+   "version": "0.3.0",
+   "sha256": "31d4b927e087e9cd8f6093a2d5e711d01259e247755d8abf8ed36caf04537628"
+  },
+  {
+   "id": "72-the-members-are-checked-before-the-threshold",
+   "version": "0.3.0",
+   "sha256": "466a311123c088ce899eaefe4070466cd2410d55c1909d7cb4c2177722af496a"
+  },
+  {
+   "id": "73-measuring-touches-no-ballot",
+   "version": "0.3.0",
+   "sha256": "2e9f7158e03b0fdccd4e168b44a7978d03bc042654d1c04657cfb70c0ca57add"
+  },
+  {
+   "id": "74-positions-span-every-u64",
+   "version": "0.3.0",
+   "sha256": "abcc06bb5205d3936014aea2d6c95868f7732b5db3a60f03e3c1a3a39b6ac96e"
   }
  ]
 }

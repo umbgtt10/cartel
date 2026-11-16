@@ -8,6 +8,7 @@ use serde_json::Value;
 
 use crate::ballot_key::BallotKey;
 use crate::call::Call;
+use crate::command::Command;
 use crate::lookup::Lookup;
 use crate::view::View;
 use crate::vocabulary::rejection_name::RejectionName;
@@ -21,6 +22,7 @@ pub enum OutputName {
     VoteCounted,
     QuorumReached,
     BallotsClosed,
+    WatermarkMeasured,
     BallotShown,
     BallotsListed,
     BooksShown,
@@ -35,6 +37,7 @@ impl OutputName {
             (OutputName::VoteCounted, "VoteCounted"),
             (OutputName::QuorumReached, "QuorumReached"),
             (OutputName::BallotsClosed, "BallotsClosed"),
+            (OutputName::WatermarkMeasured, "WatermarkMeasured"),
             (OutputName::BallotShown, "BallotShown"),
             (OutputName::BallotsListed, "BallotsListed"),
             (OutputName::BooksShown, "BooksShown"),
@@ -82,6 +85,9 @@ impl OutputName {
                 closed.sort_unstable();
                 json!({"ballots": closed.into_iter().map(View::ballot).collect::<Vec<Value>>()})
             }
+            OutputName::WatermarkMeasured => {
+                json!({"position": View::number(Self::watermark(call.command))})
+            }
             OutputName::BallotShown => {
                 json!({"record": View::record(Lookup::named(call.before, call.command))})
             }
@@ -99,5 +105,27 @@ impl OutputName {
     fn voters_after(call: &Call) -> Vec<u64> {
         let ballot = Lookup::named(call.after, call.command);
         Lookup::voters(ballot, call.command.choice.as_ref().expect("a choice"))
+    }
+
+    // The highest position at least the threshold's number of members have
+    // reached, a member having reached every position up to its own (§11): of
+    // the positions given, the highest that many members are at or beyond.
+    fn watermark(command: &Command) -> u64 {
+        let given = command.positions.as_ref().expect("positions");
+        let threshold = command.threshold.expect("a threshold");
+        let reached_by = |position: u64| {
+            given
+                .iter()
+                .filter(|other| other.position >= position)
+                .count()
+        };
+        given
+            .iter()
+            .map(|candidate| candidate.position)
+            .filter(|position| {
+                u64::try_from(reached_by(*position)).is_ok_and(|count| count >= threshold)
+            })
+            .max()
+            .expect("a position in range")
     }
 }

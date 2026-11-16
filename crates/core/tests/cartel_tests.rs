@@ -79,6 +79,24 @@ fn process_of_a_close_closes_the_ballots_below_its_point() {
 }
 
 #[test]
+fn process_of_a_measure_answers_the_watermark_and_changes_no_ballot() {
+    // Arrange
+    let mut cartel = fresh();
+    let _ = cartel.process(open((1, 0, 0), &[1, 2], &[2]));
+    let before = cartel.process(Command::ListBallots).output;
+
+    // Act
+    let receipt = cartel.process(Command::MeasureWatermark {
+        positions: Fixtures::positions(&[(1, 9), (2, 4)]),
+        threshold: 2,
+    });
+
+    // Assert
+    assert_eq!(receipt.output, Output::WatermarkMeasured { position: 4 });
+    assert_eq!(cartel.process(Command::ListBallots).output, before);
+}
+
+#[test]
 fn process_of_a_refused_command_answers_its_rejection_and_changes_nothing() {
     // Arrange
     let mut cartel = fresh();

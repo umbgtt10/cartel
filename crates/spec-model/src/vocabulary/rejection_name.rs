@@ -5,6 +5,7 @@ use serde_json::json;
 use serde_json::Value;
 
 use crate::call::Call;
+use crate::figures::Figures;
 use crate::lookup::Lookup;
 use crate::numbers::Numbers;
 use crate::view::View;
@@ -56,19 +57,16 @@ impl RejectionName {
         let command = call.command;
         match self {
             RejectionName::RepeatedMember => {
-                let member =
-                    Numbers::lowest_repeated(command.electorate.as_deref().expect("an electorate"));
+                let member = Numbers::lowest_repeated(&Figures::members(command));
                 Variant::of(name, json!({"member": member.map(View::number)}))
             }
             RejectionName::ThresholdOutOfRange => {
-                let electorate = command.electorate.as_deref().expect("an electorate");
-                let thresholds = command.thresholds.as_deref().expect("thresholds");
-                let threshold = Numbers::lowest_out_of_range(thresholds, electorate.len());
+                let size = Figures::members(command).len();
+                let threshold = Numbers::lowest_out_of_range(&Figures::thresholds(command), size);
                 Variant::of(name, json!({"threshold": threshold.map(View::number)}))
             }
             RejectionName::RepeatedThreshold => {
-                let threshold =
-                    Numbers::lowest_repeated(command.thresholds.as_deref().expect("thresholds"));
+                let threshold = Numbers::lowest_repeated(&Figures::thresholds(command));
                 Variant::of(name, json!({"threshold": threshold.map(View::number)}))
             }
             RejectionName::Equivocation => {
