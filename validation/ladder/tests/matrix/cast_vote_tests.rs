@@ -5,12 +5,16 @@
 // drawn from three members, with every set of thresholds it admits and every
 // way its members may already have voted two choices, given every vote of
 // four members for three choices -- the empty one among them -- in it and in
-// a ballot not open: the crate's receipt and the books it leaves against the
-// specification's model's, and every row of the command reached.
+// a ballot not open; and again under every choice bound up to two, none
+// included, for choices of none to three bytes, the ballot open or closed:
+// the crate's receipt and the books it leaves against the specification's
+// model's, and every row of the command reached.
 
 use crate::support::both_sides::BothSides;
 use cartel::ballot::Ballot;
+use cartel::bounds::Bounds;
 use cartel::choice::Choice;
+use cartel::close_point::ClosePoint;
 use cartel::command::Command;
 use serde_json::Value;
 use std::collections::BTreeSet;
@@ -102,7 +106,7 @@ fn process_of_every_vote_answers_as_the_model_does() {
         for thresholds in subsets(&(1..=size).collect::<Vec<u64>>()) {
             for assigned in assignments(&electorate) {
                 for probe in &probes {
-                    let mut sides = BothSides::new();
+                    let mut sides = BothSides::new(Bounds::default());
                     let _ = sides.process(&Command::OpenBallot {
                         ballot: OPEN,
                         electorate: electorate.clone(),
@@ -138,6 +142,88 @@ fn process_of_every_vote_answers_as_the_model_does() {
         [
             "AlreadyCounted",
             "BallotNotOpen",
+            "Equivocation",
+            "NotAMember",
+            "QuorumReached",
+            "VoteCounted",
+        ]
+        .map(String::from)
+        .into_iter()
+        .collect()
+    );
+}
+
+#[test]
+fn process_of_every_vote_under_every_choice_bound_answers_as_the_model_does() {
+    // Arrange
+    let mut departures = Vec::new();
+    let mut reached = BTreeSet::new();
+    let probes: Vec<Command> = [OPEN, NOT_OPEN]
+        .into_iter()
+        .flat_map(|ballot| {
+            (1..=4_u64).flat_map(move |member| {
+                [&[][..], &[0xaa], &[0xaa, 0xbb], &[0xaa, 0xbb, 0xcc]]
+                    .map(|choice| vote(ballot, member, choice))
+            })
+        })
+        .collect();
+    let cases: Vec<(Option<u64>, bool)> = [None, Some(0), Some(1), Some(2)]
+        .into_iter()
+        .flat_map(|bound| [false, true].map(|closed| (bound, closed)))
+        .collect();
+
+    // Act
+    for (bound, closed) in cases {
+        for assigned in assignments(&[1, 2, 3]) {
+            for probe in &probes {
+                let mut sides = BothSides::new(Bounds {
+                    choice: bound,
+                    ..Bounds::default()
+                });
+                let _ = sides.process(&Command::OpenBallot {
+                    ballot: OPEN,
+                    electorate: vec![1, 2, 3],
+                    thresholds: vec![2],
+                });
+                for (member, voted) in &assigned {
+                    if let Some(byte) = voted {
+                        let _ = sides.process(&vote(OPEN, *member, &[*byte]));
+                    }
+                }
+                if closed {
+                    let _ = sides.process(&Command::CloseBallots {
+                        before: ClosePoint {
+                            question: 1,
+                            round: 1,
+                        },
+                    });
+                }
+                let answered = sides.process(probe);
+                let left = sides.process(&Command::ShowBooks);
+                if answered.0 != answered.1 || left.0 != left.1 {
+                    departures.push(format!(
+                        "{probe:?} after {assigned:?} under {bound:?}: crate {answered:?}, books {left:?}"
+                    ));
+                }
+                reached.insert(kind(&answered.0));
+            }
+        }
+    }
+
+    // Assert
+    assert!(
+        departures.is_empty(),
+        "{} departures, the first {:?}",
+        departures.len(),
+        departures.first()
+    );
+    assert_eq!(
+        reached,
+        [
+            "AlreadyCounted",
+            "BallotClosed",
+            "BallotNotOpen",
+            "ChoiceTooLong",
             "Equivocation",
             "NotAMember",
             "QuorumReached",

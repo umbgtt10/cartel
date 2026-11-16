@@ -5,6 +5,22 @@ version it conforms to. The first release is 0.2.0: 0.1.0 on crates.io is the na
 
 ## [Unreleased]
 
+#### Added
+- The bounds (slice 4, the specification's 0.4.0): `Fresh` carries `Bounds` -- the most ballots open at once, the
+  most members an electorate may name, the most bytes a choice may have -- each optional, and `Bounds::default()`
+  binds nothing. A command that would exceed one is refused, naming the bound: `ElectorateTooLarge` after the
+  opening's form is checked, `BooksFull` last, only for an opening that would add a ballot, and `ChoiceTooLong`
+  before anything else a vote meets. The checkpoint carries the bounds.
+- The ladder: 18 vectors; the opening and vote matrices swept again under every bound up to two, none included;
+  properties that the crate answers as the model under any bounds and that the books never exceed one; replay
+  under any bounds; a memory run filled to the bounds and flooded beyond them, holding after a thousand rounds
+  exactly what it held full. Each of three bounds planted broken is caught by conformance, the matrix and two
+  properties, and the books bound also by the memory tier.
+
+#### Changed
+- `Fresh` and `Checkpoint` gain a `bounds` field; a caller building a `Fresh` adds `bounds: Bounds::default()` to keep
+  today's behaviour. The books and an open ballot's record move to `registry/`; no type a caller builds moved.
+
 ## [0.4.0] — 2026-11-16
 
 ### Published on crates.io

@@ -2,4 +2,6 @@
 // SPDX-License-Identifier: MIT
 
 mod ballot_sequence_tests;
+mod bounded_flood_tests;
 mod counting_allocator_tests;
+mod support;

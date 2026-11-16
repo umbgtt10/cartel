@@ -27,6 +27,7 @@ extern crate alloc;
 
 pub mod answer;
 pub mod ballot_key;
+pub mod bounds;
 pub mod call;
 pub mod choice;
 pub mod command;

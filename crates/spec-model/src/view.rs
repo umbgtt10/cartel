@@ -7,6 +7,7 @@ use alloc::string::ToString;
 use alloc::vec::Vec;
 use core::fmt::Write;
 use serde_json::json;
+use serde_json::Map;
 use serde_json::Value;
 
 use crate::ballot_key::BallotKey;
@@ -38,7 +39,8 @@ impl View {
         Value::Array(keys.into_iter().map(Self::ballot).collect())
     }
 
-    // The checkpoint (§9): the close point only once a close has moved it (§1).
+    // The checkpoint (§9): a bound only when it is given, and the bounds only
+    // when one is; the close point only once a close has moved it (§1).
     #[must_use]
     pub fn checkpoint(state: &InstanceState) -> Value {
         let mut ballots: Vec<&OpenBallot> = state.ballots.iter().collect();
@@ -49,6 +51,17 @@ impl View {
                 "incarnation": Self::number(state.incarnation),
             },
         });
+        let given: Map<String, Value> = [
+            ("open_ballots", state.bounds.open_ballots),
+            ("electorate", state.bounds.electorate),
+            ("choice", state.bounds.choice),
+        ]
+        .into_iter()
+        .filter_map(|(name, bound)| bound.map(|bound| (String::from(name), Self::number(bound))))
+        .collect();
+        if !given.is_empty() {
+            checkpoint["bounds"] = Value::Object(given);
+        }
         if let Some(point) = state.close_point {
             checkpoint["close_point"] = Self::point(point);
         }

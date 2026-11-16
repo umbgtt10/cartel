@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: MIT
 
 use crate::support::fixtures::Fixtures;
+use cartel::bounds::Bounds;
 use cartel::registry::open_ballot::OpenBallot;
 use cartel::rejection::Rejection;
+use cartel::rows::bound_rows::BoundRows;
 use cartel::rows::closing_rows::ClosingRows;
 use cartel::rows::opening_rows::OpeningRows;
 use std::collections::BTreeMap;
@@ -15,18 +17,26 @@ fn refusal(electorate: &[u64], thresholds: &[u64]) -> Option<Rejection> {
         Fixtures::ballot(1, 0, 0),
         OpenBallot::new(Fixtures::set(&[1]), Fixtures::set(&[1])),
     );
-    OpeningRows::new(&ballots, ClosingRows::new(None)).refusal(
+    OpeningRows::new(&ballots, ClosingRows::new(None), unbounded()).refusal(
         Fixtures::ballot(1, 0, 0),
         electorate,
         thresholds,
     )
 }
 
+fn unbounded() -> BoundRows {
+    BoundRows::new(Bounds::default())
+}
+
 #[test]
 fn refusal_of_a_ballot_below_the_close_point_is_closed_once_its_form_is_checked() {
     // Arrange
     let ballots = BTreeMap::new();
-    let rows = OpeningRows::new(&ballots, ClosingRows::new(Some(Fixtures::point(3, 0))));
+    let rows = OpeningRows::new(
+        &ballots,
+        ClosingRows::new(Some(Fixtures::point(3, 0))),
+        unbounded(),
+    );
 
     // Act
     let refused = [
@@ -52,7 +62,7 @@ fn refusal_of_a_ballot_not_open_and_well_formed_is_none() {
     let ballots = BTreeMap::new();
 
     // Act
-    let refused = OpeningRows::new(&ballots, ClosingRows::new(None)).refusal(
+    let refused = OpeningRows::new(&ballots, ClosingRows::new(None), unbounded()).refusal(
         Fixtures::ballot(2, 0, 0),
         &[3, 1, 2],
         &[3, 2],
@@ -60,6 +70,41 @@ fn refusal_of_a_ballot_not_open_and_well_formed_is_none() {
 
     // Assert
     assert_eq!(refused, None);
+}
+
+#[test]
+fn refusal_of_an_electorate_above_its_bound_comes_after_its_form_and_before_the_ballot() {
+    // Arrange
+    let mut ballots = BTreeMap::new();
+    ballots.insert(
+        Fixtures::ballot(1, 0, 0),
+        OpenBallot::new(Fixtures::set(&[1]), Fixtures::set(&[1])),
+    );
+    let rows = OpeningRows::new(
+        &ballots,
+        ClosingRows::new(Some(Fixtures::point(1, 0))),
+        BoundRows::new(Bounds {
+            electorate: Some(1),
+            ..Bounds::default()
+        }),
+    );
+
+    // Act
+    let refused = [
+        rows.refusal(Fixtures::ballot(1, 0, 0), &[1, 1], &[1]),
+        rows.refusal(Fixtures::ballot(1, 0, 0), &[1, 2], &[1]),
+        rows.refusal(Fixtures::ballot(0, 0, 0), &[1, 2], &[1]),
+    ];
+
+    // Assert
+    assert_eq!(
+        refused,
+        [
+            Some(Rejection::RepeatedMember { member: 1 }),
+            Some(Rejection::ElectorateTooLarge { bound: 1 }),
+            Some(Rejection::ElectorateTooLarge { bound: 1 }),
+        ]
+    );
 }
 
 #[test]
@@ -87,6 +132,43 @@ fn refusal_of_an_open_ballot_well_formed_is_already_open() {
 
     // Assert
     assert_eq!(refused, Some(Rejection::BallotAlreadyOpen));
+}
+
+#[test]
+fn refusal_of_an_opening_at_full_books_is_books_full_after_the_ballot() {
+    // Arrange
+    let mut ballots = BTreeMap::new();
+    ballots.insert(
+        Fixtures::ballot(1, 0, 0),
+        OpenBallot::new(Fixtures::set(&[1]), Fixtures::set(&[1])),
+    );
+    let rows = OpeningRows::new(
+        &ballots,
+        ClosingRows::new(Some(Fixtures::point(1, 0))),
+        BoundRows::new(Bounds {
+            open_ballots: Some(1),
+            ..Bounds::default()
+        }),
+    );
+
+    // Act
+    let refused = [
+        rows.refusal(Fixtures::ballot(2, 0, 0), &[1], &[1]),
+        rows.refusal(Fixtures::ballot(1, 0, 0), &[1], &[1]),
+        rows.refusal(Fixtures::ballot(0, 0, 0), &[1], &[1]),
+        rows.refusal(Fixtures::ballot(2, 0, 0), &[], &[1]),
+    ];
+
+    // Assert
+    assert_eq!(
+        refused,
+        [
+            Some(Rejection::BooksFull { bound: 1 }),
+            Some(Rejection::BallotAlreadyOpen),
+            Some(Rejection::BallotClosed),
+            Some(Rejection::EmptyElectorate),
+        ]
+    );
 }
 
 #[test]

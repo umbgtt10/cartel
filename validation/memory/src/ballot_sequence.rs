@@ -4,6 +4,7 @@
 use crate::allocation_counter::AllocationCounter;
 use crate::memory_profile::MemoryProfile;
 use cartel::ballot::Ballot;
+use cartel::bounds::Bounds;
 use cartel::cartel::Cartel;
 use cartel::choice::Choice;
 use cartel::close_point::ClosePoint;
@@ -53,6 +54,7 @@ impl<'a> BallotSequence<'a> {
                     node: 1,
                     incarnation: 1,
                 },
+                bounds: Bounds::default(),
             }),
             Box::new(NoOpObserver),
         );

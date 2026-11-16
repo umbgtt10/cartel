@@ -8,6 +8,7 @@
 
 use crate::support::both_sides::BothSides;
 use cartel::ballot::Ballot;
+use cartel::bounds::Bounds;
 use cartel::choice::Choice;
 use cartel::command::Command;
 use serde_json::Value;
@@ -61,7 +62,7 @@ fn process_of_every_query_answers_as_the_model_does() {
     // Act
     for mask in 0..1_u32 << BALLOTS.len() {
         for query in &queries {
-            let mut sides = BothSides::new();
+            let mut sides = BothSides::new(Bounds::default());
             for (at, ballot) in BALLOTS
                 .iter()
                 .enumerate()

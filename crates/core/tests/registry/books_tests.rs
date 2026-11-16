@@ -2,15 +2,58 @@
 // SPDX-License-Identifier: MIT
 
 use crate::support::fixtures::Fixtures;
+use cartel::bounds::Bounds;
 use cartel::checkpoint::Checkpoint;
 use cartel::output::Output;
 use cartel::registry::books::Books;
 use cartel::rejection::Rejection;
 
 #[test]
+fn cast_of_a_choice_longer_than_its_bound_is_refused_before_the_ballot() {
+    // Arrange
+    let mut books = Books::new(
+        Fixtures::instance(),
+        Bounds {
+            choice: Some(1),
+            ..Bounds::default()
+        },
+    );
+    let _ = books.open(Fixtures::ballot(1, 0, 0), &[1], &[1]);
+
+    // Act
+    let outputs = [
+        books.cast(
+            Fixtures::ballot(2, 0, 0),
+            1,
+            Fixtures::choice(&[0xaa, 0xbb]),
+        ),
+        books.cast(
+            Fixtures::ballot(1, 0, 0),
+            9,
+            Fixtures::choice(&[0xaa, 0xbb]),
+        ),
+        books.cast(Fixtures::ballot(1, 0, 0), 1, Fixtures::choice(&[0xaa])),
+    ];
+
+    // Assert
+    assert_eq!(
+        outputs,
+        [
+            Output::CommandRejected(Rejection::ChoiceTooLong { bound: 1 }),
+            Output::CommandRejected(Rejection::ChoiceTooLong { bound: 1 }),
+            Output::QuorumReached {
+                count: 1,
+                thresholds: vec![1],
+                voters: vec![1],
+            },
+        ]
+    );
+}
+
+#[test]
 fn cast_of_a_vote_below_the_close_point_is_refused_as_closed() {
     // Arrange
-    let mut books = Books::new(Fixtures::instance());
+    let mut books = Books::new(Fixtures::instance(), Bounds::default());
     let _ = books.open(Fixtures::ballot(1, 0, 0), &[1], &[1]);
     let _ = books.close(Fixtures::point(1, 1));
 
@@ -33,7 +76,7 @@ fn cast_of_a_vote_below_the_close_point_is_refused_as_closed() {
 #[test]
 fn cast_of_a_vote_counts_it_in_that_ballot_alone() {
     // Arrange
-    let mut books = Books::new(Fixtures::instance());
+    let mut books = Books::new(Fixtures::instance(), Bounds::default());
     let _ = books.open(Fixtures::ballot(1, 0, 0), &[1, 2], &[2]);
     let _ = books.open(Fixtures::ballot(2, 0, 0), &[1, 2], &[2]);
 
@@ -48,7 +91,7 @@ fn cast_of_a_vote_counts_it_in_that_ballot_alone() {
 #[test]
 fn cast_of_a_vote_in_a_ballot_not_open_is_refused() {
     // Arrange
-    let mut books = Books::new(Fixtures::instance());
+    let mut books = Books::new(Fixtures::instance(), Bounds::default());
     let _ = books.open(Fixtures::ballot(1, 0, 0), &[1], &[1]);
 
     // Act
@@ -61,7 +104,7 @@ fn cast_of_a_vote_in_a_ballot_not_open_is_refused() {
 #[test]
 fn cast_of_a_vote_the_ballot_refuses_changes_nothing() {
     // Arrange
-    let mut books = Books::new(Fixtures::instance());
+    let mut books = Books::new(Fixtures::instance(), Bounds::default());
     let _ = books.open(Fixtures::ballot(1, 0, 0), &[1, 2], &[2]);
     let _ = books.cast(Fixtures::ballot(1, 0, 0), 1, Fixtures::choice(&[0xaa]));
 
@@ -74,9 +117,26 @@ fn cast_of_a_vote_the_ballot_refuses_changes_nothing() {
 }
 
 #[test]
+fn checkpoint_of_bounded_books_holds_their_bounds() {
+    // Arrange
+    let bounds = Bounds {
+        open_ballots: Some(4),
+        electorate: None,
+        choice: Some(0),
+    };
+    let books = Books::new(Fixtures::instance(), bounds);
+
+    // Act
+    let checkpoint = books.checkpoint();
+
+    // Assert
+    assert_eq!(checkpoint.bounds, bounds);
+}
+
+#[test]
 fn checkpoint_of_fresh_books_holds_no_ballot_and_numbers_from_one() {
     // Arrange
-    let books = Books::new(Fixtures::instance());
+    let books = Books::new(Fixtures::instance(), Bounds::default());
 
     // Act
     let checkpoint = books.checkpoint();
@@ -86,6 +146,7 @@ fn checkpoint_of_fresh_books_holds_no_ballot_and_numbers_from_one() {
         checkpoint,
         Checkpoint {
             instance: Fixtures::instance(),
+            bounds: Bounds::default(),
             close_point: None,
             ballots: Vec::new(),
             next_receipt: 1,
@@ -96,7 +157,7 @@ fn checkpoint_of_fresh_books_holds_no_ballot_and_numbers_from_one() {
 #[test]
 fn close_at_or_behind_the_close_point_is_refused_naming_it() {
     // Arrange
-    let mut books = Books::new(Fixtures::instance());
+    let mut books = Books::new(Fixtures::instance(), Bounds::default());
     let _ = books.close(Fixtures::point(5, 2));
 
     // Act
@@ -116,7 +177,7 @@ fn close_at_or_behind_the_close_point_is_refused_naming_it() {
 #[test]
 fn close_of_a_point_closes_every_ballot_below_it_and_moves_the_point() {
     // Arrange
-    let mut books = Books::new(Fixtures::instance());
+    let mut books = Books::new(Fixtures::instance(), Bounds::default());
     for ballot in [
         Fixtures::ballot(2, 1, 0),
         Fixtures::ballot(2, 0, 9),
@@ -148,7 +209,7 @@ fn close_of_a_point_closes_every_ballot_below_it_and_moves_the_point() {
 #[test]
 fn count_call_of_each_call_is_one_more_than_the_last() {
     // Arrange
-    let mut books = Books::new(Fixtures::instance());
+    let mut books = Books::new(Fixtures::instance(), Bounds::default());
 
     // Act
     let numbers = [books.count_call(), books.count_call()];
@@ -159,9 +220,36 @@ fn count_call_of_each_call_is_one_more_than_the_last() {
 }
 
 #[test]
+fn open_of_a_ballot_at_full_books_is_refused_until_a_close_frees_one() {
+    // Arrange
+    let mut books = Books::new(
+        Fixtures::instance(),
+        Bounds {
+            open_ballots: Some(1),
+            ..Bounds::default()
+        },
+    );
+    let _ = books.open(Fixtures::ballot(1, 0, 0), &[1], &[1]);
+
+    // Act
+    let refused = books.open(Fixtures::ballot(2, 0, 0), &[1], &[1]);
+    let _ = books.close(Fixtures::point(2, 0));
+    let opened = books.open(Fixtures::ballot(2, 0, 0), &[1], &[1]);
+
+    // Assert
+    assert_eq!(
+        [refused, opened],
+        [
+            Output::CommandRejected(Rejection::BooksFull { bound: 1 }),
+            Output::BallotOpened,
+        ]
+    );
+}
+
+#[test]
 fn open_of_a_ballot_lists_it_in_canonical_order() {
     // Arrange
-    let mut books = Books::new(Fixtures::instance());
+    let mut books = Books::new(Fixtures::instance(), Bounds::default());
 
     // Act
     let _ = books.open(Fixtures::ballot(2, 0, 0), &[1], &[1]);
@@ -183,7 +271,7 @@ fn open_of_a_ballot_lists_it_in_canonical_order() {
 #[test]
 fn open_of_a_ballot_the_rows_refuse_opens_nothing() {
     // Arrange
-    let mut books = Books::new(Fixtures::instance());
+    let mut books = Books::new(Fixtures::instance(), Bounds::default());
 
     // Act
     let output = books.open(Fixtures::ballot(1, 0, 0), &[], &[1]);

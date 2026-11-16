@@ -1,0 +1,120 @@
+{
+  "description": "What the command carries is checked first: a repeated member, a threshold out of range and a repeated threshold come before the electorate's size.",
+  "rows": [
+    "repeated-member",
+    "threshold-out-of-range",
+    "repeated-threshold"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      },
+      "bounds": {
+        "electorate": "2"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1",
+            "1",
+            "2"
+          ],
+          "thresholds": [
+            "2"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "CommandRejected": {
+            "RepeatedMember": {
+              "member": "1"
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1",
+            "2",
+            "3"
+          ],
+          "thresholds": [
+            "4"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "CommandRejected": {
+            "ThresholdOutOfRange": {
+              "threshold": "4"
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1",
+            "2",
+            "3"
+          ],
+          "thresholds": [
+            "2",
+            "2"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "3",
+        "output": {
+          "CommandRejected": {
+            "RepeatedThreshold": {
+              "threshold": "2"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "bounds": {
+      "electorate": "2"
+    },
+    "ballots": [],
+    "next_receipt": "5"
+  }
+}

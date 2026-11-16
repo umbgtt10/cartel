@@ -1,5 +1,5 @@
 {
- "version": "0.3.0",
+ "version": "0.4.0",
  "rows": [
   {
    "id": "empty-electorate",
@@ -49,6 +49,24 @@
    "rejection": "RepeatedThreshold"
   },
   {
+   "id": "electorate-too-large",
+   "commands": [
+    "OpenBallot"
+   ],
+   "situation": "an `electorate` bound is given, and `electorate` names more members than it",
+   "output": "CommandRejected",
+   "rejection": "ElectorateTooLarge"
+  },
+  {
+   "id": "choice-too-long",
+   "commands": [
+    "CastVote"
+   ],
+   "situation": "a `choice` bound is given, and `choice` has more bytes than it",
+   "output": "CommandRejected",
+   "rejection": "ChoiceTooLong"
+  },
+  {
    "id": "ballot-closed",
    "commands": [
     "OpenBallot",
@@ -67,6 +85,15 @@
    "situation": "`ballot` is open",
    "output": "CommandRejected",
    "rejection": "BallotAlreadyOpen"
+  },
+  {
+   "id": "books-full",
+   "commands": [
+    "OpenBallot"
+   ],
+   "situation": "an `open_ballots` bound is given, and the open ballots number it",
+   "output": "CommandRejected",
+   "rejection": "BooksFull"
   },
   {
    "id": "ballot-opened",

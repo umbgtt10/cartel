@@ -3,6 +3,7 @@
 
 use cartel::ballot::Ballot;
 use cartel::ballot_record::BallotRecord;
+use cartel::bounds::Bounds;
 use cartel::checkpoint::Checkpoint;
 use cartel::choice::Choice;
 use cartel::close_point::ClosePoint;
@@ -12,6 +13,7 @@ use cartel::output::Output;
 use cartel::receipt::Receipt;
 use cartel::rejection::Rejection;
 use serde_json::json;
+use serde_json::Map;
 use serde_json::Value;
 use std::fmt::Write;
 
@@ -20,8 +22,9 @@ use std::fmt::Write;
 pub struct SpecWriter;
 
 impl SpecWriter {
-    // The checkpoint, its close point written only once a close has moved it,
-    // as the specification's growth rule asks (§1).
+    // The checkpoint, its bounds written only when one is given and its close
+    // point only once a close has moved it, as the specification's growth rule
+    // asks (§1).
     pub fn checkpoint(checkpoint: &Checkpoint) -> Value {
         let mut written = json!({
             "instance": {
@@ -29,6 +32,9 @@ impl SpecWriter {
                 "incarnation": Self::number(checkpoint.instance.incarnation),
             },
         });
+        if let Some(bounds) = Self::bounds(checkpoint.bounds) {
+            written["bounds"] = bounds;
+        }
         if let Some(point) = checkpoint.close_point {
             written["close_point"] = Self::point(point);
         }
@@ -83,10 +89,14 @@ impl SpecWriter {
 
     pub fn origin(origin: &Origin) -> Value {
         let Origin::Fresh(fresh) = origin;
-        json!({"Fresh": {"instance": {
+        let mut written = json!({"instance": {
             "node": Self::number(fresh.instance.node),
             "incarnation": Self::number(fresh.instance.incarnation),
-        }}})
+        }});
+        if let Some(bounds) = Self::bounds(fresh.bounds) {
+            written["bounds"] = bounds;
+        }
+        json!({"Fresh": written})
     }
 
     pub fn receipt(receipt: &Receipt) -> Value {
@@ -99,6 +109,19 @@ impl SpecWriter {
             "round": Self::number(ballot.round),
             "phase": Self::number(ballot.phase),
         })
+    }
+
+    // The bounds given, each by its name, or none when none is given.
+    fn bounds(bounds: Bounds) -> Option<Value> {
+        let given: Map<String, Value> = [
+            ("open_ballots", bounds.open_ballots),
+            ("electorate", bounds.electorate),
+            ("choice", bounds.choice),
+        ]
+        .into_iter()
+        .filter_map(|(name, bound)| bound.map(|bound| (name.to_string(), Self::number(bound))))
+        .collect();
+        (!given.is_empty()).then_some(Value::Object(given))
     }
 
     fn choice(choice: &Choice) -> Value {
@@ -190,6 +213,13 @@ impl SpecWriter {
             Rejection::BallotClosed => json!({"BallotClosed": {}}),
             Rejection::CloseBehind { close_point } => {
                 json!({"CloseBehind": {"close_point": Self::point(*close_point)}})
+            }
+            Rejection::ElectorateTooLarge { bound } => {
+                json!({"ElectorateTooLarge": {"bound": Self::number(*bound)}})
+            }
+            Rejection::BooksFull { bound } => json!({"BooksFull": {"bound": Self::number(*bound)}}),
+            Rejection::ChoiceTooLong { bound } => {
+                json!({"ChoiceTooLong": {"bound": Self::number(*bound)}})
             }
         }
     }

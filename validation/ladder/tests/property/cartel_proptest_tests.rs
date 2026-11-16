@@ -2,15 +2,17 @@
 // SPDX-License-Identifier: MIT
 
 // The property tier: random sequences of commands over a small world, the
-// crate against the specification's model receipt by receipt, and the
-// invariants after every call -- receipts one more on every call, no ballot
-// touched by a command naming another, no member a voter of two choices in a
-// ballot -- and forgetting safe: of the votes counted, any subset reaches no
-// quorum the whole set did not.
+// crate against the specification's model receipt by receipt, without bounds
+// and under any, and the invariants after every call -- receipts one more on
+// every call, no ballot touched by a command naming another, no member a
+// voter of two choices in a ballot, the books within every bound given -- and
+// forgetting safe: of the votes counted, any subset reaches no quorum the
+// whole set did not.
 
 use crate::support::both_sides::BothSides;
 use crate::support::random_commands::RandomCommands;
 use cartel::ballot::Ballot;
+use cartel::bounds::Bounds;
 use cartel::cartel::Cartel;
 use cartel::checkpoint::Checkpoint;
 use cartel::choice::Choice;
@@ -34,16 +36,21 @@ fn books(cartel: &mut Cartel) -> Checkpoint {
     }
 }
 
-fn fresh() -> Cartel {
+fn bounded(bounds: Bounds) -> Cartel {
     Cartel::new(
         Origin::Fresh(Fresh {
             instance: InstanceId {
                 node: 1,
                 incarnation: 1,
             },
+            bounds,
         }),
         Box::new(NoOpObserver),
     )
+}
+
+fn fresh() -> Cartel {
+    bounded(Bounds::default())
 }
 
 fn named(command: &Command) -> Option<Ballot> {
@@ -62,7 +69,7 @@ proptest! {
     #[test]
     fn process_of_any_sequence_answers_as_the_model_does(commands in RandomCommands::sequence()) {
         // Arrange
-        let mut sides = BothSides::new();
+        let mut sides = BothSides::new(Bounds::default());
 
         // Act
         let departures: Vec<String> = commands
@@ -220,6 +227,55 @@ proptest! {
         let reached_by_all = quorums(&counted);
         assert!(reached_by_subset.is_subset(&reached_by_all), "{reached_by_subset:?} beyond {reached_by_all:?}");
     }
+
+    #[test]
+    fn process_of_any_sequence_under_any_bounds_answers_as_the_model_does(
+        bounds in RandomCommands::bounds(),
+        commands in RandomCommands::sequence(),
+    ) {
+        // Arrange
+        let mut sides = BothSides::new(bounds);
+
+        // Act
+        let departures: Vec<String> = commands
+            .iter()
+            .chain([&Command::ShowBooks])
+            .filter_map(|command| {
+                let (from_crate, from_model) = sides.process(command);
+                (from_crate != from_model).then(|| format!("{command:?} under {bounds:?}: crate {from_crate}, model {from_model}"))
+            })
+            .collect();
+
+        // Assert
+        assert!(departures.is_empty(), "{departures:#?}");
+    }
+
+    #[test]
+    fn process_of_any_sequence_under_any_bounds_keeps_the_books_within_them(
+        bounds in RandomCommands::bounds(),
+        commands in RandomCommands::sequence(),
+    ) {
+        // Arrange
+        let mut cartel = bounded(bounds);
+
+        // Act
+        let overflows: Vec<String> = commands
+            .into_iter()
+            .filter_map(|command| {
+                let _ = cartel.process(command.clone());
+                let checkpoint = books(&mut cartel);
+                let held = within(bounds.open_ballots, checkpoint.ballots.len())
+                    && checkpoint.ballots.iter().all(|record| {
+                        within(bounds.electorate, record.electorate.len())
+                            && record.tally.iter().all(|votes| within(bounds.choice, votes.choice.bytes.len()))
+                    });
+                (!held).then(|| format!("{command:?} under {bounds:?} left {checkpoint:?}"))
+            })
+            .collect();
+
+        // Assert
+        assert!(overflows.is_empty(), "{overflows:#?}");
+    }
 }
 
 // The quorums a run of commands reached: each ballot, choice and threshold.
@@ -243,4 +299,9 @@ fn quorums(commands: &[Command]) -> BTreeSet<(Ballot, Choice, u64)> {
         )
         .flatten()
         .collect()
+}
+
+// Whether a size is within its bound, a bound left out holding every size.
+fn within(bound: Option<u64>, size: usize) -> bool {
+    bound.is_none_or(|bound| size as u64 <= bound)
 }

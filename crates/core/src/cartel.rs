@@ -24,7 +24,7 @@ impl Cartel {
     pub fn new(origin: Origin, observer: Box<dyn Observer>) -> Self {
         let Origin::Fresh(fresh) = origin;
         Self {
-            books: Books::new(fresh.instance),
+            books: Books::new(fresh.instance, fresh.bounds),
             observer,
         }
     }

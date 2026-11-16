@@ -3,6 +3,7 @@
 
 use crate::support::commands::Commands;
 use crate::support::states::States;
+use cartel_spec_model::bounds::Bounds;
 use cartel_spec_model::call::Call;
 use cartel_spec_model::command::Command;
 use cartel_spec_model::instance_state::InstanceState;
@@ -27,6 +28,45 @@ fn state() -> InstanceState {
         &[1],
         &[(1, &[0xaa])],
     )])
+}
+
+#[test]
+fn encoded_of_a_bound_s_refusal_names_the_bound() {
+    // Arrange
+    let bounded = InstanceState {
+        bounds: Bounds {
+            open_ballots: Some(4),
+            electorate: Some(3),
+            choice: Some(0),
+        },
+        ..state()
+    };
+    let opening = Commands::open(States::key(2, 0, 0), &[1, 2, 3, 4], &[1]);
+    let vote = Commands::cast(States::key(1, 0, 0), 2, &[0xbb]);
+
+    // Act
+    let written = [
+        (RejectionName::ElectorateTooLarge, &opening),
+        (RejectionName::BooksFull, &opening),
+        (RejectionName::ChoiceTooLong, &vote),
+    ]
+    .map(|(rejection, command)| {
+        rejection.encoded(&Call {
+            command,
+            before: &bounded,
+            after: &bounded,
+        })
+    });
+
+    // Assert
+    assert_eq!(
+        written,
+        [
+            json!({"ElectorateTooLarge": {"bound": "3"}}),
+            json!({"BooksFull": {"bound": "4"}}),
+            json!({"ChoiceTooLong": {"bound": "0"}}),
+        ]
+    );
 }
 
 #[test]

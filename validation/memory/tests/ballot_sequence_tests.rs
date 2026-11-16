@@ -7,11 +7,9 @@
 // between them, more for more members, no more after a hundred ballots than
 // after one when each is closed once counted, and nothing once the instance is gone.
 
+use crate::support::installed::ALLOCATOR;
 use cartel_memory::ballot_sequence::BallotSequence;
-use cartel_memory::counting_allocator::CountingAllocator;
 
-#[global_allocator]
-static ALLOCATOR: CountingAllocator = CountingAllocator;
 const BALLOTS: u64 = 100;
 
 // A close splits the books' map, and the part it keeps may hold an empty node,

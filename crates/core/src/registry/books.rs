@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 use crate::ballot::Ballot;
+use crate::bounds::Bounds;
 use crate::checkpoint::Checkpoint;
 use crate::choice::Choice;
 use crate::close_point::ClosePoint;
@@ -9,6 +10,7 @@ use crate::instance_id::InstanceId;
 use crate::output::Output;
 use crate::registry::open_ballot::OpenBallot;
 use crate::rejection::Rejection;
+use crate::rows::bound_rows::BoundRows;
 use crate::rows::closing_rows::ClosingRows;
 use crate::rows::opening_rows::OpeningRows;
 use crate::rows::query_rows::QueryRows;
@@ -16,28 +18,34 @@ use alloc::collections::BTreeMap;
 use core::mem::replace;
 
 // The books: the open ballots in canonical order, the close point, and the
-// calls counted. A command meets the rows before it changes anything, and
-// every change is made inside a call already counted.
+// calls counted, within the bounds given. A command meets the rows before it
+// changes anything, and every change is made inside a call already counted.
 pub struct Books {
     instance: InstanceId,
+    bounds: Bounds,
     close_point: Option<ClosePoint>,
     ballots: BTreeMap<Ballot, OpenBallot>,
     next_receipt: u64,
 }
 
 impl Books {
-    pub fn new(instance: InstanceId) -> Self {
+    pub fn new(instance: InstanceId, bounds: Bounds) -> Self {
         Self {
             instance,
+            bounds,
             close_point: None,
             ballots: BTreeMap::new(),
             next_receipt: 1,
         }
     }
 
-    // A vote met by the rows in the matrix's order -- the close point, the
-    // ballot, then those of the ballot itself -- and counted if none refuses it.
+    // A vote met by the rows in the matrix's order -- the choice's length, the
+    // close point, the ballot, then those of the ballot itself -- and counted
+    // if none refuses it.
     pub fn cast(&mut self, ballot: Ballot, member: u64, choice: Choice) -> Output {
+        if let Some(rejection) = BoundRows::new(self.bounds).choice(&choice) {
+            return Output::CommandRejected(rejection);
+        }
         if ClosingRows::new(self.close_point).covers(ballot) {
             return Output::CommandRejected(Rejection::BallotClosed);
         }
@@ -54,6 +62,7 @@ impl Books {
     pub fn checkpoint(&self) -> Checkpoint {
         Checkpoint {
             instance: self.instance,
+            bounds: self.bounds,
             close_point: self.close_point,
             ballots: self
                 .ballots
@@ -94,7 +103,11 @@ impl Books {
     // An opening met by the rows in the matrix's order, and the ballot opened
     // with an empty tally if none refuses it.
     pub fn open(&mut self, ballot: Ballot, electorate: &[u64], thresholds: &[u64]) -> Output {
-        let rows = OpeningRows::new(&self.ballots, ClosingRows::new(self.close_point));
+        let rows = OpeningRows::new(
+            &self.ballots,
+            ClosingRows::new(self.close_point),
+            BoundRows::new(self.bounds),
+        );
         if let Some(rejection) = rows.refusal(ballot, electorate, thresholds) {
             return Output::CommandRejected(rejection);
         }
