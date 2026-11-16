@@ -7,7 +7,10 @@ version it conforms to. The first release is 0.2.0: 0.1.0 on crates.io is the na
 
 ## [0.2.0] — 2026-11-16
 
-Slice 1, ballots. Conforms to the specification's version 0.1.0. Not on crates.io.
+### Published on crates.io
+
+Slice 1, ballots. Conforms to the specification's version 0.1.0. The first version of the crate on
+[crates.io](https://crates.io/crates/cartel/0.2.0); 0.1.0 there is the name's placeholder.
 
 #### Added
 - The workspace, laid out by role: the crate in `crates/core/`, the specification's model in `crates/spec-model/`,
