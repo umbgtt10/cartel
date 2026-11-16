@@ -29,7 +29,7 @@ choices in one ballot is refused, the choice already counted named beside the on
 - storing anything durably;
 - deciding what a reached quorum means.
 
-Raft or IBFT, crash- or Byzantine-tolerant: the protocol translates at one integration point, and Cartel answers
+Any consensus protocol, crash- or Byzantine-tolerant: the protocol translates at one integration point, and Cartel answers
 every call through one entry point, on a numbered receipt, reported to an observer.
 
 ## Siblings
