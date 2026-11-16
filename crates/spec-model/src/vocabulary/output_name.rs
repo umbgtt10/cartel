@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Umberto Gotti
 // SPDX-License-Identifier: MIT
 
+use alloc::collections::BTreeSet;
 use alloc::vec::Vec;
 use serde_json::json;
 use serde_json::Map;
@@ -23,6 +24,7 @@ pub enum OutputName {
     QuorumReached,
     BallotsClosed,
     WatermarkMeasured,
+    ClaimExamined,
     BallotShown,
     BallotsListed,
     BooksShown,
@@ -38,6 +40,7 @@ impl OutputName {
             (OutputName::QuorumReached, "QuorumReached"),
             (OutputName::BallotsClosed, "BallotsClosed"),
             (OutputName::WatermarkMeasured, "WatermarkMeasured"),
+            (OutputName::ClaimExamined, "ClaimExamined"),
             (OutputName::BallotShown, "BallotShown"),
             (OutputName::BallotsListed, "BallotsListed"),
             (OutputName::BooksShown, "BooksShown"),
@@ -88,6 +91,7 @@ impl OutputName {
             OutputName::WatermarkMeasured => {
                 json!({"position": View::number(Self::watermark(call.command))})
             }
+            OutputName::ClaimExamined => Self::claim(call.command),
             OutputName::BallotShown => {
                 json!({"record": View::record(Lookup::named(call.before, call.command))})
             }
@@ -96,6 +100,29 @@ impl OutputName {
             OutputName::CommandRejected => rejection.expect("a rejection").encoded(call),
         };
         Variant::of(Speller::name(&Self::SPELLING, self), payload)
+    }
+
+    // A claim's facts (§12): the electorate's members among the voters, the
+    // voters outside it, the voters named more than once -- each once, in
+    // ascending order -- and whether the members counted number at least the
+    // threshold.
+    fn claim(command: &Command) -> Value {
+        let electorate = command.electorate.as_ref().expect("an electorate");
+        let voters = command.voters.as_ref().expect("voters");
+        let named = |voter: &u64| voters.iter().filter(|other| *other == voter).count();
+        let listed = |keep: &dyn Fn(&u64) -> bool| {
+            let found: BTreeSet<u64> = voters.iter().copied().filter(|voter| keep(voter)).collect();
+            found.into_iter().collect::<Vec<u64>>()
+        };
+        let counted = listed(&|voter| electorate.contains(voter));
+        let reached = u64::try_from(counted.len())
+            .is_ok_and(|count| count >= command.threshold.expect("a threshold"));
+        json!({
+            "counted": View::numbers(&counted),
+            "outsiders": View::numbers(&listed(&|voter| !electorate.contains(voter))),
+            "repeated": View::numbers(&listed(&|voter| named(voter) > 1)),
+            "reached": reached,
+        })
     }
 
     fn count(voters: &[u64]) -> u64 {

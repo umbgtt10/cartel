@@ -51,6 +51,11 @@ impl SpecReader {
                     .collect(),
                 threshold: Self::number(&payload["threshold"]),
             },
+            "ExamineClaim" => Command::ExamineClaim {
+                electorate: Self::numbers(&payload["electorate"]),
+                threshold: Self::number(&payload["threshold"]),
+                voters: Self::numbers(&payload["voters"]),
+            },
             "ShowBallot" => Command::ShowBallot {
                 ballot: Self::ballot(&payload["ballot"]),
             },

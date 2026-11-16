@@ -156,6 +156,36 @@ fn encoded_of_books_shown_is_the_checkpoint_after_the_call() {
 }
 
 #[test]
+fn encoded_of_claim_examined_is_the_members_counted_the_outsiders_the_repeats_and_whether_they_reach(
+) {
+    // Arrange
+    let reaching = Commands::examine(&[4, 1, 2, 3], 3, &[9, 2, 1, 2, 9, 3]);
+    let short = Commands::examine(&[1, 2, 3, 4], 3, &[2, 2, 1]);
+    let state = States::instance();
+
+    // Act
+    let outputs = [&reaching, &short].map(|command| {
+        OutputName::ClaimExamined.encoded(
+            None,
+            &Call {
+                command,
+                before: &state,
+                after: &state,
+            },
+        )
+    });
+
+    // Assert
+    assert_eq!(
+        outputs,
+        [
+            json!({"ClaimExamined": {"counted": ["1", "2", "3"], "outsiders": ["9"], "repeated": ["2", "9"], "reached": true}}),
+            json!({"ClaimExamined": {"counted": ["1", "2"], "outsiders": [], "repeated": ["2"], "reached": false}}),
+        ]
+    );
+}
+
+#[test]
 fn encoded_of_command_rejected_is_its_rejection() {
     // Arrange
     let command = Commands::cast(States::key(1, 0, 0), 9, &[0xaa]);

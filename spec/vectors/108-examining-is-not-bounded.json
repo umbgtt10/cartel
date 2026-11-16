@@ -1,0 +1,64 @@
+{
+  "description": "A claim keeps nothing, so no bound applies to it: an electorate beyond the instance's bound is examined.",
+  "rows": [
+    "claim-examined"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      },
+      "bounds": {
+        "open_ballots": "0",
+        "electorate": "1",
+        "choice": "0"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "ExamineClaim": {
+          "electorate": [
+            "1",
+            "2",
+            "3"
+          ],
+          "threshold": "2",
+          "voters": [
+            "1",
+            "2"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "ClaimExamined": {
+            "counted": [
+              "1",
+              "2"
+            ],
+            "outsiders": [],
+            "repeated": [],
+            "reached": true
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "bounds": {
+      "open_ballots": "0",
+      "electorate": "1",
+      "choice": "0"
+    },
+    "ballots": [],
+    "next_receipt": "3"
+  }
+}

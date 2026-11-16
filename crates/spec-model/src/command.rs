@@ -22,4 +22,5 @@ pub struct Command {
     pub thresholds: Option<Vec<u64>>,
     pub member: Option<u64>,
     pub choice: Option<Choice>,
+    pub voters: Option<Vec<u64>>,
 }

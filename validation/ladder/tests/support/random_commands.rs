@@ -18,8 +18,9 @@ use proptest::prop_oneof;
 // one of two -- electorates and thresholds of every shape, well formed or not,
 // closes before points around the ballots, ahead of the close point or not,
 // and measures of positions that may repeat a member, at thresholds in range
-// or not -- and the bounds an instance in that world may be given, each left
-// out or from 0 to 3, so the sequences meet them too.
+// or not, and claims of voters that may repeat or stand outside their
+// electorate -- and the bounds an instance in that world may be given, each
+// left out or from 0 to 3, so the sequences meet them too.
 pub struct RandomCommands;
 
 impl RandomCommands {
@@ -78,6 +79,9 @@ impl RandomCommands {
                         .collect(),
                     threshold,
                 }
+            }),
+            1 => (vec(0..5_u64, 0..5), 0..6_u64, vec(0..6_u64, 0..6)).prop_map(|(electorate, threshold, voters)| {
+                Command::ExamineClaim { electorate, threshold, voters }
             }),
             1 => (0..4_u64, 0..3_u64).prop_map(|(question, round)| Command::CloseBallots {
                 before: ClosePoint { question, round },

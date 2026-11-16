@@ -1,10 +1,11 @@
 {
- "version": "0.4.0",
+ "version": "0.5.0",
  "rows": [
   {
    "id": "empty-electorate",
    "commands": [
-    "OpenBallot"
+    "OpenBallot",
+    "ExamineClaim"
    ],
    "situation": "`electorate` is empty",
    "output": "CommandRejected",
@@ -14,7 +15,8 @@
    "id": "repeated-member",
    "commands": [
     "OpenBallot",
-    "MeasureWatermark"
+    "MeasureWatermark",
+    "ExamineClaim"
    ],
    "situation": "the members the command gives -- `electorate`, or those of `positions` -- name one more than once",
    "output": "CommandRejected",
@@ -33,9 +35,10 @@
    "id": "threshold-out-of-range",
    "commands": [
     "OpenBallot",
-    "MeasureWatermark"
+    "MeasureWatermark",
+    "ExamineClaim"
    ],
-   "situation": "a threshold the command gives is 0, or above the number of members it gives",
+   "situation": "a threshold the command gives is 0, or above the number of members it gives -- in `electorate`, or in `positions`",
    "output": "CommandRejected",
    "rejection": "ThresholdOutOfRange"
   },
@@ -180,6 +183,14 @@
    ],
    "situation": "otherwise: the highest position at least `threshold` of the members have reached",
    "output": "WatermarkMeasured"
+  },
+  {
+   "id": "claim-examined",
+   "commands": [
+    "ExamineClaim"
+   ],
+   "situation": "otherwise: the members of `electorate` among `voters`, the voters outside it, the voters given more than once, and whether the members counted number at least `threshold`",
+   "output": "ClaimExamined"
   },
   {
    "id": "ballot-shown",

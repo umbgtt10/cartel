@@ -1,0 +1,56 @@
+{
+  "description": "Members and voters span every u64, 0 and the top included.",
+  "rows": [
+    "claim-examined"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "ExamineClaim": {
+          "electorate": [
+            "18446744073709551615",
+            "0"
+          ],
+          "threshold": "2",
+          "voters": [
+            "18446744073709551615",
+            "0",
+            "18446744073709551615"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "ClaimExamined": {
+            "counted": [
+              "0",
+              "18446744073709551615"
+            ],
+            "outsiders": [],
+            "repeated": [
+              "18446744073709551615"
+            ],
+            "reached": true
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [],
+    "next_receipt": "3"
+  }
+}

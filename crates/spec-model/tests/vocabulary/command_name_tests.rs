@@ -21,6 +21,7 @@ fn spelling_of_every_command_is_its_name() {
             "CastVote",
             "CloseBallots",
             "MeasureWatermark",
+            "ExamineClaim",
             "ShowBallot",
             "ListBallots",
             "ShowBooks"

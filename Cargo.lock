@@ -85,7 +85,7 @@ checksum = "dc0b364ead1874514c8c2855ab558056ebfeb775653e7ae45ff72f28f8f3166c"
 
 [[package]]
 name = "cartel"
-version = "0.5.0"
+version = "0.6.0"
 
 [[package]]
 name = "cartel-core-validation"

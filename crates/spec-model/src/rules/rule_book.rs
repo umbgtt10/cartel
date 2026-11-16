@@ -11,7 +11,7 @@ use crate::rules::command_situation::CommandSituation;
 use crate::rules::rule::Rule;
 use crate::rules::situation::Situation;
 
-const RULES: [(&str, Rule); 23] = [
+const RULES: [(&str, Rule); 24] = [
     (
         "empty-electorate",
         Rule {
@@ -147,6 +147,13 @@ const RULES: [(&str, Rule); 23] = [
     ),
     (
         "watermark-measured",
+        Rule {
+            situation: Situation::Always,
+            change: Change::Nothing,
+        },
+    ),
+    (
+        "claim-examined",
         Rule {
             situation: Situation::Always,
             change: Change::Nothing,

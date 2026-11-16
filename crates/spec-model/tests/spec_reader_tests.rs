@@ -11,6 +11,22 @@ use cartel_spec_model::vocabulary::command_name::CommandName;
 use serde_json::json;
 
 #[test]
+fn command_of_a_claim_reads_its_electorate_threshold_and_voters() {
+    // Arrange
+    let value = json!({"ExamineClaim": {
+        "electorate": ["3", "1"],
+        "threshold": "2",
+        "voters": ["1", "9", "1"],
+    }});
+
+    // Act
+    let command = SpecReader::command(&value);
+
+    // Assert
+    assert_eq!(command, Commands::examine(&[3, 1], 2, &[1, 9, 1]));
+}
+
+#[test]
 fn command_of_a_close_reads_its_point() {
     // Arrange & Act
     let command =

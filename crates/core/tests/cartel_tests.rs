@@ -102,6 +102,33 @@ fn new_of_a_fresh_origin_holds_no_ballot() {
 }
 
 #[test]
+fn process_of_a_claim_answers_its_facts_and_changes_no_ballot() {
+    // Arrange
+    let mut cartel = fresh();
+    let _ = cartel.process(open((1, 0, 0), &[1, 2], &[2]));
+    let before = cartel.process(Command::ListBallots).output;
+
+    // Act
+    let receipt = cartel.process(Command::ExamineClaim {
+        electorate: vec![1, 2],
+        threshold: 2,
+        voters: vec![2, 7, 1],
+    });
+
+    // Assert
+    assert_eq!(
+        receipt.output,
+        Output::ClaimExamined {
+            counted: vec![1, 2],
+            outsiders: vec![7],
+            repeated: Vec::new(),
+            reached: true,
+        }
+    );
+    assert_eq!(cartel.process(Command::ListBallots).output, before);
+}
+
+#[test]
 fn process_of_a_close_closes_the_ballots_below_its_point() {
     // Arrange
     let mut cartel = fresh();

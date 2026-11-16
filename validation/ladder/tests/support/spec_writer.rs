@@ -79,6 +79,15 @@ impl SpecWriter {
                     .collect::<Vec<Value>>(),
                 "threshold": Self::number(*threshold),
             }}),
+            Command::ExamineClaim {
+                electorate,
+                threshold,
+                voters,
+            } => json!({"ExamineClaim": {
+                "electorate": Self::numbers(electorate),
+                "threshold": Self::number(*threshold),
+                "voters": Self::numbers(voters),
+            }}),
             Command::ShowBallot { ballot } => {
                 json!({"ShowBallot": {"ballot": Self::ballot(ballot)}})
             }
@@ -160,6 +169,17 @@ impl SpecWriter {
             Output::WatermarkMeasured { position } => {
                 json!({"WatermarkMeasured": {"position": Self::number(*position)}})
             }
+            Output::ClaimExamined {
+                counted,
+                outsiders,
+                repeated,
+                reached,
+            } => json!({"ClaimExamined": {
+                "counted": Self::numbers(counted),
+                "outsiders": Self::numbers(outsiders),
+                "repeated": Self::numbers(repeated),
+                "reached": reached,
+            }}),
             Output::BallotShown(record) => json!({"BallotShown": {"record": Self::record(record)}}),
             Output::BallotsListed { ballots } => {
                 json!({"BallotsListed": {"ballots": ballots.iter().map(Self::ballot).collect::<Vec<Value>>()}})

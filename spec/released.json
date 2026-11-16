@@ -459,6 +459,91 @@
    "id": "92-bounds-span-every-u64",
    "version": "0.4.0",
    "sha256": "a56e3802011643e5dfb1e7326fc2a8c1abff14c12abe0466a7df348b92e73777"
+  },
+  {
+   "id": "100-a-claim-of-no-voters",
+   "version": "0.5.0",
+   "sha256": "7449b34c0087fd290fbc13cf35fc8b64f25430a1b91c9d3bcae151e6f386ece9"
+  },
+  {
+   "id": "101-a-threshold-of-every-member",
+   "version": "0.5.0",
+   "sha256": "07d4d21df00a38a86d1f8b071f6ca6c5c378d021f0ae9e6c796aadbe673a7ed4"
+  },
+  {
+   "id": "102-an-empty-electorate-is-refused",
+   "version": "0.5.0",
+   "sha256": "f8d75bfcba0700b7ec7f2b96e93c9afe13a86bd5b7b4b85631fc89077f7e41e3"
+  },
+  {
+   "id": "103-a-member-named-twice-in-the-electorate-is-refused",
+   "version": "0.5.0",
+   "sha256": "b73f9567ab5c28d85a7346128cccaf2c602353498c1f4717f9e109bc66a86d0f"
+  },
+  {
+   "id": "104-a-threshold-of-zero-is-out-of-range",
+   "version": "0.5.0",
+   "sha256": "90f3a8bb1faa419d40fb18ac6a70f60f19844c5b8c677a22c23f79c0b9fed522"
+  },
+  {
+   "id": "105-a-threshold-above-the-electorate-is-out-of-range",
+   "version": "0.5.0",
+   "sha256": "ffaa8be56b1fbcd5911876b259581796d39acb63783005396dce79180f5b7133"
+  },
+  {
+   "id": "106-the-electorate-is-checked-before-the-threshold",
+   "version": "0.5.0",
+   "sha256": "908b02ef33babf4dc4f1207e5cd94b0e558a6b332c6e9f6306fa542689929449"
+  },
+  {
+   "id": "107-examining-touches-no-ballot",
+   "version": "0.5.0",
+   "sha256": "5b7d53dab175d36b121e6af542888d06f62e5d71bef15333333a4f5f1979a8ef"
+  },
+  {
+   "id": "108-examining-is-not-bounded",
+   "version": "0.5.0",
+   "sha256": "5e6416467adc9066befb78320825aac85d7b97cd4b3872a22766db7ffed233b8"
+  },
+  {
+   "id": "109-members-and-voters-span-every-u64",
+   "version": "0.5.0",
+   "sha256": "2cfca102f53769d4555175e85783d75ee0b016b20ee9d6059e18c7811b25bcda"
+  },
+  {
+   "id": "93-examine-a-claim-that-reaches",
+   "version": "0.5.0",
+   "sha256": "3a9a47d49cb9c370f38f9a3669b77986dfad3cbca545c4801cc36c306faa7749"
+  },
+  {
+   "id": "94-a-claim-short-of-the-threshold",
+   "version": "0.5.0",
+   "sha256": "c034df7605fa7bf1c92af17c5a591ffe4b56b71dccc73c4875e4a69e260cc7f5"
+  },
+  {
+   "id": "95-electorate-and-voters-in-any-order",
+   "version": "0.5.0",
+   "sha256": "daf775fc04e7114265e94e6a8ce9f6d7e851bc8db55fbc3ee6dbaa4d512d1af0"
+  },
+  {
+   "id": "96-an-outsider-is-listed-and-not-counted",
+   "version": "0.5.0",
+   "sha256": "edba6faeb04d0fcffec49d432fb2b4357be9dbe6b2d4644af8d7caba44f71707"
+  },
+  {
+   "id": "97-an-outsider-does-not-stop-a-claim-reaching",
+   "version": "0.5.0",
+   "sha256": "cae8e3ad94e933ff718f0c091c1c151ceb8b4d06af87a2f035f333dd769e55a9"
+  },
+  {
+   "id": "98-a-repeated-voter-is-listed-and-counted-once",
+   "version": "0.5.0",
+   "sha256": "3f562a2cab7008b85a30807c02db2112f805ba18883690c8119ab50aeadb59d9"
+  },
+  {
+   "id": "99-a-repeated-outsider-is-listed-both-ways",
+   "version": "0.5.0",
+   "sha256": "745309285ff86530db49b060a6ccbf3eab8f5d2e9983be1486c990c43c15b0e4"
   }
  ]
 }

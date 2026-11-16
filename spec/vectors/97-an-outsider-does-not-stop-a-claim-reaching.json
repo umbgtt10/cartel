@@ -1,0 +1,60 @@
+{
+  "description": "Members enough reach the threshold whatever outsiders stand beside them: what an outsider costs is the protocol's.",
+  "rows": [
+    "claim-examined"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "ExamineClaim": {
+          "electorate": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ],
+          "threshold": "3",
+          "voters": [
+            "9",
+            "1",
+            "2",
+            "3"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "ClaimExamined": {
+            "counted": [
+              "1",
+              "2",
+              "3"
+            ],
+            "outsiders": [
+              "9"
+            ],
+            "repeated": [],
+            "reached": true
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [],
+    "next_receipt": "3"
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "description": "The electorate and the voters are given in any order, and answered alike, in ascending order.",
+  "rows": [
+    "claim-examined"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "ExamineClaim": {
+          "electorate": [
+            "4",
+            "2",
+            "3",
+            "1"
+          ],
+          "threshold": "3",
+          "voters": [
+            "3",
+            "1",
+            "2"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "ClaimExamined": {
+            "counted": [
+              "1",
+              "2",
+              "3"
+            ],
+            "outsiders": [],
+            "repeated": [],
+            "reached": true
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "ExamineClaim": {
+          "electorate": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ],
+          "threshold": "3",
+          "voters": [
+            "2",
+            "3",
+            "1"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "ClaimExamined": {
+            "counted": [
+              "1",
+              "2",
+              "3"
+            ],
+            "outsiders": [],
+            "repeated": [],
+            "reached": true
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [],
+    "next_receipt": "4"
+  }
+}

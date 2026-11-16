@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 pub mod bound_rows;
+pub mod claim_rows;
 pub mod closing_rows;
 pub mod opening_rows;
 pub mod query_rows;

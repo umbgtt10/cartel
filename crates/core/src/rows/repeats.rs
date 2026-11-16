@@ -3,12 +3,14 @@
 
 use alloc::collections::BTreeSet;
 
-// The lowest number given more than once: the member an electorate or a
-// measure's positions name twice, the threshold an opening gives twice.
+// The numbers given more than once, and the lowest of them: the member an
+// electorate or a measure's positions name twice, the threshold an opening
+// gives twice, the voters a claim names twice.
 pub struct Repeats;
 
 impl Repeats {
-    pub fn lowest(numbers: &[u64]) -> Option<u64> {
+    // Every number given more than once, each once, in ascending order.
+    pub fn all(numbers: &[u64]) -> BTreeSet<u64> {
         let mut seen = BTreeSet::new();
         let mut repeated = BTreeSet::new();
         for number in numbers {
@@ -16,6 +18,10 @@ impl Repeats {
                 repeated.insert(*number);
             }
         }
-        repeated.first().copied()
+        repeated
+    }
+
+    pub fn lowest(numbers: &[u64]) -> Option<u64> {
+        Self::all(numbers).pop_first()
     }
 }

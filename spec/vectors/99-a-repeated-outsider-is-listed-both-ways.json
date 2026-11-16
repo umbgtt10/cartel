@@ -1,0 +1,58 @@
+{
+  "description": "An outsider named twice is an outsider and a repeat, listed once in each.",
+  "rows": [
+    "claim-examined"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "ExamineClaim": {
+          "electorate": [
+            "1",
+            "2",
+            "3"
+          ],
+          "threshold": "1",
+          "voters": [
+            "9",
+            "1",
+            "9"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "ClaimExamined": {
+            "counted": [
+              "1"
+            ],
+            "outsiders": [
+              "9"
+            ],
+            "repeated": [
+              "9"
+            ],
+            "reached": true
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [],
+    "next_receipt": "3"
+  }
+}

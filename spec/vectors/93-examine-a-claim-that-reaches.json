@@ -1,0 +1,57 @@
+{
+  "description": "A claim whose voters are distinct members reaching the threshold: all counted, none outside, none repeated, reached.",
+  "rows": [
+    "claim-examined"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "ExamineClaim": {
+          "electorate": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ],
+          "threshold": "3",
+          "voters": [
+            "1",
+            "2",
+            "3"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "ClaimExamined": {
+            "counted": [
+              "1",
+              "2",
+              "3"
+            ],
+            "outsiders": [],
+            "repeated": [],
+            "reached": true
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "ballots": [],
+    "next_receipt": "3"
+  }
+}
