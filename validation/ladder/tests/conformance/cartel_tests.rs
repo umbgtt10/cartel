@@ -14,8 +14,8 @@ use cartel::cartel::Cartel;
 use cartel::command::Command;
 use cartel::no_op_observer::NoOpObserver;
 use cartel::observer::Observer;
-use serde_json::json;
 use serde_json::Value;
+use serde_json::json;
 
 fn departures(name: &str, vector: &Value) -> Vec<String> {
     let mut cartel = Cartel::new(

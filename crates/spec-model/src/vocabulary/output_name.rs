@@ -3,9 +3,9 @@
 
 use alloc::collections::BTreeSet;
 use alloc::vec::Vec;
-use serde_json::json;
 use serde_json::Map;
 use serde_json::Value;
+use serde_json::json;
 
 use crate::ballot_key::BallotKey;
 use crate::call::Call;

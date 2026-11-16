@@ -6,9 +6,9 @@ use alloc::string::String;
 use alloc::string::ToString;
 use alloc::vec::Vec;
 use core::fmt::Write;
-use serde_json::json;
 use serde_json::Map;
 use serde_json::Value;
+use serde_json::json;
 
 use crate::ballot_key::BallotKey;
 use crate::choice::Choice;

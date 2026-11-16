@@ -12,8 +12,8 @@ use cartel_spec_model::answer::Answer;
 use cartel_spec_model::model::Model;
 use cartel_spec_model::rules::rule_book::RuleBook;
 use cartel_spec_model::spec_reader::SpecReader;
-use serde_json::json;
 use serde_json::Value;
+use serde_json::json;
 use std::collections::BTreeSet;
 
 // The model's answers to a vector's steps, and to the commands given after them.

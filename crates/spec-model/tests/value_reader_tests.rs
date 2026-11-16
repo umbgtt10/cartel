@@ -3,8 +3,8 @@
 
 use crate::support::states::States;
 use cartel_spec_model::value_reader::ValueReader;
-use serde_json::json;
 use serde_json::Value;
+use serde_json::json;
 
 #[test]
 fn choice_of_hexadecimal_digits_is_their_bytes() {

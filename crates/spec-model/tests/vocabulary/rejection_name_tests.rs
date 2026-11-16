@@ -8,8 +8,8 @@ use cartel_spec_model::call::Call;
 use cartel_spec_model::command::Command;
 use cartel_spec_model::instance_state::InstanceState;
 use cartel_spec_model::vocabulary::rejection_name::RejectionName;
-use serde_json::json;
 use serde_json::Value;
+use serde_json::json;
 
 fn encoded(rejection: RejectionName, command: &Command) -> Value {
     let state = state();

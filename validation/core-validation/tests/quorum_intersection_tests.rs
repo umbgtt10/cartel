@@ -11,8 +11,8 @@ use cartel_core_validation::cluster_invariants::ClusterInvariants;
 use cartel_core_validation::cluster_setup::ClusterSetup;
 use cartel_core_validation::cluster_simulation::ClusterSimulation;
 use cartel_core_validation::fault_policy::FaultPolicy;
-use proptest::prelude::any;
 use proptest::prelude::Strategy;
+use proptest::prelude::any;
 use proptest::proptest;
 
 proptest! {

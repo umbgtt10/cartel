@@ -12,9 +12,9 @@ use cartel::origin::Origin;
 use cartel::output::Output;
 use cartel::receipt::Receipt;
 use cartel::rejection::Rejection;
-use serde_json::json;
 use serde_json::Map;
 use serde_json::Value;
+use serde_json::json;
 use std::fmt::Write;
 
 // Cartel's answers written in the specification's JSON, so a receipt compares

@@ -156,8 +156,8 @@ fn encoded_of_books_shown_is_the_checkpoint_after_the_call() {
 }
 
 #[test]
-fn encoded_of_claim_examined_is_the_members_counted_the_outsiders_the_repeats_and_whether_they_reach(
-) {
+fn encoded_of_claim_examined_is_the_members_counted_the_outsiders_the_repeats_and_whether_they_reach()
+ {
     // Arrange
     let reaching = Commands::examine(&[4, 1, 2, 3], 3, &[9, 2, 1, 2, 9, 3]);
     let short = Commands::examine(&[1, 2, 3, 4], 3, &[2, 2, 1]);

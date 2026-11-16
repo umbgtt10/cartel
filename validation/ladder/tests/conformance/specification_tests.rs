@@ -84,13 +84,11 @@ fn declared(source: &str) -> Vec<String> {
         if let Some((field, _)) = trimmed
             .strip_prefix("pub ")
             .and_then(|rest| rest.split_once(':'))
-        {
-            if field
+            && field
                 .chars()
                 .all(|character| character.is_alphanumeric() || character == '_')
-            {
-                found.extend(words(field));
-            }
+        {
+            found.extend(words(field));
         }
     }
     found

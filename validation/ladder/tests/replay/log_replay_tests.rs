@@ -20,8 +20,8 @@ use cartel::instance_id::InstanceId;
 use cartel::no_op_observer::NoOpObserver;
 use cartel::origin::Origin;
 use proptest::proptest;
-use serde_json::json;
 use serde_json::Value;
+use serde_json::json;
 
 const ORIGIN: Origin = Origin::Fresh(Fresh {
     instance: InstanceId {

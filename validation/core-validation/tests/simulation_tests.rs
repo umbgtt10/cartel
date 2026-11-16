@@ -84,9 +84,11 @@ fn run_of_honest_members_over_a_perfect_transport_sees_every_node_reach_the_quor
     let mut nodes: Vec<u64> = sightings.iter().map(|sighting| sighting.node).collect();
     nodes.sort_unstable();
     assert_eq!(nodes, vec![1, 2, 3, 4]);
-    assert!(sightings
-        .iter()
-        .all(|sighting| sighting.choice == ClusterSimulation::cast()[0]));
+    assert!(
+        sightings
+            .iter()
+            .all(|sighting| sighting.choice == ClusterSimulation::cast()[0])
+    );
 }
 
 #[test]
