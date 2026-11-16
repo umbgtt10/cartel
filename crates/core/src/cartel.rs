@@ -22,6 +22,7 @@ pub struct Cartel {
 }
 
 impl Cartel {
+    #[must_use]
     pub fn new(origin: Origin, observer: Box<dyn Observer>) -> Self {
         let Origin::Fresh(fresh) = origin;
         Self {
@@ -30,6 +31,7 @@ impl Cartel {
         }
     }
 
+    #[must_use]
     pub fn process(&mut self, command: Command) -> Receipt {
         let number = self.books.count_call();
         let output = match &command {

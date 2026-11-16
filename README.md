@@ -154,11 +154,11 @@ let mut cartel = Cartel::new(
 
 // A ballot of four members, reached at three votes for one choice.
 let ballot = Ballot { question: 7, round: 0, phase: 0 };
-cartel.process(Command::OpenBallot { ballot, electorate: vec![1, 2, 3, 4], thresholds: vec![3] });
+let _ = cartel.process(Command::OpenBallot { ballot, electorate: vec![1, 2, 3, 4], thresholds: vec![3] });
 
 let proposal = Choice { bytes: vec![0xab; 32] };
 for member in [1, 2] {
-    cartel.process(Command::CastVote { ballot, member, choice: proposal.clone() });
+    let _ = cartel.process(Command::CastVote { ballot, member, choice: proposal.clone() });
 }
 
 // The third vote reaches the threshold, and the receipt names the quorum.
