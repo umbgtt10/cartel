@@ -1,8 +1,8 @@
 # cartel — implementation plan
 
-**Status: agreed 2026-11-16; nothing built.** The decisions are the ADRs in [`ADRs/`](ADRs/README.md); the
-vocabulary and the commands are [`DESIGN.md`](DESIGN.md). This document says in what order Cartel is built, and the
-rules that keep each step additive.
+**Status: agreed 2026-11-16. Slices 1 to 3 released, Raft integrated; restore moved to §4 the same day.** The
+decisions are the ADRs in [`ADRs/`](ADRs/README.md); the vocabulary and the commands are [`DESIGN.md`](DESIGN.md).
+This document says in what order Cartel is built, and the rules that keep each step additive.
 
 ## 1. Additivity
 
@@ -37,10 +37,18 @@ call, never a step of the plan.
 | **2. Closing** | `CloseBallots` and the close point. Opening or casting below it is refused as closed; a close at or behind it is answered, closing nothing. The close point is in the checkpoint, optional. | Raft, IBFT |
 | **3. Watermark** | `MeasureWatermark`: positions per member, a threshold, the highest position at least that many members have reached. Refused: a repeated member, a threshold out of range. | Raft's commit, ReadIndex and check-quorum |
 | *Raft integrates* | §3 | |
-| **4. Restore** | An instance from a checkpoint; a restart under a new incarnation; the replay tier resynchronising from a checkpoint; restarts from older checkpoints in the cluster simulation. | a replay's resynchronisation; a protocol that keeps its books across a restart |
-| **5. Bounds** | The three optional bounds and their refusals: books full, electorate too large, choice too long. The bounds are in the checkpoint, optional. The memory tier is measured at the bounds. | small hosts, Byzantine-tolerant protocols |
-| **6. Claims** | `ExamineClaim`: the members counted, the outsiders, the repeats, whether the threshold is reached. | IBFT's certificate and NewView checks |
+| **4. Bounds** | The three optional bounds and their refusals: books full, electorate too large, choice too long. The bounds are in the checkpoint, optional. The memory tier is measured at the bounds. | small hosts, Byzantine-tolerant protocols |
+| **5. Claims** | `ExamineClaim`: the members counted, the outsiders, the repeats, whether the threshold is reached. | IBFT's certificate and NewView checks |
 | *IBFT integrates* | §3 | |
+
+**Restore was slice 4 until 2026-11-16,** for a replay's resynchronisation and for a protocol that keeps its books
+across a restart. Neither is in view:
+- IBFT gave up restoring its votes (D20, D21) and, as Raft, starts every node fresh;
+- every log a deployment writes begins at a fresh instance's first receipt, so a replay has nothing to
+  resynchronise from.
+
+It moved to §4 unchanged: a new origin, added when a protocol asks. The checkpoint it would read is already
+`ShowBooks`'s answer, so nothing built now closes the door on it.
 
 **Slice 1, Ballots, holds:**
 - A fresh instance (the instance id), the observer and receipts.
@@ -61,7 +69,7 @@ call, never a step of the plan.
 - every tier of the ladder;
 - the vocabulary test ([`P0-ADR-ConsensusIsKeptOnBallots`](ADRs/P0-ADR-ConsensusIsKeptOnBallots.md)).
 
-It is the largest slice by far. The five after it are small.
+It is the largest slice by far. The four after it are small.
 
 ## 3. Integration
 
@@ -83,7 +91,7 @@ for reasons the port's contract and a property test gave:
 
 Raft's stages 1, 2, 5 and 6 and its soak stay green.
 
-**IBFT, after slice 6.**
+**IBFT, after slice 5.**
 1. Its `VoteTally` port first.
 2. Then the books still in its consensus code, row by row as [`INVENTORY.md`](INVENTORY.md) marks them:
    - view changes and their two thresholds;
@@ -95,8 +103,10 @@ The bounds come from its protocol limits. Its stages run on hardware as well.
 
 ## 4. Later, when a protocol asks
 
-None is built ahead of need. Each arrives as a new command or a new quorum form, never a change to an existing
-answer:
+None is built ahead of need. Each arrives as a new command, a new origin or a new quorum form, never a change to
+an existing answer:
+- restoring an instance from a checkpoint, under a new incarnation, first planned as slice 4, with the replay tier
+  resynchronising from a checkpoint and the cluster simulation restarting nodes from older checkpoints;
 - withdrawing a vote, if IBFT's rule for view changes ahead moves into Cartel;
 - closing one ballot at a time, for protocols that decide out of order;
 - a "can no longer reach" answer;

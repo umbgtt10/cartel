@@ -233,7 +233,7 @@ For step 3 the protocol chooses one of two ways:
 - **Restored.** No protocol in view does this today; IBFT did, until it gave its volatile snapshot up (D20, D21).
   The protocol stores the checkpoint, `ShowBooks`'s answer, in its own WAL, and restores it into a new incarnation.
   The argument is the same, since an older checkpoint holds a subset of the votes counted. What it gains is the
-  round not lost.
+  round not lost. Cartel builds it when a protocol asks ([`IMPLEMENTATION-PLAN.md`](IMPLEMENTATION-PLAN.md) §4).
 
 The restart sequence for a protocol:
 1. Create the instance, fresh or restored.
@@ -243,8 +243,8 @@ The restart sequence for a protocol:
 
 The testing ladder holds this two ways ([`P2-ADR-TestingLadder`](ADRs/P2-ADR-TestingLadder.md)):
 - **a property test:** any subset of a run's counted votes loses quorums and never gains one;
-- **the cluster simulation:** nodes crash and restart, fresh or from older checkpoints, and the cross-node invariant
-  must hold through every restart.
+- **the cluster simulation:** nodes crash and restart fresh -- and from older checkpoints, once restoring is
+  built -- and the cross-node invariant must hold through every restart.
 
 ## 9. Open questions
 

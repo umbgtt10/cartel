@@ -58,7 +58,8 @@ first receipt is number 1. The instance id, a node and an incarnation, tells two
 **Restoring a checkpoint may serve, unlike in beggar.** Beggar forbids a live restore because a restored instance
 would mint names again. Cartel mints no names, so a restored instance can serve: a protocol that keeps its books
 across a restart, rather than lose a round, restores them. Neither Raft nor IBFT does today; IBFT gave its
-volatile snapshot up (D20, D21) and starts from its hard state alone.
+volatile snapshot up (D20, D21) and starts from its hard state alone, so restoring waits until a protocol asks
+([`../IMPLEMENTATION-PLAN.md`](../IMPLEMENTATION-PLAN.md) §4).
 - **A restart** restores into a new incarnation, so its receipts are told apart from those before the crash.
 - **A replay** restores under the same one.
 
@@ -82,8 +83,8 @@ threshold reached that the whole set did not reach.
 - The replay tier ([P2-ADR-TestingLadder](P2-ADR-TestingLadder.md)):
   - rebuilds every receipt from a log;
   - detects a dropped line;
-  - from 0.4.0, resynchronises from a checkpoint;
-  - from 0.4.0, restores into a new incarnation.
+  - once restoring is built, resynchronises from a checkpoint;
+  - once restoring is built, restores into a new incarnation.
 
 ## Related
 

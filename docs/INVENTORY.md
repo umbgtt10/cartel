@@ -84,6 +84,6 @@ Cartel never:
 6. **Retention is explicit.** Raft's superseding (R3) and IBFT's clearing (I4, I7) both become an explicit close
    the protocol asks for. Cartel doesn't infer it from either protocol's shape.
 7. **IBFT no longer restores its votes** (I17). Chunk 2 of its mutants plan stopped writing the volatile snapshot
-   (D20) and starts a node from genesis or its hard state alone (D21), as Raft does. Restore stays in Cartel's plan
-   for a replay's resynchronisation and for a protocol that would keep its books across a restart; IBFT is no
-   longer the one that needs it.
+   (D20) and starts a node from genesis or its hard state alone (D21), as Raft does. IBFT was the protocol restore
+   was planned for, so it has left Cartel's slices for the plan's "later, when a protocol asks"
+   ([`IMPLEMENTATION-PLAN.md`](IMPLEMENTATION-PLAN.md) §4).

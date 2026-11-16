@@ -229,11 +229,11 @@ The order of building is [`IMPLEMENTATION-PLAN.md`](../docs/IMPLEMENTATION-PLAN.
 
 | version | adds |
 |---|---|
-| 0.4.0 | restoring an instance from a checkpoint, under a new incarnation |
-| 0.5.0 | the optional bounds: open ballots, electorate, choice length |
-| 0.6.0 | claims: `ExamineClaim` |
+| 0.4.0 | the optional bounds: open ballots, electorate, choice length |
+| 0.5.0 | claims: `ExamineClaim` |
 
 **Later, when a protocol asks:**
+- restoring an instance from a checkpoint, under a new incarnation;
 - withdrawing a vote;
 - closing one ballot at a time;
 - an answer that a threshold can no longer be reached;
