@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: MIT
 
 use crate::support::fixtures::Fixtures;
-use cartel::books::Books;
 use cartel::checkpoint::Checkpoint;
 use cartel::output::Output;
+use cartel::registry::books::Books;
 use cartel::rejection::Rejection;
 
 #[test]

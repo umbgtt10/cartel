@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: MIT
 
 use crate::ballot::Ballot;
-use crate::open_ballot::OpenBallot;
 use crate::output::Output;
+use crate::registry::open_ballot::OpenBallot;
 use crate::rejection::Rejection;
 use crate::rows::closing_rows::ClosingRows;
 use alloc::collections::BTreeMap;

@@ -3,8 +3,8 @@
 
 use crate::support::fixtures::Fixtures;
 use cartel::ballot_record::BallotRecord;
-use cartel::open_ballot::OpenBallot;
 use cartel::output::Output;
+use cartel::registry::open_ballot::OpenBallot;
 use cartel::rejection::Rejection;
 use cartel::votes::Votes;
 

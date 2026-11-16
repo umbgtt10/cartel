@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 use crate::support::fixtures::Fixtures;
-use cartel::open_ballot::OpenBallot;
+use cartel::registry::open_ballot::OpenBallot;
 use cartel::rejection::Rejection;
 use cartel::rows::closing_rows::ClosingRows;
 use cartel::rows::opening_rows::OpeningRows;

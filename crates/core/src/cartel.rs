@@ -1,12 +1,12 @@
 // Copyright (c) 2026 Umberto Gotti
 // SPDX-License-Identifier: MIT
 
-use crate::books::Books;
 use crate::command::Command;
 use crate::observer::Observer;
 use crate::origin::Origin;
 use crate::output::Output;
 use crate::receipt::Receipt;
+use crate::registry::books::Books;
 use crate::rows::watermark_rows::WatermarkRows;
 use alloc::boxed::Box;
 
