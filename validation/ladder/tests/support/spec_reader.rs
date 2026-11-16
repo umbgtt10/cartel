@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 use cartel::ballot::Ballot;
+use cartel::bounds::Bounds;
 use cartel::choice::Choice;
 use cartel::close_point::ClosePoint;
 use cartel::command::Command;
@@ -60,11 +61,23 @@ impl SpecReader {
     }
 
     pub fn origin(value: &Value) -> Origin {
-        let instance = &value["Fresh"]["instance"];
+        let fresh = &value["Fresh"];
+        let instance = &fresh["instance"];
+        let bound = |name: &str| {
+            fresh
+                .get("bounds")
+                .and_then(|bounds| bounds.get(name))
+                .map(Self::number)
+        };
         Origin::Fresh(Fresh {
             instance: InstanceId {
                 node: Self::number(&instance["node"]),
                 incarnation: Self::number(&instance["incarnation"]),
+            },
+            bounds: Bounds {
+                open_ballots: bound("open_ballots"),
+                electorate: bound("electorate"),
+                choice: bound("choice"),
             },
         })
     }

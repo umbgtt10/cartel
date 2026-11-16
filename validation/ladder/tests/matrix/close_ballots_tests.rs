@@ -9,6 +9,7 @@
 
 use crate::support::both_sides::BothSides;
 use cartel::ballot::Ballot;
+use cartel::bounds::Bounds;
 use cartel::choice::Choice;
 use cartel::close_point::ClosePoint;
 use cartel::command::Command;
@@ -94,7 +95,7 @@ fn process_of_every_close_and_what_meets_it_after_answers_as_the_model_does() {
         for mask in 0..1_u32 << BALLOTS.len() {
             for question in 0..4 {
                 for round in 0..3 {
-                    let mut sides = BothSides::new();
+                    let mut sides = BothSides::new(Bounds::default());
                     if let Some(before) = prior {
                         let _ = sides.process(&Command::CloseBallots { before });
                     }

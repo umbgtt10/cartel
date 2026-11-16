@@ -4,6 +4,7 @@
 use crate::support::fixtures::Fixtures;
 use crate::support::recording_observer::Calls;
 use crate::support::recording_observer::RecordingObserver;
+use cartel::bounds::Bounds;
 use cartel::cartel::Cartel;
 use cartel::command::Command;
 use cartel::fresh::Fresh;
@@ -17,6 +18,7 @@ fn fresh() -> Cartel {
     Cartel::new(
         Origin::Fresh(Fresh {
             instance: Fixtures::instance(),
+            bounds: Bounds::default(),
         }),
         Box::new(NoOpObserver),
     )
@@ -36,6 +38,47 @@ fn vote(member: u64, choice: &[u8]) -> Command {
         member,
         choice: Fixtures::choice(choice),
     }
+}
+
+#[test]
+fn new_of_a_bounded_origin_answers_within_its_bounds() {
+    // Arrange
+    let bounds = Bounds {
+        open_ballots: Some(1),
+        electorate: Some(2),
+        choice: Some(1),
+    };
+    let mut cartel = Cartel::new(
+        Origin::Fresh(Fresh {
+            instance: Fixtures::instance(),
+            bounds,
+        }),
+        Box::new(NoOpObserver),
+    );
+
+    // Act
+    let outputs: Vec<Output> = [
+        open((1, 0, 0), &[1, 2, 3], &[1]),
+        open((1, 0, 0), &[1, 2], &[2]),
+        open((2, 0, 0), &[1], &[1]),
+        vote(1, &[0xaa, 0xbb]),
+        vote(1, &[0xaa]),
+    ]
+    .into_iter()
+    .map(|command| cartel.process(command).output)
+    .collect();
+
+    // Assert
+    assert_eq!(
+        outputs,
+        vec![
+            Output::CommandRejected(Rejection::ElectorateTooLarge { bound: 2 }),
+            Output::BallotOpened,
+            Output::CommandRejected(Rejection::BooksFull { bound: 1 }),
+            Output::CommandRejected(Rejection::ChoiceTooLong { bound: 1 }),
+            Output::VoteCounted { count: 1 },
+        ]
+    );
 }
 
 #[test]
@@ -163,6 +206,7 @@ fn process_of_every_command_reports_it_with_its_receipt() {
     let mut cartel = Cartel::new(
         Origin::Fresh(Fresh {
             instance: Fixtures::instance(),
+            bounds: Bounds::default(),
         }),
         Box::new(RecordingObserver::new(calls.clone())),
     );

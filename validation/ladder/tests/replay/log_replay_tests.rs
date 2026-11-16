@@ -2,8 +2,9 @@
 // SPDX-License-Identifier: MIT
 
 // The replay tier: logs of random sequences written in the specification's
-// step form and replayed into a fresh instance -- every receipt rebuilt -- and
-// a log with a line lost, the gap found where it is.
+// step form and replayed into a fresh instance of the same origin, its bounds
+// included -- every receipt rebuilt -- and a log with a line lost, the gap
+// found where it is.
 
 use crate::support::log_replay::LogReplay;
 use crate::support::random_commands::RandomCommands;
@@ -11,6 +12,7 @@ use crate::support::spec_files::SpecFiles;
 use crate::support::spec_schema::SpecSchema;
 use crate::support::spec_writer::SpecWriter;
 use cartel::ballot::Ballot;
+use cartel::bounds::Bounds;
 use cartel::cartel::Cartel;
 use cartel::command::Command;
 use cartel::fresh::Fresh;
@@ -26,11 +28,17 @@ const ORIGIN: Origin = Origin::Fresh(Fresh {
         node: 3,
         incarnation: 9,
     },
+    bounds: Bounds {
+        open_ballots: None,
+        electorate: None,
+        choice: None,
+    },
 });
 
-// The log a run of commands leaves: each command beside its receipt.
-fn logged(commands: &[Command]) -> Vec<Value> {
-    let mut cartel = Cartel::new(ORIGIN, Box::new(NoOpObserver));
+// The log a run of commands leaves on an instance of the origin given: each
+// command beside its receipt.
+fn logged(origin: Origin, commands: &[Command]) -> Vec<Value> {
+    let mut cartel = Cartel::new(origin, Box::new(NoOpObserver));
     commands
         .iter()
         .map(|command| {
@@ -44,7 +52,7 @@ proptest! {
     #[test]
     fn replay_of_a_log_of_any_sequence_rebuilds_every_receipt(commands in RandomCommands::sequence()) {
         // Arrange
-        let lines = logged(&commands);
+        let lines = logged(ORIGIN, &commands);
         let schema = SpecSchema::new(SpecFiles::schema());
 
         // Act
@@ -52,6 +60,29 @@ proptest! {
 
         // Assert
         assert!(lines.iter().all(|line| schema.admits_step(line)));
+        assert_eq!((report.reconstructed, report.total), (lines.len(), lines.len()), "{:?}", report.departures);
+        assert!(report.gaps.is_empty());
+    }
+
+    #[test]
+    fn replay_of_a_log_of_any_sequence_under_any_bounds_rebuilds_every_receipt(
+        bounds in RandomCommands::bounds(),
+        commands in RandomCommands::sequence(),
+    ) {
+        // Arrange
+        let origin = Origin::Fresh(Fresh {
+            instance: InstanceId {
+                node: 3,
+                incarnation: 9,
+            },
+            bounds,
+        });
+        let lines = logged(origin, &commands);
+
+        // Act
+        let report = LogReplay::replay(&SpecWriter::origin(&origin), &lines);
+
+        // Assert
         assert_eq!((report.reconstructed, report.total), (lines.len(), lines.len()), "{:?}", report.departures);
         assert!(report.gaps.is_empty());
     }
@@ -74,7 +105,7 @@ fn replay_of_a_log_with_a_line_lost_finds_the_gap_and_rebuilds_up_to_it() {
         Command::ShowBooks,
         Command::ListBallots,
     ];
-    let mut lines = logged(&commands);
+    let mut lines = logged(ORIGIN, &commands);
     lines.remove(2);
 
     // Act

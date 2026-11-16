@@ -6,11 +6,22 @@
 
 //! A `no_std`, protocol-independent consensus bookkeeper.
 //!
-//! **Slices 1 to 3, ballots, closing and the watermark:** an instance,
-//! created fresh, with an observer told of every call; `OpenBallot`,
-//! `CastVote` and `CloseBallots`; `MeasureWatermark`; the queries
-//! `ShowBallot`, `ListBallots` and `ShowBooks`, the checkpoint -- conformant to
-//! version 0.3.0 of the specification in the repository's `spec/`.
+//! **Slices 1 to 4, ballots, closing, the watermark and the bounds:** an
+//! instance, created fresh within the bounds it is given, with an observer
+//! told of every call; `OpenBallot`, `CastVote` and `CloseBallots`;
+//! `MeasureWatermark`; the queries `ShowBallot`, `ListBallots` and
+//! `ShowBooks`, the checkpoint -- conformant to version 0.4.0 of the
+//! specification in the repository's `spec/`.
+//!
+//! # The bounds
+//!
+//! An instance may be given three bounds: the most ballots open at once, the
+//! most members an electorate may name, the most bytes a choice may have. A
+//! command that would exceed one is refused, naming it, and changes nothing,
+//! so the books never hold more than the bounds allow -- whatever faulty
+//! members send. A bound left out is no bound. They protect memory, not
+//! progress: which ballots to open, and what to do when an opening is
+//! refused, is the protocol's.
 //!
 //! # The watermark
 //!
@@ -59,7 +70,7 @@ extern crate alloc;
 
 pub mod ballot;
 pub mod ballot_record;
-pub mod books;
+pub mod bounds;
 pub mod cartel;
 pub mod checkpoint;
 pub mod choice;
@@ -70,10 +81,10 @@ pub mod instance_id;
 pub mod member_position;
 pub mod no_op_observer;
 pub mod observer;
-pub mod open_ballot;
 pub mod origin;
 pub mod output;
 pub mod receipt;
+pub mod registry;
 pub mod rejection;
 pub mod rows;
 pub mod votes;

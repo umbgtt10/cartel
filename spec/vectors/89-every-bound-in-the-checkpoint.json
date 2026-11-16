@@ -1,0 +1,186 @@
+{
+  "description": "Within every bound given, ballots open and votes count as without bounds, and the checkpoint holds the bounds.",
+  "rows": [
+    "ballot-opened",
+    "vote-counted",
+    "quorum-reached",
+    "books-shown"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      },
+      "bounds": {
+        "open_ballots": "2",
+        "electorate": "3",
+        "choice": "4"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1",
+            "2",
+            "3"
+          ],
+          "thresholds": [
+            "2"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "BallotOpened": {}
+        }
+      }
+    },
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "member": "1",
+          "choice": "aabbccdd"
+        }
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "VoteCounted": {
+            "count": "1"
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "CastVote": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "member": "2",
+          "choice": "aabbccdd"
+        }
+      },
+      "receipt": {
+        "number": "3",
+        "output": {
+          "QuorumReached": {
+            "count": "2",
+            "thresholds": [
+              "2"
+            ],
+            "voters": [
+              "1",
+              "2"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "ShowBooks": {}
+      },
+      "receipt": {
+        "number": "4",
+        "output": {
+          "BooksShown": {
+            "checkpoint": {
+              "instance": {
+                "node": "1",
+                "incarnation": "1"
+              },
+              "bounds": {
+                "open_ballots": "2",
+                "electorate": "3",
+                "choice": "4"
+              },
+              "ballots": [
+                {
+                  "ballot": {
+                    "question": "1",
+                    "round": "0",
+                    "phase": "0"
+                  },
+                  "electorate": [
+                    "1",
+                    "2",
+                    "3"
+                  ],
+                  "thresholds": [
+                    "2"
+                  ],
+                  "tally": [
+                    {
+                      "choice": "aabbccdd",
+                      "voters": [
+                        "1",
+                        "2"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "next_receipt": "5"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "bounds": {
+      "open_ballots": "2",
+      "electorate": "3",
+      "choice": "4"
+    },
+    "ballots": [
+      {
+        "ballot": {
+          "question": "1",
+          "round": "0",
+          "phase": "0"
+        },
+        "electorate": [
+          "1",
+          "2",
+          "3"
+        ],
+        "thresholds": [
+          "2"
+        ],
+        "tally": [
+          {
+            "choice": "aabbccdd",
+            "voters": [
+              "1",
+              "2"
+            ]
+          }
+        ]
+      }
+    ],
+    "next_receipt": "6"
+  }
+}

@@ -6,6 +6,7 @@ use alloc::vec::Vec;
 use serde_json::Value;
 
 use crate::ballot_key::BallotKey;
+use crate::bounds::Bounds;
 use crate::command::Command;
 use crate::instance_state::InstanceState;
 use crate::member_position::MemberPosition;
@@ -50,13 +51,26 @@ impl SpecReader {
         }
     }
 
-    // A fresh instance (§2) holds no ballot, and its first receipt is number 1.
+    // A fresh instance (§2) holds no ballot, and its first receipt is number
+    // 1. A bound it is not given is none.
     #[must_use]
     pub fn origin(value: &Value) -> InstanceState {
-        let instance = &value["Fresh"]["instance"];
+        let fresh = &value["Fresh"];
+        let instance = &fresh["instance"];
+        let bound = |name: &str| {
+            fresh
+                .get("bounds")
+                .and_then(|bounds| bounds.get(name))
+                .map(ValueReader::number)
+        };
         InstanceState {
             node: ValueReader::number(&instance["node"]),
             incarnation: ValueReader::number(&instance["incarnation"]),
+            bounds: Bounds {
+                open_ballots: bound("open_ballots"),
+                electorate: bound("electorate"),
+                choice: bound("choice"),
+            },
             close_point: None,
             ballots: Vec::new(),
             next_receipt: 1,

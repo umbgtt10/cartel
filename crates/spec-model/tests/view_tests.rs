@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 use crate::support::states::States;
+use cartel_spec_model::bounds::Bounds;
 use cartel_spec_model::instance_state::InstanceState;
 use cartel_spec_model::view::View;
 use serde_json::json;
@@ -66,6 +67,33 @@ fn checkpoint_of_a_state_is_its_instance_ballots_and_next_receipt() {
         json!({
             "instance": {"node": "2", "incarnation": "3"},
             "ballots": [record("1", "2"), record("3", "1")],
+            "next_receipt": "5",
+        })
+    );
+}
+
+#[test]
+fn checkpoint_of_bounded_books_holds_the_bounds_given() {
+    // Arrange
+    let state = InstanceState {
+        bounds: Bounds {
+            open_ballots: Some(4),
+            electorate: None,
+            choice: Some(0),
+        },
+        ..States::instance()
+    };
+
+    // Act
+    let checkpoint = View::checkpoint(&state);
+
+    // Assert
+    assert_eq!(
+        checkpoint,
+        json!({
+            "instance": {"node": "2", "incarnation": "3"},
+            "bounds": {"open_ballots": "4", "choice": "0"},
+            "ballots": [],
             "next_receipt": "5",
         })
     );

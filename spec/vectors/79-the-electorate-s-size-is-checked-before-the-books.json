@@ -1,0 +1,142 @@
+{
+  "description": "An electorate too large is refused as too large, whether its ballot is open or closed.",
+  "rows": [
+    "ballot-opened",
+    "electorate-too-large",
+    "ballots-closed"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      },
+      "bounds": {
+        "electorate": "2"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1",
+            "2"
+          ],
+          "thresholds": [
+            "2"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "BallotOpened": {}
+        }
+      }
+    },
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1",
+            "2",
+            "3"
+          ],
+          "thresholds": [
+            "2"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "CommandRejected": {
+            "ElectorateTooLarge": {
+              "bound": "2"
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "CloseBallots": {
+          "before": {
+            "question": "5",
+            "round": "0"
+          }
+        }
+      },
+      "receipt": {
+        "number": "3",
+        "output": {
+          "BallotsClosed": {
+            "ballots": [
+              {
+                "question": "1",
+                "round": "0",
+                "phase": "0"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1",
+            "2",
+            "3"
+          ],
+          "thresholds": [
+            "2"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "4",
+        "output": {
+          "CommandRejected": {
+            "ElectorateTooLarge": {
+              "bound": "2"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "bounds": {
+      "electorate": "2"
+    },
+    "close_point": {
+      "question": "5",
+      "round": "0"
+    },
+    "ballots": [],
+    "next_receipt": "6"
+  }
+}

@@ -1,14 +1,14 @@
 # cartel — the specification
 
-**Version 0.3.0.** The four parts of this specification are versioned together: this prose, the data model in
+**Version 0.4.0.** The four parts of this specification are versioned together: this prose, the data model in
 [`schema.json`](schema.json), the decision table in [`matrix.json`](matrix.json) and the conformance vectors in
 [`vectors/`](vectors/). It is normative; the `cartel` crate is one implementation of it, and where the two disagree
 the specification is right ([`P0-ADR-SpecificationIsNormativeCrateIsReference`](../docs/ADRs/P0-ADR-SpecificationIsNormativeCrateIsReference.md)).
 
-**What 0.3.0 covers:** ballots, closing and the watermark. An instance, created fresh, and the observer it reports
-every call to; `OpenBallot`, `CastVote` and `CloseBallots`; `MeasureWatermark`; the queries `ShowBallot`,
-`ListBallots` and `ShowBooks`, the checkpoint; each with every row it has. 0.3.0 is 0.2.0 with the watermark (§11).
-What later versions add is §12.
+**What 0.4.0 covers:** ballots, closing, the watermark and the bounds. An instance, created fresh with the bounds it
+is given, and the observer it reports every call to; `OpenBallot`, `CastVote` and `CloseBallots`;
+`MeasureWatermark`; the queries `ShowBallot`, `ListBallots` and `ShowBooks`, the checkpoint; each with every row it
+has. 0.4.0 is 0.3.0 with the bounds (§2, §5, §6). What later versions add is §12.
 
 ## 1. Conventions
 
@@ -40,12 +40,27 @@ every later version, and every vector released here passes unchanged there
 
 ## 2. An instance
 
-**An instance is created fresh**, with an instance id and an observer (§3). The instance id is a node and an
+**An instance is created fresh**, with an instance id, the bounds it is given, and an observer (§3). The instance id is a node and an
 incarnation; it tells one instance's receipts from another's. The caller guarantees that an incarnation never
 repeats for its node: a node that restarts is a new instance
 ([`P1-ADR-TheLogIsTheRecord`](../docs/ADRs/P1-ADR-TheLogIsTheRecord.md)).
 
 **A fresh instance holds no ballot**, and its first receipt is number 1.
+
+**The bounds** are three numbers, each given when the instance is created or left out
+([`P1-ADR-BoundsGivenAtConstruction`](../docs/ADRs/P1-ADR-BoundsGivenAtConstruction.md)):
+- `open_ballots`: the most ballots open at once;
+- `electorate`: the most members a ballot's electorate may name;
+- `choice`: the most bytes a counted choice may have.
+
+A bound left out is no bound, and an instance given none answers every command as 0.3.0 does. A bound of 0 is a
+bound like any other: under an `open_ballots` or an `electorate` of 0 no ballot opens, and under a `choice` of 0 only
+the empty choice is counted. No command changes a bound.
+
+**The books never exceed a bound given.** A command that would is refused and changes nothing (§5, §6), so the
+books hold at most `open_ballots` ballots, each with at most `electorate` members and as many choices, each of at
+most `choice` bytes. The bounds protect memory, not progress: a full instance refuses an honest ballot as readily
+as a faulty one, and which ballots to open, and what to do when an opening is refused, is the protocol's.
 
 ## 3. One entry point, one output
 
@@ -120,12 +135,19 @@ for as long as it is open ([`P1-ADR-TheElectorateTravelsWithTheBallot`](../docs/
 | `no-thresholds` | `thresholds` is empty | `CommandRejected(NoThresholds)` |
 | `threshold-out-of-range` | a threshold is 0, or above the number of members in `electorate` | `CommandRejected(ThresholdOutOfRange { threshold })`, the lowest such threshold |
 | `repeated-threshold` | a threshold is given more than once | `CommandRejected(RepeatedThreshold { threshold })`, the lowest such threshold |
+| `electorate-too-large` | an `electorate` bound is given, and `electorate` names more members than it | `CommandRejected(ElectorateTooLarge { bound })`, the bound |
 | `ballot-closed` | `ballot` is below the close point | `CommandRejected(BallotClosed)` |
 | `ballot-already-open` | `ballot` is open | `CommandRejected(BallotAlreadyOpen)` |
+| `books-full` | an `open_ballots` bound is given, and the open ballots number it | `CommandRejected(BooksFull { bound })`, the bound |
 | `ballot-opened` | otherwise | `BallotOpened` |
 
 **Opened:** the ballot is open, with its electorate and its thresholds as given, each in ascending order, and an
 empty tally.
+
+**Each bound is checked where it bears.** An electorate's size is the command's own, checked with the rest of what
+the command carries, before the books are read. The bound on open ballots bears only on an opening that would add a
+ballot: one below the close point or already open adds none, and is refused for that. So it is checked last, and a
+full instance opens again as soon as a close frees a ballot (§10).
 
 ## 6. `CastVote`
 
@@ -137,6 +159,7 @@ verified it: Cartel checks no signature and keeps no evidence
 
 | row | situation | output |
 |---|---|---|
+| `choice-too-long` | a `choice` bound is given, and `choice` has more bytes than it | `CommandRejected(ChoiceTooLong { bound })`, the bound |
 | `ballot-closed` | `ballot` is below the close point | `CommandRejected(BallotClosed)` |
 | `ballot-not-open` | `ballot` is not open | `CommandRejected(BallotNotOpen)` |
 | `not-a-member` | `member` is not in the ballot's electorate | `CommandRejected(NotAMember)` |
@@ -155,6 +178,9 @@ verified it: Cartel checks no signature and keeps no evidence
 nothing else follows: what to do with a member that voted two choices is the protocol's
 ([`P1-ADR-EquivocationIsReportedNotJudged`](../docs/ADRs/P1-ADR-EquivocationIsReportedNotJudged.md)). The choice
 offered is the command's, beside the output in the log.
+
+**A choice too long is refused before the books are read**, as the command's own size: whatever the ballot and the
+member, a vote carrying it is never counted.
 
 ## 7. `ShowBallot`
 
@@ -182,9 +208,10 @@ offered is the command's, beside the output in the log.
 |---|---|---|
 | `books-shown` | always | `BooksShown { checkpoint }` |
 
-**The checkpoint** is the instance id, the close point when there is one, every open ballot's record in canonical
-order, and the next receipt's number. While there is no close point, the checkpoint has no member for it (§1). It describes the state after its own call: its next receipt number is one more than the number of the
-receipt that carries it.
+**The checkpoint** is the instance id, the bounds given, the close point when there is one, every open ballot's
+record in canonical order, and the next receipt's number. It has no member for a bound left out, nor for the bounds
+when none is given, nor for the close point while there is none (§1). It describes the state after its own call:
+its next receipt number is one more than the number of the receipt that carries it.
 
 ## 10. `CloseBallots`
 
@@ -198,7 +225,8 @@ question is done, it closes what lies before it
 | `ballots-closed` | otherwise | `BallotsClosed { ballots }`, the ballots it closed, in canonical order |
 
 **Closed:** the close point becomes `before`, and every open ballot below it is closed and forgotten, its record
-gone. Ballots at or above the point are left as they were. A close that closes no ballot still moves the point.
+gone. Ballots at or above the point are left as they were. A close that closes no ballot still moves the point. The
+ballots it closes no longer count toward the bound on open ballots (§2).
 
 **The point only moves forward.** A close at or behind it is refused and changes nothing; the refusal says where
 the point stands, so a protocol that closes backwards -- a bug, or a replay after a restart -- shows in the log.
@@ -221,7 +249,7 @@ reached when its own is that position or beyond. Every member reaches 0, so the 
 is a position some member gave.
 
 **Changes nothing** but the receipt number. It names no ballot and touches none; what the watermark means -- what
-may be committed, which reads a round confirms -- is the protocol's.
+may be committed, which reads a round confirms -- is the protocol's. It keeps nothing, so no bound applies to it.
 
 ## 12. Not yet
 
@@ -229,7 +257,6 @@ The order of building is [`IMPLEMENTATION-PLAN.md`](../docs/IMPLEMENTATION-PLAN.
 
 | version | adds |
 |---|---|
-| 0.4.0 | the optional bounds: open ballots, electorate, choice length |
 | 0.5.0 | claims: `ExamineClaim` |
 
 **Later, when a protocol asks:**
@@ -241,7 +268,7 @@ The order of building is [`IMPLEMENTATION-PLAN.md`](../docs/IMPLEMENTATION-PLAN.
 
 ## 13. Conformance
 
-**A vector is an initial state, steps, and a final state.** The initial state is an origin: in 0.1.0, fresh. Each
+**A vector is an initial state, steps, and a final state.** The initial state is an origin: fresh, with the bounds it gives. Each
 step is a command and the receipt it must be answered with. The final state is the checkpoint a `ShowBooks` issued
 after the last step must answer: its own receipt numbered one more than the last step's, so its next receipt
 number is one more again.

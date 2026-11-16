@@ -73,10 +73,11 @@ not repeated in the output.
 
 **The matrix is checked in a fixed order:**
 1. whether the command is well formed;
-2. then the bounds;
+2. then the command's own sizes against the bounds: an electorate's members, a choice's bytes;
 3. then the ballot;
 4. then the member;
-5. then the effect.
+5. then the effect, which the bound on open ballots can refuse: only an opening that would add a ballot exceeds
+   it, so one below the close point or already open is refused for that first.
 
 The first row that applies is the output.
 

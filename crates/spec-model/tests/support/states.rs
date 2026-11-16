@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 use cartel_spec_model::ballot_key::BallotKey;
+use cartel_spec_model::bounds::Bounds;
 use cartel_spec_model::choice::Choice;
 use cartel_spec_model::instance_state::InstanceState;
 use cartel_spec_model::open_ballot::OpenBallot;
@@ -49,6 +50,7 @@ impl States {
         InstanceState {
             node: 2,
             incarnation: 3,
+            bounds: Bounds::default(),
             close_point: None,
             ballots: Vec::new(),
             next_receipt: 5,

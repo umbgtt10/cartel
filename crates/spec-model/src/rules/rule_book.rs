@@ -5,12 +5,13 @@ use alloc::vec::Vec;
 
 use crate::rules::ballot_situation::BallotSituation;
 use crate::rules::books_situation::BooksSituation;
+use crate::rules::bound_situation::BoundSituation;
 use crate::rules::change::Change;
 use crate::rules::command_situation::CommandSituation;
 use crate::rules::rule::Rule;
 use crate::rules::situation::Situation;
 
-const RULES: [(&str, Rule); 20] = [
+const RULES: [(&str, Rule); 23] = [
     (
         "empty-electorate",
         Rule {
@@ -47,6 +48,20 @@ const RULES: [(&str, Rule); 20] = [
         },
     ),
     (
+        "electorate-too-large",
+        Rule {
+            situation: Situation::Bound(BoundSituation::ElectorateTooLarge),
+            change: Change::Nothing,
+        },
+    ),
+    (
+        "choice-too-long",
+        Rule {
+            situation: Situation::Bound(BoundSituation::ChoiceTooLong),
+            change: Change::Nothing,
+        },
+    ),
+    (
         "ballot-closed",
         Rule {
             situation: Situation::Books(BooksSituation::Closed),
@@ -57,6 +72,13 @@ const RULES: [(&str, Rule); 20] = [
         "ballot-already-open",
         Rule {
             situation: Situation::Books(BooksSituation::Open),
+            change: Change::Nothing,
+        },
+    ),
+    (
+        "books-full",
+        Rule {
+            situation: Situation::Bound(BoundSituation::BooksFull),
             change: Change::Nothing,
         },
     ),

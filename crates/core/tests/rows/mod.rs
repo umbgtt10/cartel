@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Umberto Gotti
 // SPDX-License-Identifier: MIT
 
+mod bound_rows_tests;
 mod closing_rows_tests;
 mod opening_rows_tests;
 mod query_rows_tests;

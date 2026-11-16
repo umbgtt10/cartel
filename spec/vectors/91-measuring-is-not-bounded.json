@@ -1,0 +1,63 @@
+{
+  "description": "A measure keeps nothing, so no bound applies to it.",
+  "rows": [
+    "watermark-measured"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      },
+      "bounds": {
+        "open_ballots": "0",
+        "electorate": "1",
+        "choice": "0"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "MeasureWatermark": {
+          "positions": [
+            {
+              "member": "1",
+              "position": "5"
+            },
+            {
+              "member": "2",
+              "position": "3"
+            },
+            {
+              "member": "3",
+              "position": "7"
+            }
+          ],
+          "threshold": "2"
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "WatermarkMeasured": {
+            "position": "5"
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "bounds": {
+      "open_ballots": "0",
+      "electorate": "1",
+      "choice": "0"
+    },
+    "ballots": [],
+    "next_receipt": "3"
+  }
+}

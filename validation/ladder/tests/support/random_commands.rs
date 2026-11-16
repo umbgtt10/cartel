@@ -2,11 +2,13 @@
 // SPDX-License-Identifier: MIT
 
 use cartel::ballot::Ballot;
+use cartel::bounds::Bounds;
 use cartel::choice::Choice;
 use cartel::close_point::ClosePoint;
 use cartel::command::Command;
 use cartel::member_position::MemberPosition;
 use proptest::collection::vec;
+use proptest::option::of;
 use proptest::prelude::Just;
 use proptest::prelude::Strategy;
 use proptest::prop_oneof;
@@ -16,7 +18,8 @@ use proptest::prop_oneof;
 // one of two -- electorates and thresholds of every shape, well formed or not,
 // closes before points around the ballots, ahead of the close point or not,
 // and measures of positions that may repeat a member, at thresholds in range
-// or not.
+// or not -- and the bounds an instance in that world may be given, each left
+// out or from 0 to 3, so the sequences meet them too.
 pub struct RandomCommands;
 
 impl RandomCommands {
@@ -38,6 +41,16 @@ impl RandomCommands {
                 phase: 0
             }),
         ]
+    }
+
+    pub fn bounds() -> impl Strategy<Value = Bounds> {
+        (of(0..4_u64), of(0..4_u64), of(0..4_u64)).prop_map(|(open_ballots, electorate, choice)| {
+            Bounds {
+                open_ballots,
+                electorate,
+                choice,
+            }
+        })
     }
 
     pub fn choice() -> impl Strategy<Value = Choice> {

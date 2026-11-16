@@ -7,6 +7,7 @@
 // specification's model's, and every row of the command reached.
 
 use crate::support::both_sides::BothSides;
+use cartel::bounds::Bounds;
 use cartel::command::Command;
 use cartel::member_position::MemberPosition;
 use serde_json::Value;
@@ -56,7 +57,7 @@ fn process_of_every_measure_answers_as_the_model_does() {
     // Arrange
     let mut departures = Vec::new();
     let mut reached = BTreeSet::new();
-    let mut sides = BothSides::new();
+    let mut sides = BothSides::new(Bounds::default());
 
     // Act
     for positions in lists() {

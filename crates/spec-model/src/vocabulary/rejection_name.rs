@@ -27,6 +27,9 @@ pub enum RejectionName {
     Equivocation,
     BallotClosed,
     CloseBehind,
+    ElectorateTooLarge,
+    BooksFull,
+    ChoiceTooLong,
 }
 
 impl RejectionName {
@@ -45,12 +48,16 @@ impl RejectionName {
             (RejectionName::Equivocation, "Equivocation"),
             (RejectionName::BallotClosed, "BallotClosed"),
             (RejectionName::CloseBehind, "CloseBehind"),
+            (RejectionName::ElectorateTooLarge, "ElectorateTooLarge"),
+            (RejectionName::BooksFull, "BooksFull"),
+            (RejectionName::ChoiceTooLong, "ChoiceTooLong"),
         ],
     };
 
     // What a refusal carries (§5, §6, §10): the lowest member or threshold at
-    // fault, the choice a member is already a voter of, or the close point --
-    // a refusal changes nothing, so the state is the one the command met.
+    // fault, the choice a member is already a voter of, the close point, or
+    // the bound a command would exceed -- a refusal changes nothing, so the
+    // state is the one the command met.
     #[must_use]
     pub fn encoded(self, call: &Call) -> Value {
         let name = Speller::name(&Self::SPELLING, self);
@@ -79,7 +86,17 @@ impl RejectionName {
                 let point = call.before.close_point.expect("a close point");
                 Variant::of(name, json!({"close_point": View::point(point)}))
             }
+            RejectionName::ElectorateTooLarge => Self::bound(name, call.before.bounds.electorate),
+            RejectionName::BooksFull => Self::bound(name, call.before.bounds.open_ballots),
+            RejectionName::ChoiceTooLong => Self::bound(name, call.before.bounds.choice),
             _ => Variant::unit(name),
         }
+    }
+
+    fn bound(name: &str, bound: Option<u64>) -> Value {
+        Variant::of(
+            name,
+            json!({"bound": View::number(bound.expect("a bound"))}),
+        )
     }
 }

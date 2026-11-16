@@ -1,0 +1,143 @@
+{
+  "description": "With as many ballots open as the bound, an opening is refused, naming the bound.",
+  "rows": [
+    "ballot-opened",
+    "books-full"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      },
+      "bounds": {
+        "open_ballots": "2"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1",
+            "2",
+            "3"
+          ],
+          "thresholds": [
+            "2"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "BallotOpened": {}
+        }
+      }
+    },
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "2",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1",
+            "2",
+            "3"
+          ],
+          "thresholds": [
+            "2"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "BallotOpened": {}
+        }
+      }
+    },
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "3",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1",
+            "2",
+            "3"
+          ],
+          "thresholds": [
+            "2"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "3",
+        "output": {
+          "CommandRejected": {
+            "BooksFull": {
+              "bound": "2"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "bounds": {
+      "open_ballots": "2"
+    },
+    "ballots": [
+      {
+        "ballot": {
+          "question": "1",
+          "round": "0",
+          "phase": "0"
+        },
+        "electorate": [
+          "1",
+          "2",
+          "3"
+        ],
+        "thresholds": [
+          "2"
+        ],
+        "tally": []
+      },
+      {
+        "ballot": {
+          "question": "2",
+          "round": "0",
+          "phase": "0"
+        },
+        "electorate": [
+          "1",
+          "2",
+          "3"
+        ],
+        "thresholds": [
+          "2"
+        ],
+        "tally": []
+      }
+    ],
+    "next_receipt": "5"
+  }
+}

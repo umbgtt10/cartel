@@ -1,7 +1,7 @@
 {
  "$schema": "https://json-schema.org/draft/2020-12/schema",
- "$id": "urn:cartel:spec:0.3.0:schema",
- "title": "cartel 0.3.0 -- the data model",
+ "$id": "urn:cartel:spec:0.4.0:schema",
+ "title": "cartel 0.4.0 -- the data model",
  "description": "Every command, receipt, output, rejection and the checkpoint, and the forms of a conformance vector, of the decision table and of the released vectors. Normative with SPEC.md.",
  "$ref": "#/$defs/vector",
  "$defs": {
@@ -153,8 +153,26 @@
     }
    }
   },
+  "bounds": {
+   "description": "The bounds given: the most ballots open at once, the most members an electorate may name, the most bytes a choice may have. A bound left out is no bound, and has no member.",
+   "type": "object",
+   "additionalProperties": false,
+   "required": [],
+   "properties": {
+    "open_ballots": {
+     "$ref": "#/$defs/u64"
+    },
+    "electorate": {
+     "$ref": "#/$defs/u64"
+    },
+    "choice": {
+     "$ref": "#/$defs/u64"
+    }
+   },
+   "minProperties": 1
+  },
   "checkpoint": {
-   "description": "The books, as ShowBooks answers them: the instance id, the close point when there is one, every open ballot's record, the next receipt's number.",
+   "description": "The books, as ShowBooks answers them: the instance id, the bounds when any is given, the close point when there is one, every open ballot's record, the next receipt's number.",
    "type": "object",
    "additionalProperties": false,
    "required": [
@@ -165,6 +183,9 @@
    "properties": {
     "instance": {
      "$ref": "#/$defs/instance_id"
+    },
+    "bounds": {
+     "$ref": "#/$defs/bounds"
     },
     "close_point": {
      "$ref": "#/$defs/point"
@@ -190,6 +211,9 @@
    "properties": {
     "instance": {
      "$ref": "#/$defs/instance_id"
+    },
+    "bounds": {
+     "$ref": "#/$defs/bounds"
     }
    }
   },
@@ -557,6 +581,69 @@
        "properties": {
         "close_point": {
          "$ref": "#/$defs/point"
+        }
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "ElectorateTooLarge"
+     ],
+     "properties": {
+      "ElectorateTooLarge": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "bound"
+       ],
+       "properties": {
+        "bound": {
+         "$ref": "#/$defs/u64"
+        }
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "BooksFull"
+     ],
+     "properties": {
+      "BooksFull": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "bound"
+       ],
+       "properties": {
+        "bound": {
+         "$ref": "#/$defs/u64"
+        }
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "ChoiceTooLong"
+     ],
+     "properties": {
+      "ChoiceTooLong": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "bound"
+       ],
+       "properties": {
+        "bound": {
+         "$ref": "#/$defs/u64"
         }
        }
       }

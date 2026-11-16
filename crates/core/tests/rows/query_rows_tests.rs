@@ -2,12 +2,13 @@
 // SPDX-License-Identifier: MIT
 
 use crate::support::fixtures::Fixtures;
-use cartel::books::Books;
+use cartel::bounds::Bounds;
 use cartel::output::Output;
+use cartel::registry::books::Books;
 use cartel::rejection::Rejection;
 
 fn books() -> Books {
-    let mut books = Books::new(Fixtures::instance());
+    let mut books = Books::new(Fixtures::instance(), Bounds::default());
     let _ = books.open(Fixtures::ballot(2, 0, 0), &[1], &[1]);
     let _ = books.open(Fixtures::ballot(1, 0, 1), &[1], &[1]);
     books

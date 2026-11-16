@@ -1,0 +1,112 @@
+{
+  "description": "What the command carries, the electorate's size included, is checked before the books are found full.",
+  "rows": [
+    "empty-electorate",
+    "threshold-out-of-range",
+    "electorate-too-large"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      },
+      "bounds": {
+        "open_ballots": "0",
+        "electorate": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [],
+          "thresholds": [
+            "1"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "CommandRejected": {
+            "EmptyElectorate": {}
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1"
+          ],
+          "thresholds": [
+            "2"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "CommandRejected": {
+            "ThresholdOutOfRange": {
+              "threshold": "2"
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1",
+            "2"
+          ],
+          "thresholds": [
+            "1"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "3",
+        "output": {
+          "CommandRejected": {
+            "ElectorateTooLarge": {
+              "bound": "1"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "bounds": {
+      "open_ballots": "0",
+      "electorate": "1"
+    },
+    "ballots": [],
+    "next_receipt": "5"
+  }
+}

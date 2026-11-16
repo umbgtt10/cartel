@@ -3,8 +3,11 @@
 
 use crate::support::commands::Commands;
 use crate::support::states::States;
+use cartel_spec_model::bounds::Bounds;
+use cartel_spec_model::instance_state::InstanceState;
 use cartel_spec_model::rules::ballot_situation::BallotSituation;
 use cartel_spec_model::rules::books_situation::BooksSituation;
+use cartel_spec_model::rules::bound_situation::BoundSituation;
 use cartel_spec_model::rules::command_situation::CommandSituation;
 use cartel_spec_model::rules::situation::Situation;
 use cartel_spec_model::vocabulary::command_name::CommandName;
@@ -32,6 +35,30 @@ fn holds_of_a_books_situation_is_that_situation_s() {
     // Act
     let held = [States::key(1, 0, 0), States::key(2, 0, 0)]
         .map(|key| situation.holds(&Commands::show(key), &state));
+
+    // Assert
+    assert_eq!(held, [true, false]);
+}
+
+#[test]
+fn holds_of_a_bound_situation_is_that_situation_s() {
+    // Arrange
+    let situation = Situation::Bound(BoundSituation::ElectorateTooLarge);
+    let state = InstanceState {
+        bounds: Bounds {
+            electorate: Some(1),
+            ..Bounds::default()
+        },
+        ..States::instance()
+    };
+
+    // Act
+    let held = [&[1, 2][..], &[1]].map(|electorate| {
+        situation.holds(
+            &Commands::open(States::key(1, 0, 0), electorate, &[1]),
+            &state,
+        )
+    });
 
     // Assert
     assert_eq!(held, [true, false]);

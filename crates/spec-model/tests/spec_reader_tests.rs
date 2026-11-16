@@ -4,6 +4,7 @@
 use crate::support::commands::Commands;
 use crate::support::spec_files::SpecFiles;
 use crate::support::states::States;
+use cartel_spec_model::bounds::Bounds;
 use cartel_spec_model::instance_state::InstanceState;
 use cartel_spec_model::spec_reader::SpecReader;
 use cartel_spec_model::vocabulary::command_name::CommandName;
@@ -90,6 +91,25 @@ fn origin_of_a_fresh_instance_holds_no_ballot_and_numbers_from_one() {
         InstanceState {
             next_receipt: 1,
             ..States::instance()
+        }
+    );
+}
+
+#[test]
+fn origin_of_a_fresh_instance_with_bounds_holds_the_bounds_given() {
+    // Arrange & Act
+    let state = SpecReader::origin(&json!({"Fresh": {
+        "instance": {"node": "2", "incarnation": "3"},
+        "bounds": {"open_ballots": "4", "choice": "0"},
+    }}));
+
+    // Assert
+    assert_eq!(
+        state.bounds,
+        Bounds {
+            open_ballots: Some(4),
+            electorate: None,
+            choice: Some(0),
         }
     );
 }

@@ -1,0 +1,156 @@
+{
+  "description": "A full instance opens again as soon as a close frees a ballot.",
+  "rows": [
+    "ballot-opened",
+    "books-full",
+    "ballots-closed"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      },
+      "bounds": {
+        "open_ballots": "1"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1",
+            "2",
+            "3"
+          ],
+          "thresholds": [
+            "2"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "BallotOpened": {}
+        }
+      }
+    },
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "2",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1",
+            "2",
+            "3"
+          ],
+          "thresholds": [
+            "2"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "2",
+        "output": {
+          "CommandRejected": {
+            "BooksFull": {
+              "bound": "1"
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "CloseBallots": {
+          "before": {
+            "question": "2",
+            "round": "0"
+          }
+        }
+      },
+      "receipt": {
+        "number": "3",
+        "output": {
+          "BallotsClosed": {
+            "ballots": [
+              {
+                "question": "1",
+                "round": "0",
+                "phase": "0"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "2",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1",
+            "2",
+            "3"
+          ],
+          "thresholds": [
+            "2"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "4",
+        "output": {
+          "BallotOpened": {}
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "bounds": {
+      "open_ballots": "1"
+    },
+    "close_point": {
+      "question": "2",
+      "round": "0"
+    },
+    "ballots": [
+      {
+        "ballot": {
+          "question": "2",
+          "round": "0",
+          "phase": "0"
+        },
+        "electorate": [
+          "1",
+          "2",
+          "3"
+        ],
+        "thresholds": [
+          "2"
+        ],
+        "tally": []
+      }
+    ],
+    "next_receipt": "6"
+  }
+}

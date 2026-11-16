@@ -1,0 +1,57 @@
+{
+  "description": "Under an electorate bound of 0, every electorate is too large.",
+  "rows": [
+    "electorate-too-large"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      },
+      "bounds": {
+        "electorate": "0"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1"
+          ],
+          "thresholds": [
+            "1"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "CommandRejected": {
+            "ElectorateTooLarge": {
+              "bound": "0"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "bounds": {
+      "electorate": "0"
+    },
+    "ballots": [],
+    "next_receipt": "3"
+  }
+}

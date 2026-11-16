@@ -10,6 +10,7 @@ use alloc::boxed::Box;
 use alloc::vec;
 use alloc::vec::Vec;
 use cartel::ballot::Ballot;
+use cartel::bounds::Bounds;
 use cartel::cartel::Cartel;
 use cartel::choice::Choice;
 use cartel::command::Command;
@@ -131,6 +132,7 @@ impl ClusterSimulation {
         let mut books = Cartel::new(
             Origin::Fresh(Fresh {
                 instance: InstanceId { node, incarnation },
+                bounds: Bounds::default(),
             }),
             Box::new(NoOpObserver),
         );

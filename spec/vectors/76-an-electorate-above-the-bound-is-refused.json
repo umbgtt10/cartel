@@ -1,0 +1,60 @@
+{
+  "description": "An electorate naming more members than the bound is refused, naming the bound, and opens nothing.",
+  "rows": [
+    "electorate-too-large"
+  ],
+  "origin": {
+    "Fresh": {
+      "instance": {
+        "node": "1",
+        "incarnation": "1"
+      },
+      "bounds": {
+        "electorate": "3"
+      }
+    }
+  },
+  "steps": [
+    {
+      "command": {
+        "OpenBallot": {
+          "ballot": {
+            "question": "1",
+            "round": "0",
+            "phase": "0"
+          },
+          "electorate": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ],
+          "thresholds": [
+            "2"
+          ]
+        }
+      },
+      "receipt": {
+        "number": "1",
+        "output": {
+          "CommandRejected": {
+            "ElectorateTooLarge": {
+              "bound": "3"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "final": {
+    "instance": {
+      "node": "1",
+      "incarnation": "1"
+    },
+    "bounds": {
+      "electorate": "3"
+    },
+    "ballots": [],
+    "next_receipt": "3"
+  }
+}
