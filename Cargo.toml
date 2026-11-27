@@ -1,7 +1,7 @@
 # A virtual workspace laid out by role (docs/ADRs/P2-ADR-WorkspaceLaidOutByRole.md):
 # the library under crates/, everything that checks it under validation/, the
-# gates in xtask/. A crate at the root would put xtask/tests/** inside its
-# package directory, and stern would read them as the crate's.
+# gates in xtask/. A crate at the root would put validation/** and xtask/**
+# inside its package directory, and stern would read them as the crate's.
 [workspace]
 members = [
     "crates/core",
