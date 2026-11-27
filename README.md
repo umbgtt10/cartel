@@ -256,7 +256,10 @@ just stage1   # format, clippy, the no_std check and the tests
 just stage2   # house rules, duplication, CRAP, coverage, mirrored tests, file risk, dependencies
 ```
 
-Both gates must pass before any commit lands. They drive these tools, each installed once from crates.io:
+Both gates must pass before any commit lands. Stage 2's gates are
+[`serge4rust`](https://github.com/umbgtt10/serge4rust)'s, the house's quality gates as a library; `xtask/src/main.rs`
+holds only which of them run, in what order, and with what settings, and takes serge4rust from crates.io. They
+drive these tools, each installed once from crates.io:
 
 | Tool | Used by | Install |
 |---|---|---|
@@ -298,7 +301,7 @@ library, `validation/` everything that checks it, and `xtask/` the gates.
 | `validation/ladder/` | Conformance, the exhaustive matrix, property and replay tiers |
 | `validation/core-validation/` | The seeded cluster simulation |
 | `validation/memory/` | The memory tier, a counting allocator in a binary of its own |
-| `xtask/` | The gates: `cargo xtask stage2` and the commit scores |
+| `xtask/` | The gates, taken from [`serge4rust`](https://github.com/umbgtt10/serge4rust): `cargo xtask stage2` and the commit scores |
 
 ---
 
