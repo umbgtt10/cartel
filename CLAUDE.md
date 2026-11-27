@@ -41,12 +41,29 @@ The `no_std` check builds the crate and the specification's model for
 `thumbv7em-none-eabihf`, a target with no std at all, which
 `rust-toolchain.toml` installs.
 
-Stage 2 is `cargo xtask stage2`, ported from beggar's: stern4rust, then
-dry4rust against `dry4rust-baseline.json`, crap4rust, the coverage gate twice,
-twin4rust, iceberg4rust and cargo-deny, in that order. stern runs over
-`cartel`, `cartel-core-validation`, `cartel-ladder`, `cartel-memory`,
-`cartel-spec-model` **and** `xtask`; the rest over the library, `cartel` and
-`cartel-spec-model`. dry4rust scans `crates/`, what `dry4rust.toml` leaves in.
+Stage 2 is `cargo xtask stage2`, as beggar's: stern4rust, then dry4rust
+against `dry4rust-baseline.json`, crap4rust, the coverage gate twice,
+twin4rust, iceberg4rust and cargo-deny, in that order. The gates come from
+`serge4rust`, the house's gates as a library: the gate trait, the sequence, the
+command runner, a gate per tool and the commit scoring are its, with their
+tests. `xtask/` keeps only `src/main.rs` -- which gates stage 2 runs, in what
+order, and cartel's constants, passed to serge4rust's constructors: packages,
+thresholds, the baseline and its floor, the words the coverage failure names,
+the library the scoring reads. A gate that needs changing is changed in
+serge4rust, released, and taken here from crates.io (`serge4rust = "0.2"`),
+never patched in place. stern runs over `cartel`, `cartel-core-validation`,
+`cartel-ladder`, `cartel-memory`, `cartel-spec-model` **and** `xtask`; the rest
+over the library, `cartel` and `cartel-spec-model`. dry4rust scans `crates/`,
+what `dry4rust.toml` leaves in.
+
+`just ripe` runs `cargo ripe4rust plan`: every upgrade the workspace could
+take, judged ripe, worth asking about or not yet, against the gates
+`[workspace.metadata.ripe4rust]` declares in `Cargo.toml` -- `just stage1`,
+then `just stage2`, in the order they validate a change. It prints the plan and
+applies nothing; applying an upgrade is a change of its own, on the owner's
+word.
+
+`cargo install cargo-ripe4rust`
 
 The tests climb a ladder of seven tiers — `docs/ADRs/P2-ADR-TestingLadder.md`.
 The coverage gate, `cargo llvm-cov` over `cartel`, `cartel-spec-model` and
@@ -69,10 +86,11 @@ by id and digest, and the conformance tier fails on one missing or changed
 Every commit message carries the grip and braintax of the library's crates,
 `core` and `spec-model` under `crates/`, and their ratio, scored as the commit
 stages them, as beggar's and faction's do. `.githooks/commit-msg` runs
-`cargo xtask grip-braintax` on the message's file. A scoring that fails stops
-the commit, and `--no-verify` skips it, deliberately -- never use it. Git runs a
-repository's own hooks only where a clone asks it to: `just hooks`, once a
-clone, on each machine.
+`cargo xtask grip-braintax` on the message's file -- serge4rust's scoring,
+told the library is `core` and `spec-model` under `crates/`. A scoring that
+fails stops the commit, and `--no-verify` skips it, deliberately -- never use
+it. Git runs a repository's own hooks only where a clone asks it to:
+`just hooks`, once a clone, on each machine.
 
 `cargo install cargo-grip4rust`
 `cargo install cargo-braintax4rust`
@@ -84,7 +102,8 @@ A workspace laid out by role (`docs/ADRs/P2-ADR-WorkspaceLaidOutByRole.md`):
 crate, and `crates/spec-model/`, the specification's independent model;
 `validation/` every package that checks it -- `validation/ladder/` the testing
 ladder's scenario tiers, `validation/core-validation/` its cluster simulation,
-`validation/memory/` its memory tier; and `xtask/` runs the gates.
+`validation/memory/` its memory tier; and `xtask/` runs the gates,
+serge4rust's.
 
 `crates/core/tests/` and `crates/spec-model/tests/` are the unit tier, one test
 file per source file, under every rule. The tiers that are scenarios rather
