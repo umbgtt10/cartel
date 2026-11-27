@@ -56,6 +56,15 @@ never patched in place. stern runs over `cartel`, `cartel-core-validation`,
 over the library, `cartel` and `cartel-spec-model`. dry4rust scans `crates/`,
 what `dry4rust.toml` leaves in.
 
+`just ripe` runs `cargo ripe4rust plan`: every upgrade the workspace could
+take, judged ripe, worth asking about or not yet, against the gates
+`[workspace.metadata.ripe4rust]` declares in `Cargo.toml` -- `just stage1`,
+then `just stage2`, in the order they validate a change. It prints the plan and
+applies nothing; applying an upgrade is a change of its own, on the owner's
+word.
+
+`cargo install cargo-ripe4rust`
+
 The tests climb a ladder of seven tiers — `docs/ADRs/P2-ADR-TestingLadder.md`.
 The coverage gate, `cargo llvm-cov` over `cartel`, `cartel-spec-model` and
 `cartel-ladder`, fails on any line, region or function of the library left
