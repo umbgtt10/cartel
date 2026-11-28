@@ -50,7 +50,7 @@ tests. `xtask/` keeps only `src/main.rs` -- which gates stage 2 runs, in what
 order, and cartel's constants, passed to serge4rust's constructors: packages,
 thresholds, the baseline and its floor, the words the coverage failure names,
 the library the scoring reads. A gate that needs changing is changed in
-serge4rust, released, and taken here from crates.io (`serge4rust = "0.3.1"`),
+serge4rust, released, and taken here from crates.io (`serge4rust = "0.3.3"`),
 never patched in place. stern runs over `cartel`, `cartel-core-validation`,
 `cartel-ladder`, `cartel-memory`, `cartel-spec-model` **and** `xtask`; the rest
 over the library, `cartel` and `cartel-spec-model`. dry4rust scans `crates/`,
