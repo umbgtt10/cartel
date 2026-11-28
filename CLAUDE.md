@@ -42,15 +42,15 @@ The `no_std` check builds the crate and the specification's model for
 `rust-toolchain.toml` installs.
 
 Stage 2 is `cargo xtask stage2`, as beggar's: stern4rust, then dry4rust
-against `dry4rust-baseline.json`, crap4rust, the coverage gate twice,
-twin4rust, iceberg4rust and cargo-deny, in that order. The gates come from
+against `dry4rust-baseline.json`, crap4rust, the coverage gate twice -- the
+second on the build the first left --, twin4rust, iceberg4rust and cargo-deny, in that order. The gates come from
 `serge4rust`, the house's gates as a library: the gate trait, the sequence, the
 command runner, a gate per tool and the commit scoring are its, with their
 tests. `xtask/` keeps only `src/main.rs` -- which gates stage 2 runs, in what
 order, and cartel's constants, passed to serge4rust's constructors: packages,
 thresholds, the baseline and its floor, the words the coverage failure names,
 the library the scoring reads. A gate that needs changing is changed in
-serge4rust, released, and taken here from crates.io (`serge4rust = "0.3.0"`),
+serge4rust, released, and taken here from crates.io (`serge4rust = "0.3.1"`),
 never patched in place. stern runs over `cartel`, `cartel-core-validation`,
 `cartel-ladder`, `cartel-memory`, `cartel-spec-model` **and** `xtask`; the rest
 over the library, `cartel` and `cartel-spec-model`. dry4rust scans `crates/`,
